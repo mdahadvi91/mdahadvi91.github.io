@@ -162,21 +162,25 @@ color:#ff2a6d;
 </div></div>
 </div><script>
 
-<script>
-
 function openLogin(){
+
 document.getElementById("startBox").style.display="none";
 document.getElementById("loginCard").style.display="block";
+
 }
 
 function showRegister(){
+
 document.getElementById("loginCard").style.display="none";
 document.getElementById("registerCard").style.display="block";
+
 }
 
 function showLogin(){
+
 document.getElementById("registerCard").style.display="none";
 document.getElementById("loginCard").style.display="block";
+
 }
 
 /* REGISTER */
@@ -186,7 +190,7 @@ function register(){
 let user=document.getElementById("regUser").value;
 let pass=document.getElementById("regPass").value;
 
-let users = JSON.parse(localStorage.getItem("users")) || [];
+let users=JSON.parse(localStorage.getItem("users")) || [];
 
 users.push({
 username:user,
@@ -212,6 +216,8 @@ let pass=document.getElementById("loginPass").value;
 
 if(user==="admin" && pass==="123456"){
 
+localStorage.setItem("role","admin");
+
 alert("Admin Login Success");
 
 window.location.href="admin.html";
@@ -222,11 +228,13 @@ return;
 
 /* USER LOGIN */
 
-let users = JSON.parse(localStorage.getItem("users")) || [];
+let users=JSON.parse(localStorage.getItem("users")) || [];
 
 for(let i=0;i<users.length;i++){
 
 if(user===users[i].username && pass===users[i].password){
+
+localStorage.setItem("role","user");
 
 alert("User Login Success");
 
@@ -242,4 +250,5 @@ alert("Wrong Username or Password");
 
 }
 
-</script>
+</script></body>
+</html>
