@@ -1,0 +1,57 @@
+<!DOCTYPE html><html>
+<head>
+<title>Admin Dashboard</title><style>
+
+body{
+background:#0e0f1a;
+color:white;
+font-family:sans-serif;
+text-align:center;
+padding:40px;
+}
+
+h1{
+margin-bottom:20px;
+}
+
+.box{
+background:#16182c;
+padding:30px;
+border-radius:10px;
+width:300px;
+margin:auto;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:none;
+border-radius:5px;
+}
+
+button{
+margin-top:15px;
+padding:10px 20px;
+background:#00eaff;
+border:none;
+cursor:pointer;
+border-radius:5px;
+}
+
+</style></head><body><h1>👑 Admin Dashboard</h1><div class="box"><h3>Post Message</h3><input type="text" id="postText" placeholder="Write something"><button onclick="upload()">Post</button>
+
+</div><script>
+
+function upload(){
+
+let text=document.getElementById("postText").value;
+
+localStorage.setItem("adminPost",text);
+
+alert("Post Uploaded!");
+
+}
+
+</script></body>
+</html>
