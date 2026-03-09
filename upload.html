@@ -1,7 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
 <input type="file" id="video">
 
 <input type="text" id="caption">
 
 <button onclick="upload()">Upload</button>
 
-<script type="module" src="upload.js"></script>
+<script type="module">
+
+import { db,storage } from "./firebase.js";
+
+import {
+collection,
+addDoc
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+import {
+ref,
+uploadBytes,
+getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
+
+window.upload=async function(){
+
+const file=document.getElementById("video").files[0];
+
+const caption=document.getElementById("caption").value;
+
+const refFile=ref(storage,"videos/"+Date.now()+file.name);
+
+await uploadBytes(refFile,file);
+
+const url=await getDownloadURL(refFile);
+
+await addDoc(collection(db,"posts"),{
+
+media:url,
+caption:caption,
+likes:0,
+username:"user"
+
+});
+
+alert("Uploaded");
+
+}
+
+</script>
+
+</body>
+
+</html>
