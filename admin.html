@@ -1,49 +1,161 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html>
 <head>
-<title>Admin</title>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+
 <style>
-body{font-family:Arial;text-align:center}
-textarea{width:300px;height:120px}
+
+body{
+font-family:sans-serif;
+background:#0e0f1a;
+color:white;
+margin:0;
+padding:0;
+text-align:center;
+}
+
+.header{
+background:#16182c;
+padding:20px;
+font-size:24px;
+}
+
+.logout{
+position:absolute;
+right:20px;
+top:20px;
+padding:8px 15px;
+border:none;
+background:#ff2a6d;
+color:white;
+border-radius:10px;
+cursor:pointer;
+}
+
+.container{
+margin-top:40px;
+}
+
+textarea{
+width:80%;
+height:120px;
+border:none;
+border-radius:10px;
+padding:10px;
+background:#1a1d35;
+color:white;
+}
+
+button.upload{
+margin-top:15px;
+padding:10px 25px;
+border:none;
+border-radius:10px;
+background:#00eaff;
+cursor:pointer;
+font-weight:bold;
+}
+
+.post{
+background:#1a1d35;
+margin:15px auto;
+padding:15px;
+width:85%;
+border-radius:15px;
+box-shadow:0 0 10px #00eaff;
+}
+
 </style>
-</head><body><script>
+</head>
+
+<body>
 
 <script>
-if(localStorage.getItem("role") !== "admin"){
+
+/* ADMIN CHECK */
+
+if(localStorage.getItem("role")!=="admin"){
 alert("Access denied");
 window.location.href="index.html";
 }
+
 </script>
 
-</script><h1>Admin Dashboard</h1><h3>Create Post</h3><textarea id="postText"></textarea><br><br>
+<div class="header">
+Admin Dashboard
+<button class="logout" onclick="logout()">Logout</button>
+</div>
 
-<button onclick="addPost()">Upload Post</button>
+<div class="container">
 
-<br><br>
+<h2>Create Post</h2>
 
-<button onclick="logout()">Logout</button>
+<textarea id="postText" placeholder="Write something..."></textarea>
+<br>
+
+<button class="upload" onclick="addPost()">Upload Post</button>
+
+<h2>All Posts</h2>
+
+<div id="posts"></div>
+
+</div>
 
 <script>
 
+/* LOAD POSTS */
+
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
+
+let container = document.getElementById("posts");
+
+posts.reverse().forEach(function(p){
+
+let div=document.createElement("div");
+
+div.className="post";
+
+div.innerText=p;
+
+container.appendChild(div);
+
+});
+
+/* ADD POST */
+
 function addPost(){
 
-let text=document.getElementById("postText").value
+let text=document.getElementById("postText").value;
 
-let posts=JSON.parse(localStorage.getItem("posts")) || []
+if(text===""){
+alert("Write something first");
+return;
+}
 
-posts.push(text)
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
-localStorage.setItem("posts",JSON.stringify(posts))
+posts.push(text);
 
-alert("Post Uploaded")
+localStorage.setItem("posts",JSON.stringify(posts));
+
+alert("Post Uploaded");
+
+location.reload();
 
 }
+
+/* LOGOUT */
 
 function logout(){
 
-localStorage.clear()
-location="index.html"
+localStorage.clear();
+
+window.location.href="index.html";
 
 }
 
-</script></body>
+</script>
+
+</body>
 </html>
