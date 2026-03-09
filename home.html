@@ -1,31 +1,40 @@
 <!DOCTYPE html><html>
-<head><title>User Home</title><style>
+<head>
+<title>Home</title>
+<style>
+body{font-family:Arial;text-align:center}
+.post{border:1px solid #ccc;padding:10px;margin:10px}
+</style>
+</head><body><script>
 
-body{
-background:#0e0f1a;
-color:white;
-font-family:sans-serif;
-text-align:center;
-padding:40px;
+if(!localStorage.getItem("role")){
+location="index.html"
 }
 
-.box{
-margin-top:40px;
-font-size:20px;
+</script><h1>User Home</h1><div id="posts"></div><button onclick="logout()">Logout</button>
+
+<script>
+
+let posts=JSON.parse(localStorage.getItem("posts")) || []
+
+let container=document.getElementById("posts")
+
+posts.reverse().forEach(p=>{
+
+let div=document.createElement("div")
+div.className="post"
+div.innerText=p
+
+container.appendChild(div)
+
+})
+
+function logout(){
+
+localStorage.clear()
+location="index.html"
+
 }
 
-</style></head><body><h1>Welcome User 👋</h1><div class="box"><h3>Admin Post:</h3><p id="showPost"></p></div><script>
-
-let post=localStorage.getItem("post");
-
-if(post){
-
-document.getElementById("showPost").innerText=post;
-
-}else{
-
-document.getElementById("showPost").innerText="No post yet";
-
-}
-
-</script></body></html>
+</script></body>
+</html>
