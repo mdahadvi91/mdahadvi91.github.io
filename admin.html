@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel</title>
+<title>Admin</title>
 
 <style>
 
@@ -10,149 +10,88 @@ body{
 font-family:sans-serif;
 background:#0e0f1a;
 color:white;
-margin:0;
-padding:0;
 text-align:center;
-}
-
-.header{
-background:#16182c;
-padding:20px;
-font-size:24px;
-}
-
-.logout{
-position:absolute;
-right:20px;
-top:20px;
-padding:8px 15px;
-border:none;
-background:#ff2a6d;
-color:white;
-border-radius:10px;
-cursor:pointer;
-}
-
-.container{
-margin-top:40px;
 }
 
 textarea{
 width:80%;
-height:120px;
-border:none;
-border-radius:10px;
-padding:10px;
-background:#1a1d35;
-color:white;
+height:100px;
 }
 
-button.upload{
-margin-top:15px;
-padding:10px 25px;
+button{
+padding:8px 15px;
+margin-top:10px;
 border:none;
-border-radius:10px;
-background:#00eaff;
+border-radius:6px;
 cursor:pointer;
-font-weight:bold;
-}
-
-.post{
-background:#1a1d35;
-margin:15px auto;
-padding:15px;
-width:85%;
-border-radius:15px;
-box-shadow:0 0 10px #00eaff;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <script>
 
-/* ADMIN CHECK */
-
 if(localStorage.getItem("role")!=="admin"){
-alert("Access denied");
-window.location.href="index.html";
+window.location.href="index.html"
 }
 
 </script>
 
-<div class="header">
-Admin Dashboard
-<button class="logout" onclick="logout()">Logout</button>
-</div>
+<h2>Admin Post Panel</h2>
 
-<div class="container">
+<textarea id="text" placeholder="Write post"></textarea>
 
-<h2>Create Post</h2>
-
-<textarea id="postText" placeholder="Write something..."></textarea>
 <br>
 
-<button class="upload" onclick="addPost()">Upload Post</button>
+<input type="file" id="img">
 
-<h2>All Posts</h2>
+<br>
 
-<div id="posts"></div>
+<button onclick="post()">Upload Post</button>
 
-</div>
+<br>
+
+<button onclick="logout()">Logout</button>
 
 <script>
 
-/* LOAD POSTS */
+function post(){
 
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
+let text=document.getElementById("text").value
 
-let container = document.getElementById("posts");
+let file=document.getElementById("img").files[0]
 
-posts.reverse().forEach(function(p){
+let reader=new FileReader()
 
-let div=document.createElement("div");
+reader.onload=function(){
 
-div.className="post";
+let posts=JSON.parse(localStorage.getItem("posts"))||[]
 
-div.innerText=p;
+posts.push({
 
-container.appendChild(div);
+text:text,
+image:reader.result
 
-});
+})
 
-/* ADD POST */
+localStorage.setItem("posts",JSON.stringify(posts))
 
-function addPost(){
-
-let text=document.getElementById("postText").value;
-
-if(text===""){
-alert("Write something first");
-return;
-}
-
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
-
-posts.push(text);
-
-localStorage.setItem("posts",JSON.stringify(posts));
-
-alert("Post Uploaded");
-
-location.reload();
+alert("Post Uploaded")
 
 }
 
-/* LOGOUT */
+if(file){
+reader.readAsDataURL(file)
+}
+
+}
 
 function logout(){
-
-localStorage.clear();
-
-window.location.href="index.html";
-
+localStorage.clear()
+window.location.href="index.html"
 }
 
 </script>
