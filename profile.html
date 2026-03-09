@@ -1,120 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Profile</title>
-
-<style>
-
-body{
-font-family:sans-serif;
-background:#0e0f1a;
-color:white;
-text-align:center;
-}
-
-img{
-width:120px;
-height:120px;
-border-radius:50%;
-object-fit:cover;
-}
-
-button{
-padding:8px 15px;
-border:none;
-border-radius:6px;
-margin-top:10px;
-cursor:pointer;
-}
-
-</style>
-
-</head>
 
 <body>
 
-<script>
-
-if(localStorage.getItem("role")!=="user"){
-window.location.href="index.html"
-}
-
-</script>
-
 <h2>User Profile</h2>
 
-<img id="avatar" src="https://via.placeholder.com/120">
+<a href="upload.html">Upload Video</a>
 
-<br>
+<br><br>
 
-<input type="file" id="img">
-
-<br>
-
-<button onclick="upload()">Upload Photo</button>
-
-<h3 id="username"></h3>
-
-<p id="followers"></p>
-
-<button onclick="follow()">Follow</button>
-
-<br>
-
-<button onclick="goHome()">Back Home</button>
-
-<script>
-
-let user=localStorage.getItem("username")
-
-document.getElementById("username").innerText=user
-
-let followers=localStorage.getItem("followers")||0
-
-document.getElementById("followers").innerText="Followers: "+followers
-
-let img=localStorage.getItem("profileImg")
-
-if(img){
-document.getElementById("avatar").src=img
-}
-
-function upload(){
-
-let file=document.getElementById("img").files[0]
-
-let reader=new FileReader()
-
-reader.onload=function(){
-
-localStorage.setItem("profileImg",reader.result)
-
-document.getElementById("avatar").src=reader.result
-
-}
-
-reader.readAsDataURL(file)
-
-}
-
-function follow(){
-
-followers++
-
-localStorage.setItem("followers",followers)
-
-document.getElementById("followers").innerText="Followers: "+followers
-
-alert("Someone followed you!")
-
-}
-
-function goHome(){
-window.location.href="home.html"
-}
-
-</script>
+<a href="home.html">Go Feed</a>
 
 </body>
+
 </html>
