@@ -3,6 +3,10 @@
 
 <head>
 
+<link rel="stylesheet" href="style.css">
+
+</head>
+
 <title>Hridoy vi </title>
 
 </head>
@@ -21,197 +25,75 @@
 
 </html>
 
-body{
-font-family:Arial;
-background:#fafafa;
-margin:0;
-}
-
-header{
-background:black;
-color:white;
-padding:15px;
-text-align:center;
-font-size:22px;
-}
-
-.container{
-max-width:500px;
-margin:auto;
-padding:20px;
-}
-
-.post{
-background:white;
-padding:10px;
-margin-top:20px;
-border-radius:10px;
-box-shadow:0 0 5px rgba(0,0,0,0.1);
-}
-
-.post img{
-width:100%;
-border-radius:10px;
-}
-
-button{
-padding:8px 15px;
-margin-top:5px;
-}
-
-</style>
-</head>
-
 <body>
 
-<header>My Social App</header>
-
-<div class="container">
-
-<h3>Create Post</h3>
-
-<input type="file" id="imageInput">
-<br><br>
-
-<input type="text" id="caption" placeholder="Write caption">
-<br><br>
-
-<button onclick="uploadPost()">Upload</button>
-
-<hr>
-
-<h3>Posts</h3>
-
-<div id="posts"></div>
-
-</div>
-
+<div class="feed" id="feed"></div>
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { db } from "./firebase.js";
 
 import {
-getFirestore,
 collection,
-addDoc,
 getDocs,
 updateDoc,
 doc
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-import {
-getStorage,
-ref,
-uploadBytes,
-getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
+const feed=document.getElementById("feed");
 
+async function load(){
 
+const snap=await getDocs(collection(db,"posts"));
 
-const firebaseConfig = {
-apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
-authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
-projectId: "hridoy-er-apps-2ad7c",
-storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
-messagingSenderId: "152919903520",
-appId: "1:152919903520:web:5726d95dceeab535961b45",
-measurementId: "G-R0S25ZXRQ3"
-};
+snap.forEach(docu=>{
 
+const d=docu.data();
 
-const app = initializeApp(firebaseConfig);
+feed.innerHTML+=`
 
-const db = getFirestore(app);
+<div class="video">
 
-const storage = getStorage(app);
+<video autoplay loop muted src="${d.media}"></video>
 
+<div class="side">
 
-
-window.uploadPost = async function(){
-
-const file = document.getElementById("imageInput").files[0];
-const caption = document.getElementById("caption").value;
-
-if(!file){
-alert("Select image first");
-return;
-}
-
-const storageRef = ref(storage,"posts/"+file.name);
-
-await uploadBytes(storageRef,file);
-
-const url = await getDownloadURL(storageRef);
-
-await addDoc(collection(db,"posts"),{
-
-image:url,
-caption:caption,
-likes:0
-
-});
-
-alert("Post Uploaded!");
-
-loadPosts();
-
-}
-
-
-
-async function loadPosts(){
-
-const postDiv = document.getElementById("posts");
-
-postDiv.innerHTML="";
-
-const querySnapshot = await getDocs(collection(db,"posts"));
-
-querySnapshot.forEach((docu)=>{
-
-const data = docu.data();
-
-const post = document.createElement("div");
-
-post.className="post";
-
-post.innerHTML = `
-
-<img src="${data.image}">
-
-<p>${data.caption}</p>
-
-<button onclick="likePost('${docu.id}',${data.likes})">
-❤️ ${data.likes}
+<button onclick="like('${docu.id}',${d.likes})">
+❤️ ${d.likes}
 </button>
+
+</div>
+
+<div class="caption">
+
+<b>@${d.username}</b>
+
+<p>${d.caption}</p>
+
+</div>
+
+</div>
 
 `;
 
-postDiv.appendChild(post);
-
 });
 
 }
 
+window.like=async function(id,current){
 
+const refDoc=doc(db,"posts",id);
 
-window.likePost = async function(id,currentLikes){
+await updateDoc(refDoc,{likes:current+1});
 
-const refDoc = doc(db,"posts",id);
-
-await updateDoc(refDoc,{
-likes:currentLikes+1
-});
-
-loadPosts();
+location.reload();
 
 }
 
-
-loadPosts();
+load()
 
 </script>
 
 </body>
+
 </html>
