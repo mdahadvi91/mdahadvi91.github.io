@@ -7,9 +7,11 @@ body{font-family:Arial;text-align:center}
 </style>
 </head><body><script>
 
+<script>
 if(!localStorage.getItem("role")){
-location="index.html"
+window.location.href="index.html";
 }
+</script>
 
 </script><h1>User Home</h1><div id="posts"></div><button onclick="logout()">Logout</button>
 
