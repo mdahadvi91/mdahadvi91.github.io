@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Advanced Login</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:sans-serif;
+}
+
+body{
+
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#0e0f1a;
+
+}
+
+/* start button */
+
+.startBox button{
+
+padding:20px 45px;
+font-size:20px;
+
+background:#1a1d35;
+color:white;
+
+border:none;
+border-radius:15px;
+
+cursor:pointer;
+
+box-shadow:
+0 0 10px #ff006a,
+0 0 20px #00eaff;
+
+transition:.3s;
+
+}
+
+.startBox button:hover{
+
+transform:scale(1.1);
+
+}
+
+/* card */
+
+.card{
+
+display:none;
+
+position:relative;
+
+width:320px;
+padding:40px;
+
+background:#16182c;
+
+border-radius:20px;
+
+overflow:hidden;
+
+}
+
+/* RGB border */
+
+.card::before{
+
+content:"";
+
+position:absolute;
+
+width:500px;
+height:500px;
+
+background:linear-gradient(
+45deg,
+#ff0055,
+#00eaff,
+#ffea00,
+#ff0055
+);
+
+animation:rotate 6s linear infinite;
+
+}
+
+.card::after{
+
+content:"";
+
+position:absolute;
+
+inset:3px;
+
+background:#16182c;
+
+border-radius:18px;
+
+}
+
+/* content */
+
+.form{
+
+position:relative;
+z-index:2;
+text-align:center;
+
+}
+
+.form h2{
+
+color:white;
+margin-bottom:20px;
+
+}
+
+.form input{
+
+width:100%;
+margin:10px 0;
+
+padding:12px;
+
+border:none;
+border-radius:25px;
+
+outline:none;
+
+background:#0e0f1a;
+color:white;
+
+}
+
+/* button */
+
+.form button{
+
+width:100%;
+
+padding:12px;
+
+border:none;
+
+border-radius:25px;
+
+background:#7ee7f9;
+
+cursor:pointer;
+
+margin-top:10px;
+
+font-weight:bold;
+
+}
+
+/* links */
+
+.links{
+
+display:flex;
+justify-content:space-between;
+
+margin-top:15px;
+
+}
+
+.links a{
+
+color:#aaa;
+font-size:14px;
+cursor:pointer;
+text-decoration:none;
+
+}
+
+.links a:last-child{
+
+color:#ff2a6d;
+
+}
+
+/* animation */
+
+@keyframes rotate{
+
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- start button -->
+
+<div class="startBox" id="startBox">
+
+<button onclick="openLogin()">LOGIN ❤️</button>
+
+</div>
+
+
+<!-- LOGIN FORM -->
+
+<div class="card" id="loginCard">
+
+<div class="form">
+
+<h2>LOGIN</h2>
+
+<input type="text" placeholder="Username">
+
+<input type="password" placeholder="Password">
+
+<button>Sign in</button>
+
+<div class="links">
+
+<a onclick="showRegister()">Sign up</a>
+
+<a>Forgot</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- REGISTER FORM -->
+
+<div class="card" id="registerCard">
+
+<div class="form">
+
+<h2>REGISTER</h2>
+
+<input type="text" placeholder="Username">
+
+<input type="email" placeholder="Email">
+
+<input type="password" placeholder="Password">
+
+<button>Create Account</button>
+
+<div class="links">
+
+<a onclick="showLogin()">Back Login</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+function openLogin(){
+
+document.getElementById("startBox").style.display="none";
+
+document.getElementById("loginCard").style.display="block";
+
+}
+
+function showRegister(){
+
+document.getElementById("loginCard").style.display="none";
+
+document.getElementById("registerCard").style.display="block";
+
+}
+
+function showLogin(){
+
+document.getElementById("registerCard").style.display="none";
+
+document.getElementById("loginCard").style.display="block";
+
+}
+
+</script>
+
+
+</body>
+</html>
