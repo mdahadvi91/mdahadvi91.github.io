@@ -1,21 +1,213 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Home</title>
+
+<style>
+
+body{
+font-family:sans-serif;
+background:#0e0f1a;
+color:white;
+margin:0;
+}
+
+.header{
+background:#16182c;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.container{
+padding:20px;
+}
+
+.post{
+background:#1a1d35;
+padding:15px;
+margin-top:15px;
+border-radius:10px;
+}
+
+.post img{
+width:100%;
+margin-top:10px;
+border-radius:8px;
+}
+
+button{
+padding:6px 12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin-top:8px;
+}
+
+.like{
+background:#ff2a6d;
+color:white;
+}
+
+.comment{
+font-size:14px;
+color:#ccc;
+}
+
+.logout{
+background:#00eaff;
+}
+
+</style>
 </head>
 
-<body style="background:black;color:white;text-align:center">
-
-<h1>Welcome User</h1>
-<p>You are logged in.</p>
-
-<button onclick="logout()">Logout</button>
+<body>
 
 <script>
-function logout(){
-localStorage.clear();
-window.location.href="index.html";
+
+if(localStorage.getItem("role")!=="user"){
+window.location.href="index.html"
 }
+
+</script>
+
+<div class="header">
+
+<h2>Home Feed</h2>
+
+<div>
+
+<button onclick="openProfile()">👤 Profile</button>
+
+<button onclick="showNotify()">🔔</button>
+
+<button class="logout" onclick="logout()">Logout</button>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<div id="posts"></div>
+
+</div>
+
+<script>
+
+let container=document.getElementById("posts")
+
+let posts=JSON.parse(localStorage.getItem("posts"))||[]
+
+if(posts.length===0){
+container.innerHTML="<p>No posts yet</p>"
+}
+
+posts.reverse().forEach((p,i)=>{
+
+let div=document.createElement("div")
+
+div.className="post"
+
+let imgHTML=""
+
+if(p.image){
+imgHTML=`<img src="${p.image}">`
+}
+
+div.innerHTML=`
+
+<p>${p.text}</p>
+
+${imgHTML}
+
+<button class="like" onclick="likePost(${i})">
+❤️ Like (${p.likes || 0})
+</button>
+
+<br>
+
+<input id="c${i}" placeholder="Write comment">
+
+<button onclick="addComment(${i})">Comment</button>
+
+<div id="comments${i}"></div>
+
+`
+
+container.appendChild(div)
+
+if(p.comments){
+
+let commentBox=document.getElementById("comments"+i)
+
+p.comments.forEach(c=>{
+
+let d=document.createElement("p")
+
+d.className="comment"
+
+d.innerText=c
+
+commentBox.appendChild(d)
+
+})
+
+}
+
+})
+
+function likePost(i){
+
+let posts=JSON.parse(localStorage.getItem("posts"))||[]
+
+posts[i].likes=(posts[i].likes||0)+1
+
+localStorage.setItem("posts",JSON.stringify(posts))
+
+location.reload()
+
+}
+
+function addComment(i){
+
+let text=document.getElementById("c"+i).value
+
+if(text==="")return
+
+let posts=JSON.parse(localStorage.getItem("posts"))||[]
+
+if(!posts[i].comments){
+posts[i].comments=[]
+}
+
+posts[i].comments.push(text)
+
+localStorage.setItem("posts",JSON.stringify(posts))
+
+location.reload()
+
+}
+
+function openProfile(){
+window.location.href="profile.html"
+}
+
+function showNotify(){
+
+let f=localStorage.getItem("followers")||0
+
+alert("You have "+f+" followers")
+
+}
+
+function logout(){
+localStorage.clear()
+window.location.href="index.html"
+}
+
 </script>
 
 </body>
