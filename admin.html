@@ -7,9 +7,12 @@ textarea{width:300px;height:120px}
 </style>
 </head><body><script>
 
-if(localStorage.getItem("role")!=="admin"){
-location="index.html"
+<script>
+if(localStorage.getItem("role") !== "admin"){
+alert("Access denied");
+window.location.href="index.html";
 }
+</script>
 
 </script><h1>Admin Dashboard</h1><h3>Create Post</h3><textarea id="postText"></textarea><br><br>
 
