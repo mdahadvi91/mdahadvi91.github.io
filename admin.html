@@ -1,41 +1,44 @@
 <!DOCTYPE html><html>
 <head>
-<title>Admin Panel</title><style>
-body{
-background:#0e0f1a;
-color:white;
-font-family:sans-serif;
-text-align:center;
-padding:40px;
+<title>Admin</title>
+<style>
+body{font-family:Arial;text-align:center}
+textarea{width:300px;height:120px}
+</style>
+</head><body><script>
+
+if(localStorage.getItem("role")!=="admin"){
+location="index.html"
 }
 
-input{
-padding:10px;
-margin:10px;
-width:200px;
+</script><h1>Admin Dashboard</h1><h3>Create Post</h3><textarea id="postText"></textarea><br><br>
+
+<button onclick="addPost()">Upload Post</button>
+
+<br><br>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+
+function addPost(){
+
+let text=document.getElementById("postText").value
+
+let posts=JSON.parse(localStorage.getItem("posts")) || []
+
+posts.push(text)
+
+localStorage.setItem("posts",JSON.stringify(posts))
+
+alert("Post Uploaded")
+
 }
 
-button{
-padding:10px 20px;
-background:#00eaff;
-border:none;
-cursor:pointer;
-}
+function logout(){
 
-.box{
-margin-top:30px;
-}
-</style></head><body><h1>👑 Admin Panel</h1><div class="box"><h3>Upload Message</h3><input type="text" id="postText" placeholder="Write something"><br><button onclick="upload()">Upload</button>
-
-</div><script>
-
-function upload(){
-
-let text=document.getElementById("postText").value;
-
-localStorage.setItem("post",text);
-
-alert("Upload Success!");
+localStorage.clear()
+location="index.html"
 
 }
 
