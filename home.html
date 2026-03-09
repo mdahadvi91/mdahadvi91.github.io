@@ -1,42 +1,116 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html>
 <head>
-<title>Home</title>
+<meta charset="UTF-8">
+<title>User Home</title>
+
 <style>
-body{font-family:Arial;text-align:center}
-.post{border:1px solid #ccc;padding:10px;margin:10px}
+
+body{
+font-family:sans-serif;
+background:#0e0f1a;
+color:white;
+margin:0;
+padding:0;
+text-align:center;
+}
+
+.header{
+background:#16182c;
+padding:20px;
+font-size:24px;
+}
+
+.logout{
+position:absolute;
+right:20px;
+top:20px;
+padding:8px 15px;
+border:none;
+background:#ff2a6d;
+color:white;
+border-radius:10px;
+cursor:pointer;
+}
+
+.container{
+margin-top:30px;
+}
+
+.post{
+background:#1a1d35;
+margin:15px auto;
+padding:15px;
+width:85%;
+border-radius:15px;
+box-shadow:0 0 10px #00eaff;
+}
+
 </style>
-</head><body><script>
+</head>
+
+<body>
 
 <script>
+
+/* LOGIN CHECK */
+
 if(!localStorage.getItem("role")){
 window.location.href="index.html";
 }
+
 </script>
 
-</script><h1>User Home</h1><div id="posts"></div><button onclick="logout()">Logout</button>
+<div class="header">
+User Home
+<button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+<h2>Latest Posts</h2>
+
+<div id="posts"></div>
+
+</div>
 
 <script>
 
-let posts=JSON.parse(localStorage.getItem("posts")) || []
+/* LOAD POSTS */
 
-let container=document.getElementById("posts")
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
-posts.reverse().forEach(p=>{
+let container = document.getElementById("posts");
 
-let div=document.createElement("div")
-div.className="post"
-div.innerText=p
+if(posts.length === 0){
 
-container.appendChild(div)
-
-})
-
-function logout(){
-
-localStorage.clear()
-location="index.html"
+container.innerHTML = "<p>No posts yet</p>";
 
 }
 
-</script></body>
+posts.reverse().forEach(function(p){
+
+let div = document.createElement("div");
+
+div.className="post";
+
+div.innerText=p;
+
+container.appendChild(div);
+
+});
+
+
+/* LOGOUT */
+
+function logout(){
+
+localStorage.clear();
+window.location.href="index.html";
+
+}
+
+</script>
+
+</body>
 </html>
