@@ -1,1 +1,38 @@
+<!DOCTYPE html>
+<html>
 
+<body>
+
+<h2>Login</h2>
+
+<input id="email">
+
+<input id="pass" type="password">
+
+<button onclick="login()">Login</button>
+
+<script type="module">
+
+import { auth } from "./firebase.js";
+
+import {
+signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+window.login=async function(){
+
+const email=document.getElementById("email").value;
+
+const pass=document.getElementById("pass").value;
+
+await signInWithEmailAndPassword(auth,email,pass);
+
+location.href="home.html";
+
+}
+
+</script>
+
+</body>
+
+</html>
