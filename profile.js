@@ -2,23 +2,20 @@ import { auth, db } from "./firebase.js";
 
 import {
 collection,
-getDocs,
 query,
-where
+where,
+getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-onAuthStateChanged,
 signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-const userEmail = document.getElementById("userEmail");
-const userVideos = document.getElementById("userVideos");
-const logoutBtn = document.getElementById("logoutBtn");
+const username = document.getElementById("username");
+const videoGrid = document.getElementById("userVideos");
+const videoCount = document.getElementById("videoCount");
 
-/* CHECK USER */
-
-onAuthStateChanged(auth, async (user)=>{
+auth.onAuthStateChanged(async (user)=>{
 
 if(!user){
 
@@ -27,20 +24,24 @@ return;
 
 }
 
-/* SHOW EMAIL */
+username.innerText = user.email;
 
-if(userEmail){
-userEmail.innerText = user.email;
-}
+loadVideos(user.uid);
 
-/* LOAD USER VIDEOS */
+});
+
+async function loadVideos(uid){
 
 const q = query(
 collection(db,"videos"),
-where("userId","==",user.uid)
+where("uid","==",uid)
 );
 
 const snapshot = await getDocs(q);
+
+videoGrid.innerHTML="";
+
+videoCount.innerText = snapshot.size;
 
 snapshot.forEach((doc)=>{
 
@@ -48,25 +49,19 @@ const data = doc.data();
 
 const video = document.createElement("video");
 
-video.src = data.url;
+video.src = data.video;
 video.controls = true;
 
-userVideos.appendChild(video);
+videoGrid.appendChild(video);
 
 });
 
-});
+}
 
-/* LOGOUT */
+document.getElementById("logoutBtn").onclick = function(){
 
-if(logoutBtn){
-
-logoutBtn.onclick = async ()=>{
-
-await signOut(auth);
-
+signOut(auth).then(()=>{
 window.location.href="auth.html";
+});
 
-}
-
-}
+};
