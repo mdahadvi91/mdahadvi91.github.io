@@ -1,50 +1,40 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>Upload Video</title>
 
+<link rel="stylesheet" href="style.css">
+
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:sans-serif;
-}
-
 body{
-background:black;
-color:white;
+margin:0;
 height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
+background:#000;
+color:white;
+font-family:sans-serif;
 }
 
 .container{
 width:350px;
+padding:30px;
 background:#111;
-padding:25px;
 border-radius:12px;
-box-shadow:0 0 15px #ff0050;
 text-align:center;
+box-shadow:0 0 20px #ff0050;
 }
 
-h2{
-margin-bottom:20px;
-}
-
-input,textarea{
+input{
 width:100%;
-padding:10px;
-margin:10px 0;
-border:none;
-border-radius:6px;
-outline:none;
+margin:15px 0;
 }
 
 button{
@@ -52,21 +42,10 @@ width:100%;
 padding:12px;
 background:#ff0050;
 border:none;
-border-radius:6px;
 color:white;
-cursor:pointer;
 font-size:16px;
-}
-
-button:hover{
-background:#ff3366;
-}
-
-.back{
-margin-top:15px;
-display:block;
+border-radius:6px;
 cursor:pointer;
-color:#aaa;
 }
 
 </style>
@@ -81,68 +60,15 @@ color:#aaa;
 
 <input type="file" id="videoFile" accept="video/*">
 
-<textarea id="caption" placeholder="Write caption..."></textarea>
+<button id="uploadBtn">Upload</button>
 
-<button onclick="uploadVideo()">Upload</button>
-
-<div class="back" onclick="goBack()">⬅ Back</div>
+<p id="status"></p>
 
 </div>
 
-<script type="module">
-
-import { auth, db, storage } from "./firebase.js";
-
-import {
-ref,
-uploadBytes,
-getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
-import {
-collection,
-addDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-async function uploadVideo(){
-
-const file=document.getElementById("videoFile").files[0];
-const caption=document.getElementById("caption").value;
-
-if(!file){
-alert("Select a video first");
-return;
-}
-
-const storageRef=ref(storage,"videos/"+Date.now()+file.name);
-
-await uploadBytes(storageRef,file);
-
-const url=await getDownloadURL(storageRef);
-
-await addDoc(collection(db,"videos"),{
-
-url:url,
-caption:caption,
-user:auth.currentUser.email
-
-});
-
-alert("Upload success!");
-
-window.location.href="home.html";
-
-}
-
-window.uploadVideo=uploadVideo;
-
-window.goBack=()=>{
-
-location.href="home.html";
-
-}
-
-</script>
+<script type="module" src="firebase.js"></script>
+<script type="module" src="upload.js"></script>
 
 </body>
+
 </html>
