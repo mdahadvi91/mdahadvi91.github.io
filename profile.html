@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Profile</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:sans-serif;
+}
+
+body{
+background:black;
+color:white;
+min-height:100vh;
+padding:20px;
+}
+
+/* header */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.logout{
+background:#ff0050;
+padding:8px 15px;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* user info */
+
+.userBox{
+text-align:center;
+margin-bottom:30px;
+}
+
+.avatar{
+width:80px;
+height:80px;
+border-radius:50%;
+background:#222;
+margin:auto;
+margin-bottom:10px;
+}
+
+/* videos grid */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:5px;
+}
+
+.grid video{
+width:100%;
+height:150px;
+object-fit:cover;
+}
+
+/* back */
+
+.back{
+margin-top:20px;
+text-align:center;
+cursor:pointer;
+color:#aaa;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>Profile</h2>
+
+<div class="logout" onclick="logout()">Logout</div>
+
+</div>
+
+<div class="userBox">
+
+<div class="avatar"></div>
+
+<div id="email"></div>
+
+</div>
+
+<div class="grid" id="videoGrid"></div>
+
+<div class="back" onclick="goHome()">⬅ Back to Home</div>
+
+<script type="module">
+
+import { auth, db } from "./firebase.js";
+
+import {
+signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+collection,
+getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const emailText=document.getElementById("email");
+const grid=document.getElementById("videoGrid");
+
+emailText.innerText=auth.currentUser.email;
+
+async function loadMyVideos(){
+
+const snapshot=await getDocs(collection(db,"videos"));
+
+snapshot.forEach((doc)=>{
+
+const data=doc.data();
+
+if(data.user===auth.currentUser.email){
+
+const video=document.createElement("video");
+
+video.src=data.url;
+video.controls=true;
+
+grid.appendChild(video);
+
+}
+
+});
+
+}
+
+loadMyVideos();
+
+window.logout=()=>{
+
+signOut(auth).then(()=>{
+
+window.location.href="auth.html";
+
+});
+
+}
+
+window.goHome=()=>{
+
+window.location.href="home.html";
+
+}
+
+</script>
+
+</body>
+</html>
