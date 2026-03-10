@@ -1,4 +1,4 @@
-import { auth, db } from "./firebase.js";
+import { auth, db, logout } from "./firebase.js";
 
 import {
 collection,
@@ -7,61 +7,71 @@ where,
 getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 const username = document.getElementById("username");
-const videoGrid = document.getElementById("userVideos");
+const userVideos = document.getElementById("userVideos");
+
 const videoCount = document.getElementById("videoCount");
+const likes = document.getElementById("likes");
+const followers = document.getElementById("followers");
 
-auth.onAuthStateChanged(async (user)=>{
+const logoutBtn = document.getElementById("logoutBtn");
 
-if(!user){
 
-window.location.href="auth.html";
-return;
+// LOAD PROFILE
+auth.onAuthStateChanged(async(user)=>{
 
-}
+if(!user) return;
 
 username.innerText = user.email;
 
-loadVideos(user.uid);
-
-});
-
-async function loadVideos(uid){
-
 const q = query(
 collection(db,"videos"),
-where("uid","==",uid)
+where("userId","==",user.uid)
 );
 
 const snapshot = await getDocs(q);
 
-videoGrid.innerHTML="";
+let videos = 0;
+let totalLikes = 0;
 
-videoCount.innerText = snapshot.size;
+userVideos.innerHTML = "";
 
 snapshot.forEach((doc)=>{
 
 const data = doc.data();
 
+videos++;
+
+totalLikes += data.likes || 0;
+
 const video = document.createElement("video");
 
 video.src = data.video;
+
 video.controls = true;
 
-videoGrid.appendChild(video);
+video.style.width = "100%";
+
+video.style.height = "140px";
+
+video.style.objectFit = "cover";
+
+userVideos.appendChild(video);
 
 });
 
-}
+videoCount.innerText = videos;
 
-document.getElementById("logoutBtn").onclick = function(){
+likes.innerText = totalLikes;
 
-signOut(auth).then(()=>{
-window.location.href="auth.html";
+followers.innerText = "0";
+
 });
+
+
+// LOGOUT
+logoutBtn.onclick = function(){
+
+logout();
 
 };
