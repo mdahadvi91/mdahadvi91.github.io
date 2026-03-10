@@ -1,14 +1,177 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sound Test</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Mini TikTok</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:sans-serif;
+}
+
+body{
+background:black;
+color:white;
+overflow:hidden;
+}
+
+/* video feed */
+
+#video-feed{
+height:100vh;
+overflow-y:scroll;
+scroll-snap-type:y mandatory;
+}
+
+video{
+width:100%;
+height:100vh;
+object-fit:cover;
+scroll-snap-align:start;
+}
+
+/* buttons */
+
+.right-buttons{
+position:fixed;
+right:10px;
+bottom:120px;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.right-buttons button{
+width:50px;
+height:50px;
+border-radius:50%;
+border:none;
+background:rgba(0,0,0,0.5);
+color:white;
+font-size:20px;
+}
+
+#uploadBtn{
+position:fixed;
+bottom:25px;
+left:50%;
+transform:translateX(-50%);
+width:65px;
+height:65px;
+border-radius:50%;
+border:none;
+background:#ff0050;
+color:white;
+font-size:35px;
+}
+
+::-webkit-scrollbar{
+display:none;
+}
+
+</style>
+
 </head>
 
-<body style="background:black;">
+<body>
 
-<video src="https://www.w3schools.com/html/mov_bbb.mp4" controls width="100%"></video>
+<div id="video-feed">
+
+<video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay loop muted playsinline controls></video>
+
+<video src="https://www.w3schools.com/html/movie.mp4" autoplay loop muted playsinline controls></video>
+
+</div>
+
+<div class="right-buttons">
+
+<button id="likeBtn">❤️</button>
+
+<button id="shareBtn">🔗</button>
+
+</div>
+
+<button id="uploadBtn">+</button>
+
+<script>
+
+const videos=document.querySelectorAll("video")
+
+// tap → sound on
+
+videos.forEach(video=>{
+
+video.addEventListener("click",()=>{
+
+videos.forEach(v=>{
+v.muted=true
+})
+
+video.muted=false
+video.play()
+
+})
+
+})
+
+
+// scroll play
+
+window.addEventListener("scroll",()=>{
+
+videos.forEach(video=>{
+
+const rect=video.getBoundingClientRect()
+
+if(rect.top>=0 && rect.bottom<=window.innerHeight){
+
+video.play()
+
+}else{
+
+video.pause()
+video.muted=true
+
+}
+
+})
+
+})
+
+
+// like button
+
+let likes=0
+
+document.getElementById("likeBtn").onclick=function(){
+
+likes++
+
+this.innerText="❤️ "+likes
+
+}
+
+
+// share button
+
+document.getElementById("shareBtn").onclick=function(){
+
+navigator.clipboard.writeText(window.location.href)
+
+alert("Link Copied")
+
+}
+
+</script>
 
 </body>
+
 </html>
