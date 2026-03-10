@@ -17,19 +17,14 @@ font-family:sans-serif;
 
 .header{
 padding:15px;
-font-size:20px;
 border-bottom:1px solid #333;
 }
 
 .searchBox{
-padding:10px;
-}
-
-.searchBox input{
 width:100%;
-padding:12px;
+padding:10px;
 border:none;
-border-radius:8px;
+border-radius:6px;
 background:#111;
 color:white;
 }
@@ -39,19 +34,9 @@ padding:10px;
 }
 
 .user{
-padding:12px;
+padding:10px;
 border-bottom:1px solid #222;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-button{
-background:#ff0050;
-border:none;
-color:white;
-padding:6px 12px;
-border-radius:6px;
+cursor:pointer;
 }
 
 .menu{
@@ -67,16 +52,26 @@ align-items:center;
 border-top:1px solid #333;
 }
 
+.menu div{
+font-size:12px;
+text-align:center;
+cursor:pointer;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="header">Search Users</div>
+<div class="header">
 
-<div class="searchBox">
-<input id="search" placeholder="Search user..." onkeyup="findUser()">
+<input
+class="searchBox"
+id="search"
+placeholder="Search user..."
+oninput="searchUser()">
+
 </div>
 
 <div class="results" id="results"></div>
@@ -85,7 +80,11 @@ border-top:1px solid #333;
 
 <div onclick="location.href='home.html'">🏠<br>Home</div>
 
+<div onclick="location.href='search.html'">🔍<br>Search</div>
+
 <div onclick="location.href='upload.html'">➕<br>Upload</div>
+
+<div onclick="location.href='notifications.html'">🔔<br>Alerts</div>
 
 <div onclick="location.href='profile.html'">👤<br>Profile</div>
 
@@ -93,20 +92,15 @@ border-top:1px solid #333;
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 
 import {
 getFirestore,
 collection,
 getDocs
 }
-
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
-import { getAuth }
-
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-
 
 const firebaseConfig = {
 
@@ -120,53 +114,30 @@ appId: "1:152919903520:web:5726d95dceeab535961b45"
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
-
-const auth = getAuth(app);
-
-let users=[];
 
 const results=document.getElementById("results");
 
-
-async function loadUsers(){
-
-const snap=await getDocs(collection(db,"users"));
-
-snap.forEach(doc=>{
-
-users.push(doc.data());
-
-});
-
-}
-
-window.findUser=function(){
+window.searchUser = async function(){
 
 let text=document.getElementById("search").value.toLowerCase();
 
 results.innerHTML="";
 
-users.forEach(u=>{
+const snap=await getDocs(collection(db,"users"));
 
-if(u.email.toLowerCase().includes(text)){
+snap.forEach(doc=>{
+
+const u=doc.data();
+
+if(u.username.toLowerCase().includes(text)){
 
 results.innerHTML+=`
 
-<div class="user">
+<div class="user"
+onclick="location.href='profile.html?user=${u.username}'">
 
-<div onclick="location.href='profile.html?user=${u.email}'">
-
-${u.email}
-
-</div>
-
-<button onclick="followUser('${u.email}')">
-
-Follow
-
-</button>
+@${u.username}
 
 </div>
 
@@ -177,8 +148,6 @@ Follow
 });
 
 }
-
-loadUsers();
 
 </script>
 
