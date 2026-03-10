@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Home</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:sans-serif;
+}
+
+body{
+background:black;
+color:white;
+height:100vh;
+overflow-y:scroll;
+scroll-snap-type:y mandatory;
+}
+
+/* video box */
+
+.videoBox{
+height:100vh;
+width:100%;
+position:relative;
+scroll-snap-align:start;
+}
+
+video{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* user info */
+
+.info{
+position:absolute;
+bottom:80px;
+left:15px;
+}
+
+.username{
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.caption{
+font-size:14px;
+opacity:0.8;
+}
+
+/* action buttons */
+
+.actions{
+position:absolute;
+right:15px;
+bottom:120px;
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+.btn{
+font-size:24px;
+background:rgba(0,0,0,0.4);
+padding:10px;
+border-radius:50%;
+cursor:pointer;
+}
+
+/* top buttons */
+
+.topBar{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+padding:15px;
+background:rgba(0,0,0,0.5);
+}
+
+.uploadBtn{
+background:#ff0050;
+padding:8px 15px;
+border-radius:10px;
+cursor:pointer;
+}
+
+.profileBtn{
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topBar">
+
+<div class="logo">MyVideo</div>
+
+<div>
+
+<span class="uploadBtn" onclick="upload()">Upload</span>
+<span class="profileBtn" onclick="profile()">👤</span>
+
+</div>
+
+</div>
+
+<div id="feed"></div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+collection,
+getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const feed=document.getElementById("feed");
+
+async function loadVideos(){
+
+const snapshot=await getDocs(collection(db,"videos"));
+
+snapshot.forEach((doc)=>{
+
+const data=doc.data();
+
+const box=document.createElement("div");
+box.className="videoBox";
+
+box.innerHTML=`
+
+<video src="${data.url}" autoplay loop muted></video>
+
+<div class="actions">
+
+<div class="btn">❤️</div>
+<div class="btn">💬</div>
+<div class="btn">🔗</div>
+
+</div>
+
+<div class="info">
+
+<div class="username">@${data.user}</div>
+<div class="caption">${data.caption}</div>
+
+</div>
+
+`;
+
+feed.appendChild(box);
+
+});
+
+}
+
+loadVideos();
+
+window.upload=()=>{
+
+location.href="upload.html";
+
+}
+
+window.profile=()=>{
+
+location.href="profile.html";
+
+}
+
+</script>
+
+</body>
+</html>
