@@ -6,10 +6,7 @@ collection,
 addDoc,
 getDocs,
 updateDoc,
-doc,
-setDoc,
-deleteDoc,
-getDoc
+doc
 }
 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -22,6 +19,7 @@ getDownloadURL
 }
 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
 
 const firebaseConfig = {
 
@@ -41,7 +39,6 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 
-
 /* PAGE SWITCH */
 
 window.showPage=function(id){
@@ -51,7 +48,6 @@ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 
 }
-
 
 
 /* LOAD VIDEOS */
@@ -99,7 +95,6 @@ feed.appendChild(box)
 loadVideos()
 
 
-
 /* UPLOAD */
 
 window.uploadVideo=async function(){
@@ -126,8 +121,7 @@ await addDoc(collection(db,"videos"),{
 
 url:url,
 likes:0,
-views:0,
-time:Date.now()
+views:0
 
 })
 
@@ -136,7 +130,6 @@ alert("Video Uploaded")
 loadVideos()
 
 }
-
 
 
 /* LIKE */
@@ -158,7 +151,6 @@ likes:count
 })
 
 }
-
 
 
 /* SHARE */
