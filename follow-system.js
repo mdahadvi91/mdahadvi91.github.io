@@ -1,5 +1,3 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-
 import {
 getFirestore,
 collection,
@@ -16,69 +14,16 @@ import { getAuth }
 
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
+const db = getFirestore();
+const auth = getAuth();
 
-const firebaseConfig = {
-
-apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
-authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
-projectId: "hridoy-er-apps-2ad7c",
-storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
-messagingSenderId: "152919903520",
-appId: "1:152919903520:web:5726d95dceeab535961b45"
-
-};
-
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-const auth = getAuth(app);
-
-
-
-/* FOLLOW USER */
+/* FOLLOW BUTTON */
 
 window.followUser = async function(targetUser){
 
 const user = auth.currentUser;
 
-if(!user){
-
-alert("Login first");
-return;
-
-}
-
-/* save follow */
-
-await addDoc(collection(db,"follows"),{
-
-from:user.email,
-to:targetUser
-
-});
-
-/* send notification */
-
-await addDoc(collection(db,"notifications"),{
-
-to:targetUser,
-from:user.email,
-type:"started following you 👥"
-
-});
-
-alert("Followed");
-
-};
-
-
-
-/* UNFOLLOW USER */
-
-window.unfollowUser = async function(targetUser){
-
-const user = auth.currentUser;
+if(!user) return;
 
 const q = query(
 collection(db,"follows"),
@@ -88,29 +33,53 @@ where("to","==",targetUser)
 
 const snap = await getDocs(q);
 
-snap.forEach(async docItem=>{
+/* already following */
 
-await deleteDoc(docItem.ref);
+if(!snap.empty){
+
+snap.forEach(async doc=>{
+await deleteDoc(doc.ref);
+});
+
+}
+
+/* follow */
+
+else{
+
+await addDoc(collection(db,"follows"),{
+
+from:user.email,
+to:targetUser,
+time:Date.now()
 
 });
 
-alert("Unfollowed");
+}
 
-};
+updateFollowers(targetUser);
 
+}
 
+/* FOLLOWERS COUNT */
 
-/* FOLLOW COUNT */
-
-window.loadFollowers = async function(userEmail,element){
+window.updateFollowers = async function(user){
 
 const q = query(
 collection(db,"follows"),
-where("to","==",userEmail)
+where("to","==",user)
 );
 
 const snap = await getDocs(q);
 
-element.innerText = snap.size;
+const count = snap.size;
 
-};
+const el=document.getElementById("followers");
+
+if(el){
+
+el.innerText=count;
+
+}
+
+}
