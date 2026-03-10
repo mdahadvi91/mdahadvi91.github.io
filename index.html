@@ -18,8 +18,6 @@ font-family:sans-serif;
 overflow:hidden;
 }
 
-/* PAGE */
-
 .page{
 display:none;
 height:100vh;
@@ -69,7 +67,7 @@ width:55px;
 height:55px;
 border-radius:50%;
 border:none;
-background:rgba(0,0,0,0.5);
+background:rgba(0,0,0,0.6);
 color:white;
 font-size:22px;
 }
@@ -164,11 +162,8 @@ display:none;
 <!-- HOME -->
 
 <div id="home" class="page active">
-
 <div id="video-feed"></div>
-
 </div>
-
 
 <!-- UPLOAD -->
 
@@ -185,7 +180,6 @@ display:none;
 </div>
 
 </div>
-
 
 <!-- PROFILE -->
 
@@ -219,7 +213,6 @@ display:none;
 
 </div>
 
-
 <!-- NAVBAR -->
 
 <div class="navbar">
@@ -234,25 +227,39 @@ display:none;
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, setDoc, deleteDoc, getDoc }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import { getStorage, ref, uploadBytes, getDownloadURL }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 
 const firebaseConfig = {
+
 apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
+
 authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
+
 projectId: "hridoy-er-apps-2ad7c",
+
 storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
+
 messagingSenderId: "152919903520",
-appId: "1:152919903520:web:5726d95dceeab535961b45",
-measurementId: "G-R0S25ZXRQ3"
+
+appId: "1:152919903520:web:5726d95dceeab535961b45"
+
 };
+
 
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
 const storage = getStorage(app);
+
 
 
 /* PAGE SWITCH */
@@ -264,6 +271,7 @@ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 
 }
+
 
 
 /* LOAD VIDEOS */
@@ -281,6 +289,7 @@ snap.forEach(d=>{
 const data=d.data()
 
 const box=document.createElement("div")
+
 box.className="video-box"
 
 box.innerHTML=`
@@ -290,9 +299,8 @@ box.innerHTML=`
 <div class="right-buttons">
 
 <button onclick="likeVideo('${d.id}',this)">❤️</button>
-<div>${data.likes||0}</div>
 
-<button>💬</button>
+<div>${data.likes||0}</div>
 
 <button onclick="shareVideo()">🔗</button>
 
@@ -311,15 +319,24 @@ feed.appendChild(box)
 loadVideos()
 
 
-/* UPLOAD */
+
+/* UPLOAD VIDEO */
 
 window.uploadVideo=async function(){
 
 const file=document.getElementById("videoFile").files[0]
 
-if(!file) return alert("select video")
+if(!file){
 
-const storageRef=ref(storage,"videos/"+file.name)
+alert("Select video")
+
+return
+
+}
+
+const fileName=Date.now()+"_"+file.name
+
+const storageRef=ref(storage,"videos/"+fileName)
 
 await uploadBytes(storageRef,file)
 
@@ -328,16 +345,21 @@ const url=await getDownloadURL(storageRef)
 await addDoc(collection(db,"videos"),{
 
 url:url,
+
 likes:0,
-views:0
+
+views:0,
+
+time:Date.now()
 
 })
 
-alert("uploaded")
+alert("Video Uploaded ✅")
 
 loadVideos()
 
 }
+
 
 
 /* LIKE */
@@ -361,15 +383,17 @@ likes:count
 }
 
 
+
 /* SHARE */
 
 window.shareVideo=function(){
 
 navigator.clipboard.writeText(location.href)
 
-alert("link copied")
+alert("Link Copied")
 
 }
+
 
 
 /* FOLLOW SYSTEM */
@@ -377,32 +401,37 @@ alert("link copied")
 const followBtn=document.getElementById("followBtn")
 
 const currentUser="user1"
+
 const profileUser="user2"
 
 async function loadFollowStats(){
 
 const followersRef=collection(db,"users",profileUser,"followers")
+
 const followingRef=collection(db,"users",currentUser,"following")
 
 const followersSnap=await getDocs(followersRef)
+
 const followingSnap=await getDocs(followingRef)
 
 document.getElementById("followers").innerText=followersSnap.size
+
 document.getElementById("following").innerText=followingSnap.size
 
 const followDoc=doc(db,"users",profileUser,"followers",currentUser)
 
 const snap=await getDoc(followDoc)
 
-followBtn.innerText=snap.exists() ? "Following" : "Follow"
+followBtn.innerText=snap.exists()?"Following":"Follow"
 
 }
 
 loadFollowStats()
 
-followBtn.onclick=async ()=>{
+followBtn.onclick=async()=>{
 
 const followDoc=doc(db,"users",profileUser,"followers",currentUser)
+
 const followingDoc=doc(db,"users",currentUser,"following",profileUser)
 
 const snap=await getDoc(followDoc)
@@ -410,11 +439,13 @@ const snap=await getDoc(followDoc)
 if(snap.exists()){
 
 await deleteDoc(followDoc)
+
 await deleteDoc(followingDoc)
 
 }else{
 
 await setDoc(followDoc,{time:Date.now()})
+
 await setDoc(followingDoc,{time:Date.now()})
 
 }
