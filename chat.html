@@ -4,7 +4,7 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comments</title>
+<title>Chat</title>
 
 <style>
 
@@ -13,31 +13,42 @@ margin:0;
 background:black;
 color:white;
 font-family:sans-serif;
+display:flex;
+flex-direction:column;
+height:100vh;
 }
 
 .header{
 padding:15px;
 border-bottom:1px solid #333;
-font-size:20px;
+font-size:18px;
+text-align:center;
 }
 
-.list{
+.messages{
+flex:1;
+overflow:auto;
 padding:10px;
 }
 
-.comment{
-padding:10px;
-border-bottom:1px solid #222;
-font-size:14px;
+.msg{
+margin:8px 0;
+padding:8px 12px;
+border-radius:8px;
+max-width:70%;
+}
+
+.me{
+background:#ff0050;
+margin-left:auto;
+}
+
+.other{
+background:#222;
 }
 
 .box{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
 display:flex;
-background:black;
 border-top:1px solid #333;
 }
 
@@ -62,15 +73,15 @@ color:white;
 
 <body>
 
-<div class="header">Comments</div>
+<div class="header" id="name">Chat</div>
 
-<div class="list" id="list"></div>
+<div class="messages" id="messages"></div>
 
 <div class="box">
 
-<input id="text" placeholder="Write comment...">
+<input id="text" placeholder="Write message...">
 
-<button onclick="send()">Post</button>
+<button onclick="send()">Send</button>
 
 </div>
 
@@ -112,32 +123,34 @@ const auth = getAuth(app);
 
 const params=new URLSearchParams(location.search);
 
-const video=params.get("video");
+const to=params.get("user");
 
-const list=document.getElementById("list");
+document.getElementById("name").innerText="Chat with "+to;
+
+const box=document.getElementById("messages");
 
 async function load(){
 
+const user=auth.currentUser;
+
 const q=query(
-collection(db,"comments"),
-where("video","==",video)
+collection(db,"messages"),
+where("room","==",user.email+"_"+to)
 );
 
 const snap=await getDocs(q);
 
-list.innerHTML="";
+box.innerHTML="";
 
 snap.forEach(doc=>{
 
-const c=doc.data();
+const m=doc.data();
 
-list.innerHTML+=`
+box.innerHTML+=`
 
-<div class="comment">
+<div class="msg ${m.from==user.email?'me':'other'}">
 
-<strong>${c.user}</strong><br>
-
-${c.text}
+${m.text}
 
 </div>
 
@@ -155,11 +168,12 @@ let text=document.getElementById("text").value;
 
 if(!text)return;
 
-await addDoc(collection(db,"comments"),{
+await addDoc(collection(db,"messages"),{
 
-video:video,
+room:user.email+"_"+to,
+from:user.email,
+to:to,
 text:text,
-user:user.email,
 time:Date.now()
 
 });
