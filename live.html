@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Live Stream</title><link rel="stylesheet" href="style.css"><style>
+
+.live-video{
+width:100%;
+height:60vh;
+background:black;
+}
+
+.live-chat{
+height:25vh;
+overflow-y:auto;
+padding:10px;
+background:#111;
+}
+
+.live-message{
+margin:5px 0;
+font-size:14px;
+}
+
+.live-controls{
+display:flex;
+padding:10px;
+background:#000;
+}
+
+.live-controls input{
+flex:1;
+padding:10px;
+border:none;
+}
+
+.live-controls button{
+padding:10px;
+border:none;
+background:#ff0050;
+color:white;
+}
+
+.gift-btn{
+position:fixed;
+right:10px;
+bottom:120px;
+background:gold;
+border:none;
+padding:12px;
+border-radius:50%;
+}
+
+</style></head><body><div class="live-video" id="liveVideo"></div><div class="live-chat" id="liveChat"></div><div class="live-controls"><input type="text" id="liveMessage" placeholder="Say something..."><button id="sendLive">Send</button>
+
+</div><button class="gift-btn" id="giftBtn">
+🎁
+</button><script type="module" src="firebase.js"></script><script type="module" src="live.js"></script></body></html>
