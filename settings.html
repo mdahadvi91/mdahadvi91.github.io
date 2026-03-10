@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Settings</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:sans-serif;
+}
+
+body{
+background:black;
+color:white;
+padding:20px;
+}
+
+/* header */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+.back{
+cursor:pointer;
+color:#aaa;
+}
+
+/* settings items */
+
+.setting{
+background:#111;
+padding:15px;
+border-radius:10px;
+margin-bottom:10px;
+cursor:pointer;
+}
+
+.setting:hover{
+background:#1a1a1a;
+}
+
+.logout{
+background:#ff0050;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>Settings</h2>
+
+<div class="back" onclick="goHome()">⬅ Home</div>
+
+</div>
+
+<div class="setting" onclick="resetPassword()">
+Reset Password
+</div>
+
+<div class="setting" onclick="showEmail()">
+Show My Email
+</div>
+
+<div class="setting logout" onclick="logout()">
+Logout
+</div>
+
+<script type="module">
+
+import { auth } from "./firebase.js";
+
+import {
+signOut,
+sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+function goHome(){
+window.location.href="home.html";
+}
+
+function showEmail(){
+
+alert(auth.currentUser.email);
+
+}
+
+function resetPassword(){
+
+const email=auth.currentUser.email;
+
+sendPasswordResetEmail(auth,email)
+.then(()=>{
+
+alert("Password reset email sent");
+
+});
+
+}
+
+function logout(){
+
+signOut(auth).then(()=>{
+
+window.location.href="auth.html";
+
+});
+
+}
+
+window.goHome=goHome;
+window.logout=logout;
+window.resetPassword=resetPassword;
+window.showEmail=showEmail;
+
+</script>
+
+</body>
+</html>
