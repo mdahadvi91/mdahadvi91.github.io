@@ -1,24 +1,61 @@
-import { db } from "./firebase.js";
-import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { db, auth } from "./firebase.js";
+
+import {
+doc,
+setDoc,
+deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const likeBtn = document.getElementById("likeBtn");
-const likeCount = document.getElementById("likeCount");
 
-let currentVideoId = null;
+let liked = false;
 
-export function setCurrentVideo(id,likes){
-currentVideoId = id;
-likeCount.innerText = likes || 0;
-}
+if(likeBtn){
 
 likeBtn.onclick = async ()=>{
-if(!currentVideoId) return;
 
-const ref = doc(db,"videos",currentVideoId);
+const user = auth.currentUser;
 
-await updateDoc(ref,{
-likes: increment(1)
+if(!user){
+
+alert("Login first");
+return;
+
+}
+
+const videoId = "currentVideo"; // video id placeholder
+
+const likeRef = doc(db,"likes",user.uid+"_"+videoId);
+
+try{
+
+if(!liked){
+
+await setDoc(likeRef,{
+userId:user.uid,
+videoId:videoId
 });
 
-likeCount.innerText = Number(likeCount.innerText)+1;
-};
+likeBtn.innerText="💖";
+
+liked=true;
+
+}else{
+
+await deleteDoc(likeRef);
+
+likeBtn.innerText="❤️";
+
+liked=false;
+
+}
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
+
+}
