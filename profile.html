@@ -4,7 +4,6 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Profile</title>
 
 <style>
@@ -19,13 +18,14 @@ font-family:sans-serif;
 .header{
 text-align:center;
 padding:20px;
+border-bottom:1px solid #333;
 }
 
 .avatar{
 width:90px;
 height:90px;
 border-radius:50%;
-background:#444;
+background:#333;
 margin:auto;
 }
 
@@ -37,8 +37,21 @@ font-size:18px;
 .stats{
 display:flex;
 justify-content:center;
+gap:30px;
 margin-top:10px;
-gap:20px;
+font-size:14px;
+}
+
+.btns{
+margin-top:10px;
+}
+
+button{
+padding:8px 16px;
+border:none;
+background:#ff0050;
+color:white;
+border-radius:6px;
 }
 
 .grid{
@@ -67,6 +80,12 @@ align-items:center;
 border-top:1px solid #333;
 }
 
+.menu div{
+font-size:12px;
+text-align:center;
+cursor:pointer;
+}
+
 </style>
 
 </head>
@@ -77,38 +96,37 @@ border-top:1px solid #333;
 
 <div class="avatar"></div>
 
-<div class="username" id="name"></div>
+<div class="username" id="name">@user</div>
 
 <div class="stats">
 
-<div>
-<b id="posts">0</b><br>
-Posts
+<div><span id="videos">0</span><br>Videos</div>
+<div><span id="followers">0</span><br>Followers</div>
+<div><span id="following">0</span><br>Following</div>
+
 </div>
 
-<div>
-<b id="followers">0</b><br>
-Followers
-</div>
+<div class="btns">
 
-<div>
-<b id="following">0</b><br>
-Following
-</div>
+<button onclick="location.href='edit-profile.html'">Edit Profile</button>
 
 </div>
 
 </div>
 
-<div class="grid" id="videos"></div>
+<div class="grid" id="grid"></div>
 
 <div class="menu">
 
 <div onclick="location.href='home.html'">🏠<br>Home</div>
 
+<div onclick="location.href='search.html'">🔍<br>Search</div>
+
 <div onclick="location.href='upload.html'">➕<br>Upload</div>
 
-<div>👤<br>Profile</div>
+<div onclick="location.href='notifications.html'">🔔<br>Alerts</div>
+
+<div onclick="location.href='profile.html'">👤<br>Profile</div>
 
 </div>
 
@@ -116,7 +134,13 @@ Following
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 
-import { getFirestore,collection,getDocs }
+import {
+getFirestore,
+collection,
+getDocs,
+query,
+where
+}
 
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
@@ -127,15 +151,10 @@ from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 const firebaseConfig = {
 
 apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
-
 authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
-
 projectId: "hridoy-er-apps-2ad7c",
-
 storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
-
 messagingSenderId: "152919903520",
-
 appId: "1:152919903520:web:5726d95dceeab535961b45"
 
 };
@@ -146,9 +165,7 @@ const db = getFirestore(app);
 
 const auth = getAuth(app);
 
-const videos=document.getElementById("videos");
-
-const name=document.getElementById("name");
+const grid=document.getElementById("grid");
 
 async function load(){
 
@@ -156,37 +173,33 @@ const user=auth.currentUser;
 
 if(!user){
 
-location.href="login.html";
-
+location.href="index.html";
 return;
 
 }
 
-name.innerText=user.email;
+document.getElementById("name").innerText="@"+user.email;
 
-let count=0;
+const q=query(
+collection(db,"videos"),
+where("user","==",user.email)
+);
 
-const snap=await getDocs(collection(db,"posts"));
+const snap=await getDocs(q);
 
-snap.forEach(d=>{
+document.getElementById("videos").innerText=snap.size;
 
-const data=d.data();
+snap.forEach(doc=>{
 
-if(data.username===user.email){
+const v=doc.data();
 
-count++;
+grid.innerHTML+=`
 
-videos.innerHTML+=`
-
-<video src="${data.video}" controls></video>
+<video src="${v.url}" controls></video>
 
 `;
 
-}
-
 });
-
-document.getElementById("posts").innerText=count;
 
 }
 
