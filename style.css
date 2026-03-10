@@ -6,16 +6,13 @@ font-family:sans-serif;
 }
 
 body{
-background:#000;
+background:black;
 color:white;
 overflow:hidden;
 }
 
-/* VIDEO FEED */
-
 #video-feed{
 height:100vh;
-width:100%;
 overflow-y:scroll;
 scroll-snap-type:y mandatory;
 }
@@ -27,8 +24,6 @@ object-fit:cover;
 scroll-snap-align:start;
 }
 
-/* RIGHT BUTTONS */
-
 .right-buttons{
 position:fixed;
 right:10px;
@@ -36,7 +31,6 @@ bottom:120px;
 display:flex;
 flex-direction:column;
 gap:15px;
-z-index:10;
 }
 
 .right-buttons button{
@@ -47,30 +41,11 @@ border:none;
 background:rgba(0,0,0,0.5);
 color:white;
 font-size:20px;
-cursor:pointer;
-transition:0.2s;
 }
-
-.right-buttons button:hover{
-transform:scale(1.1);
-background:#ff0050;
-}
-
-/* LIKE COUNT */
-
-#likeCount{
-position:fixed;
-right:20px;
-bottom:210px;
-font-size:14px;
-text-align:center;
-}
-
-/* UPLOAD BUTTON */
 
 #uploadBtn{
 position:fixed;
-bottom:25px;
+bottom:20px;
 left:50%;
 transform:translateX(-50%);
 width:65px;
@@ -80,176 +55,7 @@ border:none;
 background:#ff0050;
 color:white;
 font-size:35px;
-cursor:pointer;
-z-index:20;
 }
-
-#uploadBtn:hover{
-transform:translateX(-50%) scale(1.1);
-}
-
-/* COMMENT BOX */
-
-.comment-box{
-position:fixed;
-bottom:0;
-width:100%;
-background:#111;
-padding:10px;
-display:flex;
-gap:5px;
-}
-
-.comment-box input{
-width:75%;
-padding:10px;
-border:none;
-border-radius:4px;
-background:#222;
-color:white;
-}
-
-.comment-box button{
-padding:10px;
-border:none;
-background:#ff0050;
-color:white;
-border-radius:4px;
-}
-
-/* PROFILE GRID */
-
-.video-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:5px;
-padding:10px;
-}
-
-.video-grid video{
-height:140px;
-object-fit:cover;
-}
-
-/* TRENDING GRID */
-
-.trending-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:8px;
-padding:10px;
-}
-
-.trending-grid video{
-width:100%;
-height:200px;
-object-fit:cover;
-border-radius:6px;
-}
-
-/* STORY BAR */
-
-.story-bar{
-display:flex;
-gap:10px;
-padding:10px;
-overflow-x:auto;
-}
-
-.story{
-width:65px;
-height:65px;
-border-radius:50%;
-border:2px solid #ff0050;
-}
-
-/* CHAT */
-
-#chatBox{
-height:70vh;
-overflow-y:auto;
-padding:10px;
-}
-
-.chat-msg{
-padding:8px;
-border-bottom:1px solid #333;
-}
-
-/* LIVE SCREEN */
-
-#liveContainer{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:100;
-}
-
-/* GIFT BUTTON */
-
-.gift-btn{
-background:#ff0050;
-padding:8px 12px;
-border:none;
-border-radius:6px;
-color:white;
-}
-
-/* PREMIUM BADGE */
-
-.premium-badge{
-background:gold;
-color:black;
-padding:3px 6px;
-border-radius:4px;
-font-size:12px;
-margin-left:5px;
-}
-
-/* DASHBOARD */
-
-.creator-card{
-background:#111;
-padding:15px;
-margin:10px;
-border-radius:8px;
-text-align:center;
-}
-
-/* COIN DISPLAY */
-
-.coin-count{
-position:fixed;
-top:10px;
-right:10px;
-background:#ffcc00;
-color:black;
-padding:6px 10px;
-border-radius:20px;
-font-weight:bold;
-}
-
-/* SETTINGS */
-
-.settings-item{
-padding:12px;
-border-bottom:1px solid #333;
-}
-
-/* ADMIN PANEL */
-
-.admin-panel{
-padding:20px;
-text-align:center;
-}
-
-/* SCROLLBAR HIDE */
 
 ::-webkit-scrollbar{
 display:none;
