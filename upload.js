@@ -1,8 +1,8 @@
-import { storage, db, auth } from "./firebase.js";
+import { storage, db } from "./firebase.js";
 
 import {
 ref,
-uploadBytesResumable,
+uploadBytes,
 getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
@@ -11,134 +11,118 @@ collection,
 addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const fileInput = document.getElementById("videoFile");
-const preview = document.getElementById("preview");
-const uploadBtn = document.getElementById("uploadBtn");
-const progress = document.getElementById("progress");
 
-const musicSelect = document.getElementById("musicSelect");
-const musicPreview = document.getElementById("musicPreview");
-
-const effectSelect = document.getElementById("effectSelect");
-
-const startTrim = document.getElementById("startTrim");
-const endTrim = document.getElementById("endTrim");
-
-let selectedFile = null;
+const videoInput = document.getElementById("videoFile");
+const uploadBtn = document.getElementById("uploadVideoBtn");
+const progressText = document.getElementById("uploadStatus");
 
 
-
-// VIDEO PREVIEW
-fileInput.onchange = function(){
-
-selectedFile = fileInput.files[0];
-
-if(!selectedFile) return;
-
-preview.src = URL.createObjectURL(selectedFile);
-
-};
+uploadBtn?.addEventListener("click", uploadVideo);
 
 
+async function uploadVideo(){
 
-// MUSIC PREVIEW
-musicSelect.onchange = function(){
+const file = videoInput.files[0];
 
-musicPreview.src = musicSelect.value;
-
-};
-
-
-
-// EFFECT PREVIEW
-effectSelect.onchange = function(){
-
-preview.style.filter = effectSelect.value;
-
-};
-
-
-
-// TRIM LOOP
-preview.ontimeupdate = function(){
-
-if(endTrim.value > 0){
-
-if(preview.currentTime > endTrim.value){
-
-preview.currentTime = startTrim.value;
-
-}
-
-}
-
-};
-
-
-
-// UPLOAD VIDEO
-uploadBtn.onclick = function(){
-
-if(!selectedFile){
-
-alert("Select video first");
-
+if(!file){
+alert("Select a video first");
 return;
-
 }
 
-const fileName = Date.now() + "_" + selectedFile.name;
+progressText.innerText="Uploading...";
 
-const storageRef = ref(storage,"videos/"+fileName);
+try{
 
-const uploadTask = uploadBytesResumable(storageRef,selectedFile);
+// CREATE STORAGE PATH
 
+const videoRef = ref(storage,"videos/"+Date.now()+"_"+file.name);
 
+// UPLOAD
 
-uploadTask.on("state_changed",
+await uploadBytes(videoRef,file);
 
-(snapshot)=>{
+// GET VIDEO URL
 
-const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+const url = await getDownloadURL(videoRef);
 
-progress.innerText = "Upload: " + Math.floor(percent) + "%";
-
-},
-
-
-
-(error)=>{
-
-alert("Upload error");
-
-},
-
-
-
-async ()=>{
-
-const url = await getDownloadURL(uploadTask.snapshot.ref);
-
-
+// SAVE TO FIRESTORE
 
 await addDoc(collection(db,"videos"),{
-
 video:url,
-userId:auth.currentUser.uid,
+time:Date.now(),
 likes:0,
-views:0,
-time:Date.now()
+comments:0,
+views:0
+});
+
+progressText.innerText="Upload complete";
+
+alert("Video uploaded successfully");
+
+videoInput.value="";
+
+}catch(error){
+
+console.log("Upload error:",error);
+
+progressText.innerText="Upload failed";
+
+}
+
+}
+
+
+
+// DRAG DROP UPLOAD
+
+const dropArea=document.getElementById("uploadArea");
+
+if(dropArea){
+
+dropArea.addEventListener("dragover",(e)=>{
+e.preventDefault();
+});
+
+dropArea.addEventListener("drop",(e)=>{
+
+e.preventDefault();
+
+const file=e.dataTransfer.files[0];
+
+videoInput.files=e.dataTransfer.files;
+
+});
+
+}
+
+
+
+// BASIC UPLOAD ANALYTICS
+
+let uploadCount=0;
+
+uploadBtn?.addEventListener("click",()=>{
+
+uploadCount++;
+
+console.log("Total uploads:",uploadCount);
 
 });
 
 
 
-alert("Upload complete");
+// FILE SIZE LIMIT
 
-window.location.href="index.html";
+videoInput?.addEventListener("change",()=>{
+
+const file=videoInput.files[0];
+
+if(file && file.size>200000000){
+
+alert("Video must be under 200MB");
+
+videoInput.value="";
 
 }
 
-);
-
-};
+});
