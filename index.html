@@ -1,324 +1,97 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Mini TikTok</title>
+<title>Crystal Heart Animation</title>
 
 <style>
 
 body{
 margin:0;
 background:black;
-font-family:sans-serif;
 overflow:hidden;
-}
-
-#video-feed{
-height:100vh;
-overflow-y:scroll;
-scroll-snap-type:y mandatory;
-}
-
-.video-box{
-position:relative;
-height:100vh;
-scroll-snap-align:start;
 display:flex;
-align-items:center;
 justify-content:center;
+align-items:center;
+height:100vh;
+font-family:sans-serif;
+color:white;
 }
 
-video{
+h1{
+position:absolute;
+top:20px;
+text-align:center;
 width:100%;
-height:100%;
-object-fit:contain;
-background:black;
+color:#6eff7a;
+font-size:30px;
 }
 
-/* controls */
-
-.controls{
+canvas{
 position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-display:flex;
-gap:30px;
-opacity:0;
-transition:0.3s;
-}
-
-.show{opacity:1;}
-
-.controls button{
-width:75px;
-height:75px;
-border-radius:50%;
-border:none;
-background:rgba(0,0,0,0.6);
-color:white;
-font-size:26px;
-}
-
-.play{
-width:90px;
-height:90px;
-font-size:36px;
-}
-
-/* right buttons */
-
-.right-buttons{
-position:absolute;
-right:10px;
-bottom:140px;
-display:flex;
-flex-direction:column;
-gap:20px;
-}
-
-.right-buttons button{
-width:55px;
-height:55px;
-border-radius:50%;
-border:none;
-background:rgba(0,0,0,0.6);
-color:white;
-font-size:22px;
-}
-
-.progress-container{
-position:absolute;
-bottom:0;
-left:0;
-width:100%;
-height:6px;
-background:rgba(255,255,255,0.3);
-}
-
-.progress{
-height:6px;
-width:0%;
-background:red;
-}
-
-.time{
-position:absolute;
-bottom:10px;
-left:10px;
-color:white;
-font-size:14px;
-}
-
-.heart{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-font-size:80px;
-animation:pop 0.7s forwards;
-}
-
-@keyframes pop{
-0%{transform:translate(-50%,-50%) scale(0.5); opacity:0;}
-50%{transform:translate(-50%,-50%) scale(1.3); opacity:1;}
-100%{transform:translate(-50%,-50%) scale(1); opacity:0;}
-}
-
-::-webkit-scrollbar{
-display:none;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div id="video-feed"></div>
+<h1>Crystal Heart Animation</h1>
 
-<script type="module">
+<canvas id="canvas"></canvas>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+<script>
 
-import { 
-getFirestore,
-collection,
-getDocs,
-updateDoc,
-doc
+const canvas=document.getElementById("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+let particles=[]
+
+function heart(t){
+return {
+x:16*Math.pow(Math.sin(t),3),
+y:-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))
+}
 }
 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+for(let i=0;i<2000;i++){
 
-const firebaseConfig = {
+let t=Math.random()*Math.PI*2
+let pos=heart(t)
 
-apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
-authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
-projectId: "hridoy-er-apps-2ad7c",
-storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
-messagingSenderId: "152919903520",
-appId: "1:152919903520:web:5726d95dceeab535961b45"
-
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const feed=document.getElementById("video-feed")
-
-async function loadVideos(){
-
-const snap=await getDocs(collection(db,"videos"))
-
-snap.forEach(d=>{
-
-const data=d.data()
-
-const box=document.createElement("div")
-box.className="video-box"
-
-box.innerHTML=`
-
-<video src="${data.url}" loop></video>
-
-<div class="controls">
-<button class="back">↺5</button>
-<button class="play">▶</button>
-<button class="forward">↻5</button>
-</div>
-
-<div class="right-buttons">
-<button class="like">❤️</button>
-<div>${data.likes||0}</div>
-<button class="share">🔗</button>
-<div>👁 ${data.views||0}</div>
-</div>
-
-<div class="time">0:00 / 0:00</div>
-
-<div class="progress-container">
-<div class="progress"></div>
-</div>
-
-`
-
-feed.appendChild(box)
-
-setupVideo(box,d.id)
-
+particles.push({
+x:canvas.width/2+pos.x*20,
+y:canvas.height/2+pos.y*20,
+size:Math.random()*2,
+alpha:Math.random()
 })
 
 }
 
-loadVideos()
+function animate(){
 
+ctx.fillStyle="rgba(0,0,0,0.2)"
+ctx.fillRect(0,0,canvas.width,canvas.height)
 
-function setupVideo(box,id){
+particles.forEach(p=>{
 
-const video=box.querySelector("video")
-const play=box.querySelector(".play")
-const back=box.querySelector(".back")
-const forward=box.querySelector(".forward")
+ctx.beginPath()
+ctx.arc(p.x,p.y,p.size,0,Math.PI*2)
 
-const controls=box.querySelector(".controls")
-
-const progress=box.querySelector(".progress")
-const progressContainer=box.querySelector(".progress-container")
-
-const time=box.querySelector(".time")
-
-const likeBtn=box.querySelector(".like")
-
-let timer
-
-video.addEventListener("click",()=>{
-
-controls.classList.add("show")
-
-clearTimeout(timer)
-
-timer=setTimeout(()=>{
-controls.classList.remove("show")
-},2000)
+ctx.fillStyle="rgba(255,80,120,"+p.alpha+")"
+ctx.fill()
 
 })
 
-play.onclick=()=>{
-
-if(video.paused){
-video.play()
-play.innerHTML="❚❚"
-}else{
-video.pause()
-play.innerHTML="▶"
-}
+requestAnimationFrame(animate)
 
 }
 
-back.onclick=()=>video.currentTime-=5
-forward.onclick=()=>video.currentTime+=5
-
-video.addEventListener("timeupdate",()=>{
-
-const percent=(video.currentTime/video.duration)*100
-progress.style.width=percent+"%"
-
-time.innerText=format(video.currentTime)+" / "+format(video.duration)
-
-})
-
-progressContainer.onclick=(e)=>{
-
-const rect=progressContainer.getBoundingClientRect()
-const pos=(e.clientX-rect.left)/rect.width
-
-video.currentTime=pos*video.duration
-
-}
-
-video.addEventListener("dblclick",()=>{
-
-const heart=document.createElement("div")
-heart.className="heart"
-heart.innerHTML="❤️"
-
-box.appendChild(heart)
-
-setTimeout(()=>heart.remove(),700)
-
-})
-
-likeBtn.onclick=async ()=>{
-
-const likeText=likeBtn.nextElementSibling
-let count=parseInt(likeText.innerText)
-
-count++
-likeText.innerText=count
-
-await updateDoc(doc(db,"videos",id),{likes:count})
-
-}
-
-}
-
-function format(sec){
-
-sec=Math.floor(sec)
-
-let m=Math.floor(sec/60)
-let s=sec%60
-
-if(s<10) s="0"+s
-
-return m+":"+s
-
-}
+animate()
 
 </script>
 
