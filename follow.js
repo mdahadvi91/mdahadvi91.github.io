@@ -1,63 +1,40 @@
-import { db, auth } from "./firebase.js";
+import { auth, db } from "./firebase.js";
 
 import {
-doc,
-setDoc,
-deleteDoc
+collection,
+addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const followBtn = document.getElementById("followBtn");
 
-let followed = false;
+let currentCreator = null;
 
-/* FOLLOW SYSTEM */
 
-if(followBtn){
+// SET VIDEO CREATOR
+function setCreator(userId){
 
-followBtn.onclick = async ()=>{
+currentCreator = userId;
+
+}
+
+window.setCreator = setCreator;
+
+
+// FOLLOW BUTTON
+followBtn.onclick = async function(){
 
 const user = auth.currentUser;
 
-if(!user){
+if(!user || !currentCreator) return;
 
-alert("Login first");
-return;
+await addDoc(collection(db,"follows"),{
 
-}
+follower: user.uid,
+following: currentCreator,
+time: Date.now()
 
-const creatorId = "videoOwner"; // placeholder creator id
-
-const followRef = doc(db,"followers",user.uid+"_"+creatorId);
-
-try{
-
-if(!followed){
-
-await setDoc(followRef,{
-follower:user.uid,
-creator:creatorId
 });
 
-followBtn.innerText="Following";
+alert("Followed");
 
-followed=true;
-
-}else{
-
-await deleteDoc(followRef);
-
-followBtn.innerText="Follow";
-
-followed=false;
-
-}
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-}
-
-}
+};
