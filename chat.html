@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat</title>
+
+<style>
+
+body{
+margin:0;
+background:black;
+color:white;
+font-family:sans-serif;
+}
+
+.header{
+padding:15px;
+border-bottom:1px solid #333;
+font-size:18px;
+}
+
+.messages{
+height:70vh;
+overflow:auto;
+padding:10px;
+}
+
+.msg{
+margin:8px 0;
+padding:8px 12px;
+background:#111;
+border-radius:8px;
+max-width:70%;
+}
+
+.me{
+background:#ff0050;
+margin-left:auto;
+}
+
+.inputBox{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+display:flex;
+background:black;
+border-top:1px solid #333;
+}
+
+.inputBox input{
+flex:1;
+padding:12px;
+border:none;
+background:#111;
+color:white;
+}
+
+.inputBox button{
+padding:12px 20px;
+border:none;
+background:#ff0050;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header" id="title">Chat</div>
+
+<div class="messages" id="messages"></div>
+
+<div class="inputBox">
+
+<input id="text" placeholder="Message...">
+
+<button onclick="send()">Send</button>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+query,
+where
+}
+
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+import { getAuth }
+
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
+authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
+projectId: "hridoy-er-apps-2ad7c",
+storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
+messagingSenderId: "152919903520",
+appId: "1:152919903520:web:5726d95dceeab535961b45"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const auth = getAuth(app);
+
+const params = new URLSearchParams(location.search);
+
+const other = params.get("user");
+
+document.getElementById("title").innerText="Chat with "+other;
+
+const box=document.getElementById("messages");
+
+async function load(){
+
+const user=auth.currentUser;
+
+const q=query(collection(db,"messages"));
+
+const snap=await getDocs(q);
+
+box.innerHTML="";
+
+snap.forEach(doc=>{
+
+const d=doc.data();
+
+if(
+
+(d.from===user.email && d.to===other) ||
+
+(d.from===other && d.to===user.email)
+
+){
+
+let cls=d.from===user.email?"msg me":"msg";
+
+box.innerHTML+=`
+
+<div class="${cls}">
+
+${d.text}
+
+</div>
+
+`;
+
+}
+
+});
+
+}
+
+window.send=async function(){
+
+const user=auth.currentUser;
+
+let text=document.getElementById("text").value;
+
+if(!text) return;
+
+await addDoc(collection(db,"messages"),{
+
+from:user.email,
+to:other,
+text:text
+
+});
+
+document.getElementById("text").value="";
+
+load();
+
+}
+
+load();
+
+</script>
+
+</body>
+
+</html>
