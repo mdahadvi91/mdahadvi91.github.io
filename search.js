@@ -6,70 +6,83 @@ getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const searchInput = document.getElementById("searchInput");
-const userList = document.getElementById("userList");
+const resultBox = document.getElementById("searchResults");
 
-let users = [];
+let videos = [];
 
+async function loadVideos(){
 
-// LOAD USERS
-async function loadUsers(){
+try{
 
-const snapshot = await getDocs(collection(db,"users"));
+const snap = await getDocs(collection(db,"videos"));
 
-users = [];
-
-snapshot.forEach((doc)=>{
-
-users.push(doc.data());
-
+snap.forEach(doc=>{
+videos.push(doc.data());
 });
 
-showUsers(users);
+}catch(e){
+
+console.log("Search load error:",e);
 
 }
 
-loadUsers();
-
-
-// SHOW USERS
-function showUsers(list){
-
-userList.innerHTML = "";
-
-list.forEach((user)=>{
-
-const div = document.createElement("div");
-
-div.className = "user-item";
-
-div.innerText = user.name || user.email;
-
-div.onclick = function(){
-
-alert("Open profile feature ready");
-
-};
-
-userList.appendChild(div);
-
-});
-
 }
 
+loadVideos();
 
-// SEARCH FILTER
-searchInput.oninput = function(){
+function searchVideo(){
 
 const text = searchInput.value.toLowerCase();
 
-const filtered = users.filter(u =>
+resultBox.innerHTML="";
 
-(u.name && u.name.toLowerCase().includes(text)) ||
+videos.forEach(v=>{
 
-(u.email && u.email.toLowerCase().includes(text))
+if(v.video.toLowerCase().includes(text)){
 
-);
+const video=document.createElement("video");
 
-showUsers(filtered);
+video.src=v.video;
+video.controls=true;
 
-};
+resultBox.appendChild(video);
+
+}
+
+});
+
+}
+
+searchInput?.addEventListener("input",searchVideo);
+
+
+// TREND SEARCH COUNTER
+
+let searchCount=0;
+
+searchInput?.addEventListener("input",()=>{
+
+searchCount++;
+
+console.log("Search count:",searchCount);
+
+});
+
+
+// RECENT SEARCH SAVE
+
+function saveSearch(text){
+
+let list = JSON.parse(localStorage.getItem("recentSearch")||"[]");
+
+list.push(text);
+
+localStorage.setItem("recentSearch",JSON.stringify(list));
+
+}
+
+searchInput?.addEventListener("change",(e)=>{
+
+saveSearch(e.target.value);
+
+});
