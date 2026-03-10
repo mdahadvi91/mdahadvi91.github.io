@@ -41,88 +41,91 @@ object-fit:contain;
 /* CENTER BUTTONS */
 
 .controls{
-
 position:absolute;
-
 top:50%;
 left:50%;
-
 transform:translate(-50%,-50%);
-
 display:flex;
 gap:30px;
-
 }
 
 .controls button{
-
-width:80px;
-height:80px;
-
+width:75px;
+height:75px;
 border-radius:50%;
-
 border:none;
-
-background:rgba(0,0,0,0.45);
-
-backdrop-filter:blur(8px);
-
+background:rgba(0,0,0,0.5);
 color:white;
-
-font-size:28px;
-
+font-size:26px;
 cursor:pointer;
-
-transition:0.2s;
-
 }
 
-.controls button:active{
-
-transform:scale(0.9);
-
-}
-
-/* RIGHT SIDE BUTTONS */
+/* RIGHT SIDE */
 
 .right-buttons{
-
 position:absolute;
-
-right:12px;
+right:10px;
 bottom:120px;
-
 display:flex;
 flex-direction:column;
-
-gap:20px;
+gap:18px;
 text-align:center;
-
 }
 
 .right-buttons button{
-
 width:55px;
 height:55px;
-
 border-radius:50%;
-
 border:none;
-
-background:rgba(0,0,0,0.45);
-
-backdrop-filter:blur(8px);
-
+background:rgba(0,0,0,0.5);
 color:white;
 font-size:22px;
-
 cursor:pointer;
-
 }
 
 .count{
 font-size:14px;
-color:white;
+}
+
+/* PROGRESS BAR */
+
+.progress{
+position:absolute;
+bottom:0;
+width:100%;
+height:4px;
+background:rgba(255,255,255,0.2);
+}
+
+.bar{
+height:100%;
+width:0%;
+background:#ff0050;
+}
+
+/* HEART ANIMATION */
+
+.heart{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:90px;
+color:#ff0050;
+opacity:0;
+pointer-events:none;
+}
+
+.show{
+animation:pop 0.7s ease;
+}
+
+@keyframes pop{
+
+0%{opacity:0; transform:translate(-50%,-50%) scale(0.5);}
+50%{opacity:1; transform:translate(-50%,-50%) scale(1.3);}
+100%{opacity:0; transform:translate(-50%,-50%) scale(1);}
+
 }
 
 ::-webkit-scrollbar{
@@ -137,7 +140,7 @@ display:none;
 
 <div id="video-feed">
 
-<!-- VIDEO 1 -->
+<!-- VIDEO -->
 
 <div class="video-box">
 
@@ -146,9 +149,7 @@ display:none;
 <div class="controls">
 
 <button class="back">⟲5</button>
-
 <button class="play">▶</button>
-
 <button class="forward">5⟳</button>
 
 </div>
@@ -159,15 +160,18 @@ display:none;
 <div class="count">0</div>
 
 <button class="comment">💬</button>
-
 <button class="share">🔗</button>
 
 </div>
 
+<div class="progress">
+<div class="bar"></div>
 </div>
 
+<div class="heart">❤️</div>
 
-<!-- VIDEO 2 -->
+</div>
+
 
 <div class="video-box">
 
@@ -176,9 +180,7 @@ display:none;
 <div class="controls">
 
 <button class="back">⟲5</button>
-
 <button class="play">▶</button>
-
 <button class="forward">5⟳</button>
 
 </div>
@@ -189,15 +191,19 @@ display:none;
 <div class="count">0</div>
 
 <button class="comment">💬</button>
-
 <button class="share">🔗</button>
 
 </div>
 
+<div class="progress">
+<div class="bar"></div>
 </div>
+
+<div class="heart">❤️</div>
 
 </div>
 
+</div>
 
 <script>
 
@@ -245,6 +251,10 @@ const forward=box.querySelector(".forward")
 const likeBtn=box.querySelector(".like")
 const likeCount=box.querySelector(".count")
 
+const heart=box.querySelector(".heart")
+
+const bar=box.querySelector(".bar")
+
 let likes=0
 
 play.onclick=()=>{
@@ -282,18 +292,42 @@ likeCount.innerText=likes
 
 }
 
-box.querySelector(".share").onclick=()=>{
+/* DOUBLE TAP LIKE */
 
-if(navigator.share){
+let lastTap=0
 
-navigator.share({
-title:"Watch video",
-url:location.href
+video.addEventListener("click",()=>{
+
+let now=new Date().getTime()
+
+if(now-lastTap<300){
+
+likes++
+likeCount.innerText=likes
+
+heart.classList.add("show")
+
+setTimeout(()=>{
+heart.classList.remove("show")
+},700)
+
+}
+
+lastTap=now
+
 })
 
-}
 
-}
+/* PROGRESS BAR */
+
+video.addEventListener("timeupdate",()=>{
+
+let percent=(video.currentTime/video.duration)*100
+
+bar.style.width=percent+"%"
+
+})
+
 
 })
 
