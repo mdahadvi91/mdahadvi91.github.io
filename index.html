@@ -9,14 +9,8 @@
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:sans-serif;
-}
-
 body{
+margin:0;
 background:black;
 overflow:hidden;
 }
@@ -34,44 +28,12 @@ object-fit:cover;
 scroll-snap-align:start;
 }
 
-.right-buttons{
-position:fixed;
-right:10px;
-bottom:120px;
-display:flex;
-flex-direction:column;
-gap:15px;
-}
-
-.right-buttons button{
-width:50px;
-height:50px;
-border-radius:50%;
-border:none;
-background:rgba(0,0,0,0.6);
-color:white;
-font-size:20px;
-}
-
-#uploadBtn{
-position:fixed;
-bottom:25px;
-left:50%;
-transform:translateX(-50%);
-width:65px;
-height:65px;
-border-radius:50%;
-border:none;
-background:#ff0050;
-color:white;
-font-size:35px;
-}
-
 ::-webkit-scrollbar{
 display:none;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -84,62 +46,33 @@ display:none;
 
 </div>
 
-<div class="right-buttons">
-
-<button id="likeBtn">❤️</button>
-<button id="shareBtn">🔗</button>
-
-</div>
-
-<button id="uploadBtn">+</button>
-
 <script>
 
 const videos=document.querySelectorAll("video")
 
-// play only visible video
+const observer=new IntersectionObserver((entries)=>{
 
-window.addEventListener("scroll",()=>{
+entries.forEach(entry=>{
 
-videos.forEach(video=>{
+if(entry.isIntersecting){
 
-const rect=video.getBoundingClientRect()
-
-if(rect.top>=0 && rect.bottom<=window.innerHeight){
-
-video.play()
+entry.target.play()
 
 }else{
 
-video.pause()
+entry.target.pause()
 
 }
 
 })
 
+},{
+threshold:0.7
 })
 
-
-// like button
-
-let likes=0
-
-document.getElementById("likeBtn").onclick=function(){
-
-likes++
-this.innerText="❤️ "+likes
-
-}
-
-
-// share button
-
-document.getElementById("shareBtn").onclick=function(){
-
-navigator.clipboard.writeText(window.location.href)
-alert("Link Copied")
-
-}
+videos.forEach(video=>{
+observer.observe(video)
+})
 
 </script>
 
