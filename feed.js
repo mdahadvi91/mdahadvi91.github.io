@@ -1,4 +1,5 @@
 import { db } from "./firebase.js";
+
 import {
 collection,
 getDocs,
@@ -9,68 +10,85 @@ increment
 
 const feed = document.getElementById("video-feed");
 
+let currentVideo = null;
+
+
+// LOAD VIDEOS
 async function loadVideos(){
 
 feed.innerHTML="";
 
-const querySnapshot = await getDocs(collection(db,"videos"));
+const snapshot = await getDocs(collection(db,"videos"));
 
-querySnapshot.forEach((d)=>{
+snapshot.forEach((document)=>{
 
-const data = d.data();
+const data = document.data();
 
 const container = document.createElement("div");
-container.className="video-container";
+
+container.style.height="100vh";
 
 const video = document.createElement("video");
 
 video.src = data.video;
+
 video.loop = true;
-video.playsInline = true;
 video.controls = false;
+video.muted = false;
 
 video.style.width="100%";
-video.style.height="100vh";
+video.style.height="100%";
 video.style.objectFit="cover";
 
-const views = document.createElement("div");
-views.className="views";
-views.innerText = "👁 " + (data.views || 0);
+
+// VIEW COUNT
+video.addEventListener("play", async ()=>{
+
+const ref = doc(db,"videos",document.id);
+
+await updateDoc(ref,{
+views:increment(1)
+});
+
+});
 
 container.appendChild(video);
-container.appendChild(views);
 
 feed.appendChild(container);
 
-video.addEventListener("play",async ()=>{
-
-await updateDoc(doc(db,"videos",d.id),{
-views: increment(1)
 });
 
-});
-
-});
-
-autoPlay();
+observeVideos();
 
 }
 
-function autoPlay(){
 
-const videos=document.querySelectorAll("video");
+// AUTO PLAY SYSTEM
+function observeVideos(){
 
-const observer=new IntersectionObserver((entries)=>{
+const videos = document.querySelectorAll("video");
 
-entries.forEach((entry)=>{
+const observer = new IntersectionObserver((entries)=>{
+
+entries.forEach(entry=>{
+
+const video = entry.target;
 
 if(entry.isIntersecting){
 
-entry.target.play();
+if(currentVideo && currentVideo !== video){
+
+currentVideo.pause();
+
+}
+
+video.play();
+
+currentVideo = video;
 
 }else{
 
-entry.target.pause();
+video.pause();
 
 }
 
@@ -78,10 +96,12 @@ entry.target.pause();
 
 },{threshold:0.7});
 
-videos.forEach(v=>{
-observer.observe(v);
+videos.forEach(video=>{
+observer.observe(video);
 });
 
 }
 
+
+// START
 loadVideos();
