@@ -1,13 +1,13 @@
 const videos = document.querySelectorAll("#video-feed video");
 
-// যখন user screen এ tap করবে
+// When user taps anywhere on screen
 document.body.addEventListener("click", () => {
 
 videos.forEach(v => {
 v.muted = true;
 });
 
-// screen এ যেই video visible সেটার sound on
+// Unmute the video that is currently visible
 videos.forEach(video => {
 
 const rect = video.getBoundingClientRect();
@@ -24,7 +24,7 @@ video.play();
 });
 
 
-// scroll করলে auto play
+// Auto play video on scroll
 window.addEventListener("scroll", () => {
 
 videos.forEach(video => {
