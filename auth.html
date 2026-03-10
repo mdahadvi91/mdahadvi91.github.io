@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Login / Signup</title>
 
@@ -13,7 +13,7 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:sans-serif;
+font-family:Arial;
 }
 
 body{
@@ -21,58 +21,85 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:linear-gradient(135deg,#667eea,#764ba2);
+background:#0f172a;
 }
 
-/* card */
+/* glowing card */
 
-.container{
+.box{
+position:relative;
 width:350px;
-background:white;
-padding:35px;
+height:420px;
+background:#1e293b;
 border-radius:15px;
-box-shadow:0 15px 30px rgba(0,0,0,0.2);
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+}
+
+.box::before{
+content:'';
+position:absolute;
+width:500px;
+height:500px;
+background:linear-gradient(0deg,transparent,#00ffff,#00ffff);
+animation:rotate 6s linear infinite;
+}
+
+.box::after{
+content:'';
+position:absolute;
+inset:4px;
+background:#1e293b;
+border-radius:12px;
+}
+
+@keyframes rotate{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+/* form */
+
+.form{
+position:relative;
+z-index:1;
+width:280px;
 text-align:center;
 }
 
 h2{
+color:white;
 margin-bottom:20px;
 }
-
-/* input */
 
 input{
 width:100%;
 padding:12px;
 margin:10px 0;
-border:1px solid #ccc;
-border-radius:8px;
+border:none;
+border-radius:6px;
+background:#0f172a;
+color:white;
 }
-
-/* button */
 
 button{
 width:100%;
 padding:12px;
+margin-top:10px;
 border:none;
-border-radius:8px;
-background:linear-gradient(90deg,#6a11cb,#2575fc);
-color:white;
+border-radius:6px;
+background:#00ffff;
+color:black;
 font-weight:bold;
 cursor:pointer;
 }
-
-/* switch link */
 
 .switch{
 margin-top:15px;
-color:#555;
+color:#00ffff;
 cursor:pointer;
-}
-
-.switch span{
-color:#6a11cb;
-font-weight:bold;
 }
 
 </style>
@@ -81,11 +108,13 @@ font-weight:bold;
 
 <body>
 
-<div class="container">
+<div class="box">
+
+<div class="form">
 
 <h2 id="title">Login</h2>
 
-<form id="form">
+<form id="authForm">
 
 <input type="email" id="email" placeholder="Email" required>
 
@@ -96,7 +125,9 @@ font-weight:bold;
 </form>
 
 <div class="switch" onclick="toggleForm()">
-<span id="switchText">Create new account</span>
+<span id="switchText">Create Account</span>
+</div>
+
 </div>
 
 </div>
@@ -120,7 +151,7 @@ mode="signup";
 
 document.getElementById("title").innerText="Sign Up";
 document.getElementById("btn").innerText="Create Account";
-document.getElementById("switchText").innerText="Already have account? Login";
+document.getElementById("switchText").innerText="Back to Login";
 
 }else{
 
@@ -128,13 +159,13 @@ mode="login";
 
 document.getElementById("title").innerText="Login";
 document.getElementById("btn").innerText="Login";
-document.getElementById("switchText").innerText="Create new account";
+document.getElementById("switchText").innerText="Create Account";
 
 }
 
 }
 
-document.getElementById("form").addEventListener("submit",async(e)=>{
+document.getElementById("authForm").addEventListener("submit",async(e)=>{
 
 e.preventDefault();
 
