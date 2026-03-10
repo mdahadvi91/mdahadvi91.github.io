@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Contact</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:sans-serif;
+}
+
+body{
+background:black;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+width:350px;
+background:#111;
+padding:25px;
+border-radius:12px;
+box-shadow:0 0 15px #ff0050;
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+input,textarea{
+width:100%;
+padding:10px;
+margin:10px 0;
+border:none;
+border-radius:6px;
+outline:none;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#ff0050;
+border:none;
+border-radius:6px;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff3366;
+}
+
+.back{
+margin-top:15px;
+text-align:center;
+cursor:pointer;
+color:#aaa;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Contact Us</h2>
+
+<input type="text" id="name" placeholder="Hridoy Vai">
+
+<input type="email" id="email" placeholder="Hridoyvi55@gmail.com">
+
+<textarea id="message" placeholder="Your Message"></textarea>
+
+<button onclick="sendMessage()">Send Message</button>
+
+<div class="back" onclick="goHome()">⬅ Back to Home</div>
+
+</div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+collection,
+addDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+async function sendMessage(){
+
+const name=document.getElementById("name").value;
+const email=document.getElementById("email").value;
+const message=document.getElementById("message").value;
+
+if(!name || !email || !message){
+
+alert("Fill all fields");
+return;
+
+}
+
+await addDoc(collection(db,"messages"),{
+
+name:name,
+email:email,
+message:message,
+time:Date.now()
+
+});
+
+alert("Message sent successfully!");
+
+document.getElementById("name").value="";
+document.getElementById("email").value="";
+document.getElementById("message").value="";
+
+}
+
+window.sendMessage=sendMessage;
+
+window.goHome=()=>{
+
+window.location.href="home.html";
+
+}
+
+</script>
+
+</body>
+</html>
