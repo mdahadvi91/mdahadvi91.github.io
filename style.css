@@ -11,8 +11,6 @@ color:white;
 overflow:hidden;
 }
 
-/* VIDEO FEED */
-
 #video-feed{
 height:100vh;
 overflow-y:scroll;
@@ -25,6 +23,25 @@ height:100vh;
 object-fit:cover;
 scroll-snap-align:start;
 background:black;
+}
+
+/* ❤️ LIKE ANIMATION */
+
+.heart{
+position:fixed;
+font-size:80px;
+animation:pop 1s ease;
+pointer-events:none;
+}
+
+@keyframes pop{
+
+0%{transform:scale(0);opacity:1;}
+
+50%{transform:scale(1.5);}
+
+100%{transform:scale(1);opacity:0;}
+
 }
 
 /* RIGHT BUTTONS */
