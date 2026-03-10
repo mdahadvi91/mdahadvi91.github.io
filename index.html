@@ -1,28 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5168582564229195"
-crossorigin="anonymous"></script>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Mini TikTok</title>
-
-<link rel="stylesheet" href="style.css">
-
-</head>
-
-<body>
-
-<div id="video-feed"></div>
-  <div class="ad-box">
-<script async
-src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
-<ins class="adsbygoogle"
+<!DOCTYPE html><html><head><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5168582564229195"
+crossorigin="anonymous"></script><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Mini TikTok</title><link rel="stylesheet" href="style.css"></head><body><!-- VIDEO FEED --><div id="video-feed"></div><!-- ADS --><div class="ad-box"><ins class="adsbygoogle"
 style="display:block"
 data-ad-client="ca-pub-5168582564229195"
 data-ad-slot="1234567890"
@@ -30,62 +8,29 @@ data-ad-format="auto"></ins>
 
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-    
-<div id="video-feed"></div>
-
-<!-- RIGHT SIDE BUTTONS -->
-
-<div class="right-buttons">
-
-<button id="profileBtn">👤</button>
+</script></div><!-- RIGHT SIDE BUTTONS --><div class="right-buttons"><button id="profileBtn">👤</button>
 
 <button id="likeBtn">❤️</button>
-<div id="likeCount">0</div>
 
-<button id="commentBtn">💬</button>
-  <div id="commentBox"></div>
+<div id="likeCount">0</div><button id="commentBtn">💬</button>
 
-<button id="shareBtn">🔗</button>
+<div id="commentBox"></div><button id="shareBtn">🔗</button>
 
 <button id="followBtn">➕</button>
 
-</div>
+</div><!-- UPLOAD BUTTON --><button id="uploadBtn">+</button>
 
-<!-- UPLOAD BUTTON -->
-
-<button id="uploadBtn">+</button>
-
-
-<!-- BUTTON SCRIPT -->
-
-<script>
+<!-- BUTTON SCRIPT --><script>
 
 document.getElementById("profileBtn").onclick = function(){
 window.location.href = "profile.html";
 }
 
 document.getElementById("uploadBtn").onclick = function(){
-window.location.href = "upload.html";
-}
-
+window.location.href = "upload.
 document.getElementById("shareBtn").onclick = function(){
-
 navigator.clipboard.writeText(window.location.href);
-
 alert("Video link copied");
-
 }
 
-</script>
-
-
-<script type="module" src="firebase.js"></script>
-<script type="module" src="feed.js"></script>
-<script type="module" src="like.js"></script>
-<script type="module" src="comment.js"></script>
-<script type="module" src="follow.js"></script>
-
-</body>
-
-</html>
+</script><script type="module" src="firebase.js"></script><script type="module" src="feed.js"></script><script type="module" src="like.js"></script><script type="module" src="comment.js"></script><script type="module" src="follow.js"></script></body></html>
