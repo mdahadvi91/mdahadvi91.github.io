@@ -13,12 +13,12 @@
 body{
 margin:0;
 background:black;
+color:white;
 font-family:sans-serif;
 overflow:hidden;
-color:white;
 }
 
-/* PAGES */
+/* PAGE */
 
 .page{
 display:none;
@@ -29,7 +29,7 @@ height:100vh;
 display:block;
 }
 
-/* VIDEO FEED */
+/* FEED */
 
 #video-feed{
 height:100vh;
@@ -42,36 +42,14 @@ height:100vh;
 position:relative;
 scroll-snap-align:start;
 display:flex;
-align-items:center;
 justify-content:center;
+align-items:center;
 }
 
 video{
 width:100%;
 height:100%;
 object-fit:contain;
-}
-
-/* CONTROLS */
-
-.controls{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-display:flex;
-gap:25px;
-}
-
-.controls button{
-width:70px;
-height:70px;
-border-radius:50%;
-border:none;
-background:rgba(0,0,0,0.5);
-color:white;
-font-size:24px;
-cursor:pointer;
 }
 
 /* RIGHT BUTTONS */
@@ -94,11 +72,6 @@ border:none;
 background:rgba(0,0,0,0.5);
 color:white;
 font-size:22px;
-cursor:pointer;
-}
-
-.count{
-font-size:14px;
 }
 
 /* PROFILE GRID */
@@ -116,22 +89,7 @@ height:140px;
 object-fit:cover;
 }
 
-/* UPLOAD PAGE */
-
-.upload-box{
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-height:100%;
-gap:20px;
-}
-
-.upload-box input{
-color:white;
-}
-
-/* BOTTOM NAV */
+/* NAVBAR */
 
 .navbar{
 position:fixed;
@@ -150,7 +108,15 @@ background:none;
 border:none;
 color:white;
 font-size:22px;
-cursor:pointer;
+}
+
+.upload-box{
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+height:100%;
+gap:20px;
 }
 
 ::-webkit-scrollbar{
@@ -163,41 +129,16 @@ display:none;
 
 <body>
 
-<!-- HOME PAGE -->
+<!-- HOME -->
 
 <div id="home" class="page active">
 
-<div id="video-feed">
-
-<div class="video-box">
-
-<video src="https://www.w3schools.com/html/mov_bbb.mp4" loop></video>
-
-<div class="controls">
-
-<button class="back">⟲5</button>
-<button class="play">▶</button>
-<button class="forward">5⟳</button>
+<div id="video-feed"></div>
 
 </div>
 
-<div class="right-buttons">
 
-<button class="like">❤️</button>
-<div class="count">0</div>
-
-<button>💬</button>
-<button>🔗</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- UPLOAD PAGE -->
+<!-- UPLOAD -->
 
 <div id="upload" class="page">
 
@@ -205,7 +146,7 @@ display:none;
 
 <h2>Upload Video</h2>
 
-<input type="file" id="videoUpload" accept="video/*">
+<input type="file" id="videoFile">
 
 <button onclick="uploadVideo()">Upload</button>
 
@@ -213,7 +154,8 @@ display:none;
 
 </div>
 
-<!-- PROFILE PAGE -->
+
+<!-- PROFILE -->
 
 <div id="profile" class="page">
 
@@ -224,108 +166,47 @@ display:none;
 </div>
 
 
-<!-- NAVIGATION BAR -->
+<!-- NAVBAR -->
 
 <div class="navbar">
 
 <button onclick="showPage('home')">🏠</button>
-
 <button onclick="showPage('upload')">➕</button>
-
 <button onclick="showPage('profile')">👤</button>
 
 </div>
 
 
-<script>
+<!-- FIREBASE -->
 
-const boxes=document.querySelectorAll(".video-box")
+<script type="module">
 
-function autoPlay(){
-
-boxes.forEach(box=>{
-
-const video=box.querySelector("video")
-
-const rect=box.getBoundingClientRect()
-
-const middle=window.innerHeight/2
-
-if(rect.top<=middle && rect.bottom>=middle){
-
-video.play()
-video.muted=false
-
-}else{
-
-video.pause()
-video.muted=true
-
-}
-
-})
-
-}
-
-document.getElementById("video-feed").addEventListener("scroll",autoPlay)
-
-autoPlay()
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 
-boxes.forEach(box=>{
+const firebaseConfig = {
+apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
+authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
+projectId: "hridoy-er-apps-2ad7c",
+storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
+messagingSenderId: "152919903520",
+appId: "1:152919903520:web:5726d95dceeab535961b45",
+measurementId: "G-R0S25ZXRQ3"
+};
 
-const video=box.querySelector("video")
+const app = initializeApp(firebaseConfig);
 
-const play=box.querySelector(".play")
-const back=box.querySelector(".back")
-const forward=box.querySelector(".forward")
+const db = getFirestore(app);
 
-const likeBtn=box.querySelector(".like")
-const likeCount=box.querySelector(".count")
-
-let likes=0
-
-play.onclick=()=>{
-
-if(video.paused){
-
-video.play()
-play.innerText="⏸"
-
-}else{
-
-video.pause()
-play.innerText="▶"
-
-}
-
-}
-
-back.onclick=()=>{
-
-video.currentTime-=5
-
-}
-
-forward.onclick=()=>{
-
-video.currentTime+=5
-
-}
-
-likeBtn.onclick=()=>{
-
-likes++
-likeCount.innerText=likes
-
-}
-
-})
+const storage = getStorage(app);
 
 
-/* PAGE NAVIGATION */
 
-function showPage(id){
+/* PAGE SWITCH */
+
+window.showPage=function(id){
 
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
 
@@ -334,24 +215,112 @@ document.getElementById(id).classList.add("active")
 }
 
 
-/* VIDEO UPLOAD */
 
-function uploadVideo(){
+/* LOAD VIDEOS */
 
-const file=document.getElementById("videoUpload").files[0]
+async function loadVideos(){
 
-if(!file) return
+const feed=document.getElementById("video-feed")
 
-const url=URL.createObjectURL(file)
+feed.innerHTML=""
 
-const grid=document.getElementById("profileVideos")
+const snap=await getDocs(collection(db,"videos"))
 
-const v=document.createElement("video")
+snap.forEach(d=>{
 
-v.src=url
-v.controls=true
+const data=d.data()
 
-grid.appendChild(v)
+const box=document.createElement("div")
+box.className="video-box"
+
+box.innerHTML=`
+
+<video src="${data.url}" loop controls></video>
+
+<div class="right-buttons">
+
+<button onclick="likeVideo('${d.id}',this)">❤️</button>
+<div>${data.likes||0}</div>
+
+<button>💬</button>
+
+<button onclick="shareVideo()">🔗</button>
+
+<div>👁 ${data.views||0}</div>
+
+</div>
+
+`
+
+feed.appendChild(box)
+
+})
+
+}
+
+loadVideos()
+
+
+
+/* UPLOAD */
+
+window.uploadVideo=async function(){
+
+const file=document.getElementById("videoFile").files[0]
+
+if(!file) return alert("select video")
+
+const storageRef=ref(storage,"videos/"+file.name)
+
+await uploadBytes(storageRef,file)
+
+const url=await getDownloadURL(storageRef)
+
+await addDoc(collection(db,"videos"),{
+
+url:url,
+likes:0,
+views:0
+
+})
+
+alert("uploaded")
+
+loadVideos()
+
+}
+
+
+
+/* LIKE */
+
+window.likeVideo=async function(id,btn){
+
+const likeText=btn.nextElementSibling
+
+let count=parseInt(likeText.innerText)
+
+count++
+
+likeText.innerText=count
+
+await updateDoc(doc(db,"videos",id),{
+
+likes:count
+
+})
+
+}
+
+
+
+/* SHARE */
+
+window.shareVideo=function(){
+
+navigator.clipboard.writeText(location.href)
+
+alert("link copied")
 
 }
 
