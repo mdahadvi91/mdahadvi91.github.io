@@ -1,77 +1,120 @@
 import { db } from "./firebase.js";
-
 import {
 collection,
 addDoc,
-onSnapshot,
 query,
-orderBy
+where,
+getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const commentBtn = document.getElementById("commentBtn");
 const commentBox = document.getElementById("commentBox");
 
-let currentVideoId = null;
+let currentVideoId = "default";
+let opened = false;
 
+function openCommentBox(){
 
-// SET CURRENT VIDEO
-function setCommentVideo(id){
+if(opened){
+commentBox.style.display="none";
+opened=false;
+return;
+}
 
-currentVideoId = id;
+commentBox.style.display="block";
+
+commentBox.innerHTML = `
+<input id="commentInput" placeholder="Write comment...">
+<button id="sendComment">Send</button>
+<div id="commentList"></div>
+`;
 
 loadComments();
 
+document.getElementById("sendComment").onclick = sendComment;
+
+opened=true;
+
 }
 
-window.setCommentVideo = setCommentVideo;
+async function sendComment(){
 
+const input = document.getElementById("commentInput");
 
-// ADD COMMENT
-commentBtn.onclick = async function(){
+const text = input.value.trim();
 
-if(!currentVideoId) return;
+if(text==="") return;
 
-const text = prompt("Write comment");
-
-if(!text) return;
+try{
 
 await addDoc(collection(db,"comments"),{
-
-videoId: currentVideoId,
-text: text,
-time: Date.now()
-
+video:currentVideoId,
+text:text,
+time:Date.now()
 });
 
-};
+input.value="";
 
+loadComments();
 
-// LOAD COMMENTS
-function loadComments(){
+}catch(e){
+
+console.log("Comment error:",e);
+
+}
+
+}
+
+async function loadComments(){
+
+const list = document.getElementById("commentList");
+
+if(!list) return;
+
+list.innerHTML="Loading...";
+
+try{
 
 const q = query(
 collection(db,"comments"),
-orderBy("time","desc")
+where("video","==",currentVideoId)
 );
 
-onSnapshot(q,(snapshot)=>{
+const snap = await getDocs(q);
 
-commentBox.innerHTML = "";
+list.innerHTML="";
 
-snapshot.forEach((doc)=>{
+if(snap.empty){
+
+list.innerHTML="<div>No comments</div>";
+return;
+
+}
+
+snap.forEach(doc=>{
 
 const data = doc.data();
 
-if(data.videoId !== currentVideoId) return;
+const div=document.createElement("div");
 
-const div = document.createElement("div");
+div.className="comment";
 
-div.innerText = data.text;
+div.innerText=data.text;
 
-commentBox.appendChild(div);
-
-});
+list.appendChild(div);
 
 });
+
+}catch(e){
+
+console.log("Load comment error:",e);
+
+}
+
+}
+
+if(commentBtn){
+
+commentBtn.onclick=openCommentBox;
 
 }
