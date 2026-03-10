@@ -59,22 +59,21 @@ animation:spin 1s linear infinite;
 <script type="module">
 
 import { auth } from "./firebase.js";
+
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth,(user)=>{
 
 if(user){
 
-window.location.href = "home.html";
+window.location.href="home.html";
 
 }else{
 
-window.location.href = "auth.html";
+window.location.href="auth.html";
 
 }
 
 });
-</script>
 
-</body>
-</html>
+</script>
