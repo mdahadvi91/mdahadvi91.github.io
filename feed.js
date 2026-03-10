@@ -18,10 +18,39 @@ video.className = "feed-video";
 
 video.loop = true;
 video.muted = true;
-video.playsInline = true;
 video.autoplay = true;
+video.playsInline = true;
 
 feed.appendChild(video);
+
+/* 🔊 TAP SOUND CONTROL */
+
+video.addEventListener("click",()=>{
+
+video.muted = !video.muted;
+
+});
+
+/* ❤️ DOUBLE TAP LIKE */
+
+video.addEventListener("dblclick",(e)=>{
+
+const heart = document.createElement("div");
+
+heart.innerHTML = "❤️";
+
+heart.className = "heart";
+
+heart.style.left = e.clientX + "px";
+heart.style.top = e.clientY + "px";
+
+document.body.appendChild(heart);
+
+setTimeout(()=>{
+heart.remove();
+},1000);
+
+});
 
 });
 
@@ -56,7 +85,7 @@ video.pause();
 
 },{threshold:0.7});
 
-videos.forEach((video)=>{
+videos.forEach(video=>{
 observer.observe(video);
 });
 
