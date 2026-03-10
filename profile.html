@@ -1,15 +1,198 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Profile</title>
+
+<style>
+
+body{
+margin:0;
+background:black;
+color:white;
+font-family:sans-serif;
+}
+
+.header{
+text-align:center;
+padding:20px;
+}
+
+.avatar{
+width:90px;
+height:90px;
+border-radius:50%;
+background:#444;
+margin:auto;
+}
+
+.username{
+margin-top:10px;
+font-size:18px;
+}
+
+.stats{
+display:flex;
+justify-content:center;
+margin-top:10px;
+gap:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:2px;
+margin-top:20px;
+}
+
+.grid video{
+width:100%;
+height:120px;
+object-fit:cover;
+}
+
+.menu{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:60px;
+background:black;
+display:flex;
+justify-content:space-around;
+align-items:center;
+border-top:1px solid #333;
+}
+
+</style>
+
+</head>
+
 <body>
 
-<h2>User Profile</h2>
+<div class="header">
 
-<a href="upload.html">Upload Video</a>
+<div class="avatar"></div>
 
-<br><br>
+<div class="username" id="name"></div>
 
-<a href="home.html">Go Feed</a>
+<div class="stats">
+
+<div>
+<b id="posts">0</b><br>
+Posts
+</div>
+
+<div>
+<b id="followers">0</b><br>
+Followers
+</div>
+
+<div>
+<b id="following">0</b><br>
+Following
+</div>
+
+</div>
+
+</div>
+
+<div class="grid" id="videos"></div>
+
+<div class="menu">
+
+<div onclick="location.href='home.html'">🏠<br>Home</div>
+
+<div onclick="location.href='upload.html'">➕<br>Upload</div>
+
+<div>👤<br>Profile</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import { getFirestore,collection,getDocs }
+
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+import { getAuth }
+
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
+
+authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
+
+projectId: "hridoy-er-apps-2ad7c",
+
+storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
+
+messagingSenderId: "152919903520",
+
+appId: "1:152919903520:web:5726d95dceeab535961b45"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const auth = getAuth(app);
+
+const videos=document.getElementById("videos");
+
+const name=document.getElementById("name");
+
+async function load(){
+
+const user=auth.currentUser;
+
+if(!user){
+
+location.href="login.html";
+
+return;
+
+}
+
+name.innerText=user.email;
+
+let count=0;
+
+const snap=await getDocs(collection(db,"posts"));
+
+snap.forEach(d=>{
+
+const data=d.data();
+
+if(data.username===user.email){
+
+count++;
+
+videos.innerHTML+=`
+
+<video src="${data.video}" controls></video>
+
+`;
+
+}
+
+});
+
+document.getElementById("posts").innerText=count;
+
+}
+
+load();
+
+</script>
 
 </body>
 
