@@ -1,9 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-
 import {
 getFirestore,
 collection,
 addDoc,
+deleteDoc,
 getDocs,
 query,
 where
@@ -11,86 +10,76 @@ where
 
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-import {
-getAuth
-}
+import { getAuth }
 
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
+const db = getFirestore();
+const auth = getAuth();
 
-const firebaseConfig = {
+/* LIKE BUTTON */
 
-apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
+window.likeVideo = async function(videoId){
 
-authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
+const user = auth.currentUser;
 
-projectId: "hridoy-er-apps-2ad7c",
+if(!user) return;
 
-storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
+const q = query(
+collection(db,"likes"),
+where("video","==",videoId),
+where("user","==",user.email)
+);
 
-messagingSenderId: "152919903520",
+const snap = await getDocs(q);
 
-appId: "1:152919903520:web:5726d95dceeab535961b45"
+/* already liked */
 
-};
+if(!snap.empty){
 
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-const auth = getAuth(app);
-
-
-
-/* LIKE FUNCTION */
-
-window.likeVideo = async function(videoUrl,owner){
-
-const user=auth.currentUser;
-
-if(!user){
-
-alert("Login first");
-
-return;
+snap.forEach(async doc=>{
+await deleteDoc(doc.ref);
+});
 
 }
 
+/* new like */
 
-/* save like */
+else{
 
 await addDoc(collection(db,"likes"),{
 
-video:videoUrl,
-user:user.email
+video:videoId,
+user:user.email,
+time:Date.now()
 
 });
 
+}
 
-/* send notification */
+updateLikes(videoId);
 
-await addDoc(collection(db,"notifications"),{
+}
 
-to:owner,
-from:user.email,
-type:"liked your video ❤️"
+/* COUNT */
 
-});
+window.updateLikes = async function(videoId){
 
-alert("Liked ❤️");
+const q = query(
+collection(db,"likes"),
+where("video","==",videoId)
+);
 
-};
+const snap = await getDocs(q);
 
+const count = snap.size;
 
+const el=document.getElementById("like_"+videoId);
 
-/* COUNT LIKES */
+if(el){
 
-window.loadLikes = async function(videoUrl,element){
+el.innerText=count;
 
-const q=query(collection(db,"likes"),where("video","==",videoUrl));
+}
 
-const snap=await getDocs(q);
-
-element.innerText=snap.size;
-
-};
+}
