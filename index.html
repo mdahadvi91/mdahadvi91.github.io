@@ -1,8 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mini TikTok</title><link rel="stylesheet" href="style.css"><!-- Google AdSense --><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5168582564229195"
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mini TikTok</title><link rel="stylesheet" href="style.css"><!-- Adsense --><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5168582564229195"
 crossorigin="anonymous"></script></head><body><!-- VIDEO FEED --><div id="video-feed"></div><!-- RIGHT SIDE BUTTONS --><div class="right-buttons"><button id="profileBtn">👤</button>
 
 <button id="likeBtn">❤️</button>
@@ -13,27 +10,34 @@ crossorigin="anonymous"></script></head><body><!-- VIDEO FEED --><div id="video-
 
 <button id="followBtn">➕</button>
 
-</div><!-- COMMENT BOX --><div id="commentBox" class="comment-box" style="display:none;"><input type="text" id="commentInput" placeholder="Write comment..."><button id="sendComment">Send</button>
+<button onclick="window.location.href='search.html'">🔍</button>
 
-</div><!-- UPLOAD BUTTON --><button id="uploadBtn">+</button>
+<button onclick="window.location.href='notifications.html'">🔔</button>
 
-<!-- ADS SECTION --><div class="ad-box"><ins class="adsbygoogle"
+<button onclick="window.location.href='chat.html'">💬</button>
+
+<button onclick="window.location.href='trending.html'">🔥</button>
+
+<button onclick="window.location.href='dashboard.html'">📊</button>
+
+</div><!-- COMMENT BOX --><div id="commentBox" class="comment-box"></div><!-- UPLOAD BUTTON --><button id="uploadBtn">+</button>
+
+<!-- ADS AREA --><div class="ad-box"><ins class="adsbygoogle"
 style="display:block"
 data-ad-client="ca-pub-5168582564229195"
 data-ad-slot="1234567890"
-data-ad-format="auto"
-data-full-width-responsive="true"></ins>
+data-ad-format="auto"></ins>
 
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
-</script></div><!-- BUTTON SCRIPT --><script>
+</script></div><!-- BUTTON ACTIONS --><script>
 
 document.getElementById("profileBtn").onclick = function(){
-window.location.href = "profile.html";
+window.location.href="profile.html";
 }
 
 document.getElementById("uploadBtn").onclick = function(){
-window.location.href = "upload.html";
+window.location.href="upload.html";
 }
 
 document.getElementById("shareBtn").onclick = function(){
@@ -44,16 +48,4 @@ alert("Video link copied");
 
 }
 
-document.getElementById("commentBtn").onclick = function(){
-
-const box = document.getElementById("commentBox");
-
-if(box.style.display==="none"){
-box.style.display="block";
-}else{
-box.style.display="none";
-}
-
-}
-
-</script><!-- FIREBASE + APP SCRIPTS --><script type="module" src="firebase.js"></script><script type="module" src="feed.js"></script><script type="module" src="like.js"></script><script type="module" src="comment.js"></script><script type="module" src="follow.js"></script></body></html>
+</script><!-- FIREBASE + APP SCRIPTS --><script type="module" src="firebase.js"></script><script type="module" src="feed.js"></script><script type="module" src="like.js"></script><script type="module" src="comment.js"></script><script type="module" src="follow.js"></script><script type="module" src="premium.js"></script><script type="module" src="gift.js"></script></body></html>
