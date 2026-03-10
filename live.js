@@ -1,79 +1,124 @@
-import { db, auth } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
 collection,
 addDoc,
-query,
-orderBy,
-onSnapshot
+getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const liveChat = document.getElementById("liveChat");
-const liveMessage = document.getElementById("liveMessage");
-const sendLive = document.getElementById("sendLive");
-const giftBtn = document.getElementById("giftBtn");
+
+const liveContainer = document.getElementById("liveContainer");
+const startBtn = document.getElementById("startLive");
+const endBtn = document.getElementById("endLive");
+
+let stream = null;
 
 
-// SEND LIVE MESSAGE
-sendLive.onclick = async function(){
+// START LIVE
 
-const text = liveMessage.value;
+async function startLive(){
 
-if(!text) return;
+try{
 
-await addDoc(collection(db,"liveMessages"),{
+stream = await navigator.mediaDevices.getUserMedia({
+video:true,
+audio:true
+});
 
-text:text,
-user:auth.currentUser.uid,
+const video = document.createElement("video");
+
+video.srcObject = stream;
+video.autoplay = true;
+video.muted = true;
+
+liveContainer.innerHTML="";
+liveContainer.appendChild(video);
+
+
+// SAVE LIVE STATUS
+
+await addDoc(collection(db,"live"),{
+status:"live",
 time:Date.now()
+});
+
+}catch(e){
+
+console.log("Live error:",e);
+
+}
+
+}
+
+
+// END LIVE
+
+function endLive(){
+
+if(!stream) return;
+
+stream.getTracks().forEach(track=>{
+
+track.stop();
 
 });
 
-liveMessage.value="";
+liveContainer.innerHTML="Live ended";
 
-};
+}
 
 
-// LOAD LIVE CHAT
-const q = query(
-collection(db,"liveMessages"),
-orderBy("time")
-);
+// BUTTON EVENTS
 
-onSnapshot(q,(snapshot)=>{
+startBtn?.addEventListener("click",startLive);
 
-liveChat.innerHTML="";
+endBtn?.addEventListener("click",endLive);
 
-snapshot.forEach((doc)=>{
 
-const data = doc.data();
+// VIEWER COUNTER
 
-const div = document.createElement("div");
+let viewers = 0;
 
-div.className="live-message";
+function joinViewer(){
 
-div.innerText = data.text;
+viewers++;
 
-liveChat.appendChild(div);
+console.log("Live viewers:",viewers);
+
+}
+
+document.addEventListener("viewerJoin",joinViewer);
+
+
+// LIVE CHAT SIMULATION
+
+const liveChatBox = document.getElementById("liveChat");
+
+function addLiveChat(msg){
+
+if(!liveChatBox) return;
+
+const div=document.createElement("div");
+
+div.innerText=msg;
+
+liveChatBox.appendChild(div);
+
+}
+
+document.addEventListener("liveMessage",(e)=>{
+
+addLiveChat(e.detail);
 
 });
 
-liveChat.scrollTop = liveChat.scrollHeight;
 
-});
+// AUTO CLEAR CHAT
 
+setInterval(()=>{
 
-// SEND GIFT
-giftBtn.onclick = async function(){
+if(liveChatBox){
+liveChatBox.innerHTML="";
+}
 
-await addDoc(collection(db,"gifts"),{
-
-from:auth.currentUser.uid,
-time:Date.now(),
-gift:"coin"
-
-});
-
-alert("Gift sent 🎁");
-
-};
+},60000);
