@@ -1,13 +1,51 @@
 <!DOCTYPE html><html><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Profile</title><link rel="stylesheet" href="style.css"></head><body><div class="profile-header"><h2 id="username">User</h2><div class="profile-stats"><div>
-<b id="videoCount">0</b>
-<p>Videos</p>
-</div><div>
-<b id="followers">0</b>
-<p>Followers</p>
-</div><div>
-<b id="following">0</b>
-<p>Following</p>
-</div></div><button id="logoutBtn">Logout</button>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Profile</title><link rel="stylesheet" href="style.css"><style>
 
-</div><div class="video-grid" id="userVideos"></div><script type="module" src="firebase.js"></script><script type="module" src="profile.js"></script></body></html>
+.profile-header{
+text-align:center;
+padding:20px;
+}
+
+.profile-avatar{
+width:90px;
+height:90px;
+border-radius:50%;
+background:#333;
+margin:auto;
+margin-bottom:10px;
+}
+
+.profile-stats{
+display:flex;
+justify-content:center;
+gap:30px;
+margin-top:10px;
+}
+
+.profile-stats div{
+text-align:center;
+}
+
+#logoutBtn{
+margin-top:15px;
+padding:10px 20px;
+border:none;
+background:#ff0050;
+color:white;
+border-radius:5px;
+}
+
+</style></head><body><div class="profile-header"><div class="profile-avatar"></div><h2 id="username">User</h2><div class="profile-stats"><div>
+<p id="videoCount">0</p>
+<span>Videos</span>
+</div><div>
+<p id="followers">0</p>
+<span>Followers</span>
+</div><div>
+<p id="likes">0</p>
+<span>Likes</span>
+</div></div><button onclick="window.location.href='dashboard.html'">
+Creator Dashboard
+</button><br><button id="logoutBtn">Logout</button>
+
+</div><!-- USER VIDEOS --><div class="video-grid" id="userVideos"></div><script type="module" src="firebase.js"></script><script type="module" src="profile.js"></script></body></html>
