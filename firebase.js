@@ -1,12 +1,10 @@
-<script type="module">
-
+// Firebase import
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-// Your Firebase config
-
+// Your config
 const firebaseConfig = {
   apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
   authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
@@ -17,18 +15,10 @@ const firebaseConfig = {
   measurementId: "G-R0S25ZXRQ3"
 };
 
-// Initialize Firebase
-
+// Init
 const app = initializeApp(firebaseConfig);
 
-// Services
-
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
 // Export
-
-export { auth, db, storage };
-
-</script>
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
