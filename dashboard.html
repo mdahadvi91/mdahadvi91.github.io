@@ -1,0 +1,52 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Creator Dashboard</title><link rel="stylesheet" href="style.css"><style>
+
+.dashboard-header{
+text-align:center;
+padding:20px;
+border-bottom:1px solid #333;
+font-size:20px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+padding:15px;
+}
+
+.stat-box{
+background:#111;
+padding:20px;
+text-align:center;
+border-radius:6px;
+}
+
+.stat-box h2{
+margin-bottom:5px;
+}
+
+.video-performance{
+padding:10px;
+}
+
+.video-item{
+padding:10px;
+border-bottom:1px solid #333;
+}
+
+</style></head><body><div class="dashboard-header">
+Creator Dashboard
+</div><div class="stats"><div class="stat-box">
+<h2 id="totalViews">0</h2>
+<p>Total Views</p>
+</div><div class="stat-box">
+<h2 id="totalLikes">0</h2>
+<p>Total Likes</p>
+</div><div class="stat-box">
+<h2 id="totalVideos">0</h2>
+<p>Videos</p>
+</div><div class="stat-box">
+<h2 id="earnings">$0</h2>
+<p>Earnings</p>
+</div></div><div class="video-performance" id="videoPerformance"></div><script type="module" src="firebase.js"></script><script type="module" src="dashboard.js"></script></body></html>
