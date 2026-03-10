@@ -1,74 +1,22 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Upload Video</title><link rel="stylesheet" href="style.css"></head><body><h2 style="text-align:center;margin-top:20px;">Upload Video</h2><!-- VIDEO FILE --><input type="file" id="videoFile" accept="video/*"><!-- VIDEO PREVIEW --><video id="preview" controls style="width:100%;margin-top:10px;"></video>
 
-<head>
+<!-- MUSIC SELECT --><select id="musicSelect"><option value="">No Music</option><option value="music/beat1.mp3">Beat 1</option>
+<option value="music/beat2.mp3">Beat 2</option>
+<option value="music/beat3.mp3">Beat 3</option></select><audio id="musicPreview" controls></audio>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!-- EFFECT SELECT --><select id="effectSelect"><option value="none">No Effect</option>
+<option value="grayscale(1)">Black & White</option>
+<option value="sepia(1)">Vintage</option>
+<option value="brightness(1.5)">Bright</option>
+<option value="contrast(1.8)">Contrast</option></select><!-- TRIM CONTROLS --><label>Start</label>
+<input type="range" id="startTrim" min="0" max="100">
 
-<title>Upload Video</title>
+<label>End</label>
+<input type="range" id="endTrim" min="0" max="100">
 
-<link rel="stylesheet" href="style.css">
+<!-- CAMERA BUTTON --><button onclick="window.location.href='camera.html'">Open Camera
 
-<style>
+</button><!-- UPLOAD BUTTON --><button id="uploadBtn">Upload Video</button>
 
-body{
-margin:0;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:#000;
-color:white;
-font-family:sans-serif;
-}
-
-.container{
-width:350px;
-padding:30px;
-background:#111;
-border-radius:12px;
-text-align:center;
-box-shadow:0 0 20px #ff0050;
-}
-
-input{
-width:100%;
-margin:15px 0;
-}
-
-button{
-width:100%;
-padding:12px;
-background:#ff0050;
-border:none;
-color:white;
-font-size:16px;
-border-radius:6px;
-cursor:pointer;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<h2>Upload Video</h2>
-
-<input type="file" id="videoFile" accept="video/*">
-
-<button id="uploadBtn">Upload</button>
-
-<p id="status"></p>
-
-</div>
-
-<script type="module" src="firebase.js"></script>
-<script type="module" src="upload.js"></script>
-
-</body>
-
-</html>
+<!-- PROGRESS --><div id="progress" style="text-align:center;margin-top:10px;"></div><script type="module" src="firebase.js"></script><script type="module" src="upload.js"></script></body></html>
