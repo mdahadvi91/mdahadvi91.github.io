@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications</title>
+
+<style>
+
+body{
+margin:0;
+background:black;
+color:white;
+font-family:sans-serif;
+}
+
+.header{
+padding:15px;
+font-size:20px;
+font-weight:bold;
+border-bottom:1px solid #333;
+}
+
+.list{
+padding:10px;
+}
+
+.item{
+padding:12px;
+border-bottom:1px solid #222;
+}
+
+.item b{
+color:#ff0050;
+}
+
+.menu{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:60px;
+background:black;
+display:flex;
+justify-content:space-around;
+align-items:center;
+border-top:1px solid #333;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+Notifications
+</div>
+
+<div class="list" id="list"></div>
+
+<div class="menu">
+
+<div onclick="location.href='home.html'">🏠<br>Home</div>
+
+<div onclick="location.href='upload.html'">➕<br>Upload</div>
+
+<div onclick="location.href='profile.html'">👤<br>Profile</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import { getFirestore,collection,getDocs,query,where }
+
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+import { getAuth }
+
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
+authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
+projectId: "hridoy-er-apps-2ad7c",
+storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
+messagingSenderId: "152919903520",
+appId: "1:152919903520:web:5726d95dceeab535961b45"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const auth = getAuth(app);
+
+const box=document.getElementById("list");
+
+async function load(){
+
+const user=auth.currentUser;
+
+if(!user){
+
+location.href="login.html";
+return;
+
+}
+
+const q=query(collection(db,"notifications"),where("to","==",user.email));
+
+const snap=await getDocs(q);
+
+snap.forEach(d=>{
+
+const data=d.data();
+
+box.innerHTML+=`
+
+<div class="item">
+
+<b>${data.from}</b> ${data.type}
+
+</div>
+
+`;
+
+});
+
+}
+
+load();
+
+</script>
+
+</body>
+
+</html>
