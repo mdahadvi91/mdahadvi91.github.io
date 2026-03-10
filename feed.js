@@ -15,24 +15,24 @@ const video = document.createElement("video");
 
 video.src = data.video;
 
-video.muted = true;
-video.loop = true;
-video.playsInline = true;
+video.className = "feed-video";
 
-video.setAttribute("class","feed-video");
+video.loop = true;
+video.controls = false;
+video.playsInline = true;
 
 feed.appendChild(video);
 
 });
 
-autoPlayVideos();
+observeVideos();
 
 }
 
 loadVideos();
 
 
-function autoPlayVideos(){
+function observeVideos(){
 
 const videos = document.querySelectorAll(".feed-video");
 
@@ -40,25 +40,32 @@ const observer = new IntersectionObserver((entries)=>{
 
 entries.forEach((entry)=>{
 
+const video = entry.target;
+
 if(entry.isIntersecting){
 
-entry.target.play();
+// pause all videos first
+videos.forEach(v=>{
+v.pause();
+v.muted = true;
+});
+
+// play current video
+video.muted = false;
+video.play();
 
 }else{
 
-entry.target.pause();
+video.pause();
 
 }
 
 });
 
-},{ threshold:0.8 });
+},{threshold:0.7});
 
-
-videos.forEach((video)=>{
-
+videos.forEach(video=>{
 observer.observe(video);
-
 });
 
 }
