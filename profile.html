@@ -1,79 +1,13 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Profile</title><link rel="stylesheet" href="style.css"></head><body><div class="profile-header"><h2 id="username">User</h2><div class="profile-stats"><div>
+<b id="videoCount">0</b>
+<p>Videos</p>
+</div><div>
+<b id="followers">0</b>
+<p>Followers</p>
+</div><div>
+<b id="following">0</b>
+<p>Following</p>
+</div></div><button id="logoutBtn">Logout</button>
 
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Profile</title>
-
-<link rel="stylesheet" href="style.css">
-
-<style>
-
-body{
-margin:0;
-font-family:sans-serif;
-background:#000;
-color:white;
-}
-
-.profile-header{
-text-align:center;
-padding:30px;
-border-bottom:1px solid #333;
-}
-
-.profile-header h2{
-margin:10px 0;
-}
-
-button{
-padding:10px 20px;
-background:#ff0050;
-border:none;
-color:white;
-border-radius:6px;
-cursor:pointer;
-}
-
-.video-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:5px;
-padding:10px;
-}
-
-video{
-width:100%;
-height:150px;
-object-fit:cover;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="profile-header">
-
-<h2 id="userEmail">User</h2>
-
-<p id="followers">Followers: 0</p>
-
-<button id="logoutBtn">Logout</button>
-
-</div>
-
-<div class="video-grid" id="userVideos">
-
-</div>
-
-<script type="module" src="firebase.js"></script>
-<script type="module" src="profile.js"></script>
-
-</body>
-
-</html>
+</div><div class="video-grid" id="userVideos"></div><script type="module" src="firebase.js"></script><script type="module" src="profile.js"></script></body></html>
