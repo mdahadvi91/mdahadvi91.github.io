@@ -1,3 +1,15 @@
+const videos = document.querySelectorAll("video");
+
+videos.forEach(video => {
+
+video.addEventListener("click", () => {
+
+video.muted = false;
+video.play();
+
+});
+
+});
 const likeBtn = document.getElementById("likeBtn");
 const shareBtn = document.getElementById("shareBtn");
 
