@@ -1,61 +1,50 @@
-import { auth, db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 import {
-doc,
-setDoc,
-getDoc
+collection,
+addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* CHECK PREMIUM */
+const premiumBtn = document.getElementById("premiumBtn");
+const boostBtn = document.getElementById("boostBtn");
 
-export async function isPremiumUser(){
 
-const user = auth.currentUser;
-
-if(!user) return false;
-
-const ref = doc(db,"premium",user.uid);
-
-const snap = await getDoc(ref);
-
-if(snap.exists()){
-return true;
-}else{
-return false;
-}
-
-}
-
-/* ACTIVATE PREMIUM */
-
-export async function activatePremium(){
+// BUY PREMIUM
+premiumBtn.onclick = async function(){
 
 const user = auth.currentUser;
 
-if(!user){
+if(!user) return;
 
-alert("Login first");
-return;
+await addDoc(collection(db,"premiumUsers"),{
 
-}
-
-try{
-
-const ref = doc(db,"premium",user.uid);
-
-await setDoc(ref,{
 userId:user.uid,
-email:user.email,
-premium:true,
-date:Date.now()
+type:"premium",
+time:Date.now()
+
 });
 
-alert("Premium activated");
+alert("Premium activated 💎");
 
-}catch(err){
+};
 
-alert(err.message);
 
-}
 
-}
+// BOOST VIDEO
+window.boostVideo = async function(videoId){
+
+const user = auth.currentUser;
+
+if(!user) return;
+
+await addDoc(collection(db,"boosts"),{
+
+videoId:videoId,
+userId:user.uid,
+time:Date.now()
+
+});
+
+alert("Video boosted 🚀");
+
+};
