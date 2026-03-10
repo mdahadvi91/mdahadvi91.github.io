@@ -4,100 +4,9 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Feed</title>
 
-<title>Home</title>
-
-<style>
-
-body{
-margin:0;
-background:black;
-color:white;
-font-family:sans-serif;
-overflow:hidden;
-}
-
-.feed{
-height:100vh;
-overflow-y:scroll;
-scroll-snap-type:y mandatory;
-}
-
-.videoBox{
-height:100vh;
-position:relative;
-scroll-snap-align:start;
-}
-
-video{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-.topbar{
-position:absolute;
-top:10px;
-left:0;
-right:0;
-text-align:center;
-font-weight:bold;
-font-size:18px;
-}
-
-.right{
-position:absolute;
-right:10px;
-bottom:140px;
-text-align:center;
-}
-
-.right button{
-background:none;
-border:none;
-color:white;
-font-size:26px;
-margin:12px 0;
-}
-
-.caption{
-position:absolute;
-bottom:90px;
-left:10px;
-max-width:70%;
-}
-
-.menu{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:60px;
-background:black;
-display:flex;
-justify-content:space-around;
-align-items:center;
-border-top:1px solid #333;
-}
-
-.menu div{
-text-align:center;
-font-size:12px;
-}
-
-.plus{
-background:white;
-color:black;
-width:40px;
-height:40px;
-border-radius:10px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:24px;
-}
-
-</style>
+<link rel="stylesheet" href="tiktok-ui.css">
 
 </head>
 
@@ -107,13 +16,13 @@ font-size:24px;
 
 <div class="menu">
 
-<div>🏠<br>Home</div>
+<div onclick="location.href='home.html'">🏠<br>Home</div>
 
-<div>👥<br>Friends</div>
+<div onclick="location.href='search.html'">🔍<br>Search</div>
 
-<div class="plus" onclick="location.href='upload.html'">+</div>
+<div onclick="location.href='upload.html'">➕<br>Upload</div>
 
-<div>💬<br>Inbox</div>
+<div onclick="location.href='notifications.html'">🔔<br>Alerts</div>
 
 <div onclick="location.href='profile.html'">👤<br>Profile</div>
 
@@ -123,22 +32,27 @@ font-size:24px;
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 
-import { getFirestore,collection,getDocs,updateDoc,doc }
+import {
+getFirestore,
+collection,
+getDocs
+}
 
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+import {
+getAuth
+}
+
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
 const firebaseConfig = {
 
 apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
-
 authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
-
 projectId: "hridoy-er-apps-2ad7c",
-
 storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
-
 messagingSenderId: "152919903520",
-
 appId: "1:152919903520:web:5726d95dceeab535961b45"
 
 };
@@ -147,45 +61,39 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-const feed = document.getElementById("feed");
+const auth = getAuth(app);
 
-async function load(){
+const feed=document.getElementById("feed");
 
-feed.innerHTML="";
+async function loadVideos(){
 
-const snap = await getDocs(collection(db,"posts"));
+const snap=await getDocs(collection(db,"videos"));
 
-snap.forEach(d=>{
+snap.forEach(doc=>{
 
-const data=d.data();
+const v=doc.data();
 
-feed.innerHTML += `
+feed.innerHTML+=`
 
 <div class="videoBox">
 
-<div class="topbar">Following | <b>For You</b></div>
+<video src="${v.url}" autoplay muted loop></video>
 
-<video autoplay loop muted src="${data.video}"></video>
+<div class="actions">
 
-<div class="right">
+<button onclick="likeVideo('${v.url}','${v.user}')">❤️</button>
 
-<button onclick="like('${d.id}',${data.likes})">❤️</button>
+<button onclick="location.href='comment.html?video=${v.url}'">💬</button>
 
-<div>${data.likes}</div>
-
-<button>💬</button>
-
-<button>🔖</button>
-
-<button>🔁</button>
+<button onclick="location.href='profile.html?user=${v.user}'">👤</button>
 
 </div>
 
-<div class="caption">
+<div class="info">
 
-<b>@${data.username}</b>
+<div class="username">@${v.user}</div>
 
-<p>${data.caption}</p>
+<div class="caption">${v.caption || ""}</div>
 
 </div>
 
@@ -197,21 +105,13 @@ feed.innerHTML += `
 
 }
 
-window.like = async function(id,current){
-
-await updateDoc(doc(db,"posts",id),{
-
-likes:current+1
-
-});
-
-load();
-
-}
-
-load();
+loadVideos();
 
 </script>
+
+<script src="like-system.js"></script>
+<script src="follow-system.js"></script>
+<script src="swipe-feed.js"></script>
 
 </body>
 
