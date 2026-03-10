@@ -22,7 +22,15 @@ crossorigin="anonymous"></script></head><body><!-- VIDEO FEED --><div id="video-
 
 </div><!-- COMMENT BOX --><div id="commentBox" class="comment-box"></div><!-- UPLOAD BUTTON --><button id="uploadBtn">+</button>
 
-<!-- ADS AREA --><div class="ad-box"><ins class="adsbygoogle"
+<body>
+
+<div id="video-feed"></div>
+
+<div class="ad-box">
+<script async
+src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<ins class="adsbygoogle"
 style="display:block"
 data-ad-client="ca-pub-5168582564229195"
 data-ad-slot="1234567890"
@@ -30,7 +38,10 @@ data-ad-format="auto"></ins>
 
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
-</script></div><!-- BUTTON ACTIONS --><script>
+</script>
+</div>
+  <!-- BUTTON ACTIONS -->
+  <script>
 
 document.getElementById("profileBtn").onclick = function(){
 window.location.href="profile.html";
@@ -48,4 +59,20 @@ alert("Video link copied");
 
 }
 
-</script><!-- FIREBASE + APP SCRIPTS --><script type="module" src="firebase.js"></script><script type="module" src="feed.js"></script><script type="module" src="like.js"></script><script type="module" src="comment.js"></script><script type="module" src="follow.js"></script><script type="module" src="premium.js"></script><script type="module" src="gift.js"></script></body></html>
+</script><!-- FIREBASE + APP SCRIPTS -->
+  <script type="module" src="firebase.js">
+    
+  </script><script type="module" src="feed.js">
+    
+  </script><script type="module" src="like.js">
+    
+  </script><script type="module" src="comment.js">
+    
+  </script><script type="module" src="follow.js">
+    
+  </script><script type="module" src="premium.js">
+    
+  </script><script type="module" src="gift.js">
+    
+  </script>
+</body></html>
