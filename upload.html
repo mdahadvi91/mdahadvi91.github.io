@@ -4,46 +4,57 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Upload Video</title>
 
 <style>
 
 body{
+margin:0;
 background:black;
 color:white;
 font-family:sans-serif;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
-}
-
-.box{
-width:90%;
-max-width:400px;
 text-align:center;
 }
 
+.header{
+padding:15px;
+border-bottom:1px solid #333;
+font-size:20px;
+}
+
+.box{
+padding:20px;
+}
+
 input,textarea{
-width:100%;
-padding:12px;
+width:90%;
 margin:10px 0;
+padding:12px;
 border:none;
-border-radius:6px;
-font-size:16px;
+border-radius:8px;
+background:#111;
+color:white;
 }
 
 button{
-width:100%;
-padding:12px;
+padding:12px 20px;
 border:none;
 background:#ff0050;
 color:white;
-font-size:16px;
-border-radius:6px;
-cursor:pointer;
+border-radius:8px;
+}
+
+.menu{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:60px;
+background:black;
+display:flex;
+justify-content:space-around;
+align-items:center;
+border-top:1px solid #333;
 }
 
 </style>
@@ -52,15 +63,27 @@ cursor:pointer;
 
 <body>
 
+<div class="header">Upload Video</div>
+
 <div class="box">
 
-<h2>Upload Video</h2>
+<input id="url" placeholder="Video URL">
 
-<input type="file" id="video">
+<textarea id="caption" placeholder="Write caption..."></textarea>
 
-<textarea id="caption" placeholder="Write caption"></textarea>
+<button onclick="upload()">Post Video</button>
 
-<button onclick="upload()">Upload</button>
+</div>
+
+<div class="menu">
+
+<div onclick="location.href='home.html'">🏠<br>Home</div>
+
+<div onclick="location.href='search.html'">🔍<br>Search</div>
+
+<div onclick="location.href='upload.html'">➕<br>Upload</div>
+
+<div onclick="location.href='profile.html'">👤<br>Profile</div>
 
 </div>
 
@@ -68,30 +91,27 @@ cursor:pointer;
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 
-import { getFirestore,collection,addDoc }
+import {
+getFirestore,
+collection,
+addDoc
+}
 
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-import { getStorage,ref,uploadBytes,getDownloadURL }
-
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
-
-import { getAuth }
+import {
+getAuth
+}
 
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
 const firebaseConfig = {
 
 apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
-
 authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
-
 projectId: "hridoy-er-apps-2ad7c",
-
 storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
-
 messagingSenderId: "152919903520",
-
 appId: "1:152919903520:web:5726d95dceeab535961b45"
 
 };
@@ -100,40 +120,33 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-const storage = getStorage(app);
-
 const auth = getAuth(app);
 
 window.upload = async function(){
 
-const file = document.getElementById("video").files[0];
+const user = auth.currentUser;
 
-const caption = document.getElementById("caption").value;
+let url=document.getElementById("url").value;
 
-if(!file){
+let caption=document.getElementById("caption").value;
 
-alert("Select video first");
+if(!url){
 
+alert("Enter video URL");
 return;
 
 }
 
-const storageRef = ref(storage,"videos/"+Date.now()+file.name);
+await addDoc(collection(db,"videos"),{
 
-await uploadBytes(storageRef,file);
-
-const url = await getDownloadURL(storageRef);
-
-await addDoc(collection(db,"posts"),{
-
-video:url,
+url:url,
 caption:caption,
-likes:0,
-username:auth.currentUser.email
+user:user.email,
+time:Date.now()
 
 });
 
-alert("Video uploaded");
+alert("Video Posted");
 
 location.href="home.html";
 
