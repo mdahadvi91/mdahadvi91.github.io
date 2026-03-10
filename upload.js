@@ -2,67 +2,143 @@ import { storage, db, auth } from "./firebase.js";
 
 import {
 ref,
-uploadBytes,
+uploadBytesResumable,
 getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 import {
 collection,
-addDoc,
-serverTimestamp
+addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const fileInput = document.getElementById("videoFile");
+const preview = document.getElementById("preview");
 const uploadBtn = document.getElementById("uploadBtn");
-const status = document.getElementById("status");
+const progress = document.getElementById("progress");
 
-uploadBtn.onclick = async ()=>{
+const musicSelect = document.getElementById("musicSelect");
+const musicPreview = document.getElementById("musicPreview");
 
-const file = fileInput.files[0];
+const effectSelect = document.getElementById("effectSelect");
 
-if(!file){
+const startTrim = document.getElementById("startTrim");
+const endTrim = document.getElementById("endTrim");
+
+let selectedFile = null;
+
+
+
+// VIDEO PREVIEW
+fileInput.onchange = function(){
+
+selectedFile = fileInput.files[0];
+
+if(!selectedFile) return;
+
+preview.src = URL.createObjectURL(selectedFile);
+
+};
+
+
+
+// MUSIC PREVIEW
+musicSelect.onchange = function(){
+
+musicPreview.src = musicSelect.value;
+
+};
+
+
+
+// EFFECT PREVIEW
+effectSelect.onchange = function(){
+
+preview.style.filter = effectSelect.value;
+
+};
+
+
+
+// TRIM LOOP
+preview.ontimeupdate = function(){
+
+if(endTrim.value > 0){
+
+if(preview.currentTime > endTrim.value){
+
+preview.currentTime = startTrim.value;
+
+}
+
+}
+
+};
+
+
+
+// UPLOAD VIDEO
+uploadBtn.onclick = function(){
+
+if(!selectedFile){
 
 alert("Select video first");
+
 return;
 
 }
 
-const user = auth.currentUser;
+const fileName = Date.now() + "_" + selectedFile.name;
 
-if(!user){
+const storageRef = ref(storage,"videos/"+fileName);
 
-alert("Login first");
-return;
+const uploadTask = uploadBytesResumable(storageRef,selectedFile);
 
-}
 
-try{
 
-status.innerText="Uploading...";
+uploadTask.on("state_changed",
 
-const storageRef = ref(storage,"videos/"+Date.now()+"_"+file.name);
+(snapshot)=>{
 
-await uploadBytes(storageRef,file);
+const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-const url = await getDownloadURL(storageRef);
+progress.innerText = "Upload: " + Math.floor(percent) + "%";
+
+},
+
+
+
+(error)=>{
+
+alert("Upload error");
+
+},
+
+
+
+async ()=>{
+
+const url = await getDownloadURL(uploadTask.snapshot.ref);
+
+
 
 await addDoc(collection(db,"videos"),{
 
-url:url,
-userId:user.uid,
-userEmail:user.email,
-createdAt:serverTimestamp()
+video:url,
+userId:auth.currentUser.uid,
+likes:0,
+views:0,
+time:Date.now()
 
 });
 
-status.innerText="Upload success";
 
-fileInput.value="";
 
-}catch(err){
+alert("Upload complete");
 
-alert(err.message);
+window.location.href="index.html";
 
 }
 
-}
+);
+
+};
