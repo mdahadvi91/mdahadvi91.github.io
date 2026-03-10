@@ -14,16 +14,15 @@
 
 <body>
 
-<!-- VIDEO FEED -->
+<div id="video-feed">
 
-<div id="video-feed"></div>
+<video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay loop muted controls></video>
 
+<video src="https://www.w3schools.com/html/movie.mp4" autoplay loop muted controls></video>
 
-<!-- RIGHT SIDE BUTTONS -->
+</div>
 
 <div class="right-buttons">
-
-<button id="profileBtn">👤</button>
 
 <button id="likeBtn">❤️</button>
 
@@ -31,164 +30,12 @@
 
 <button id="shareBtn">🔗</button>
 
-<button id="followBtn">➕</button>
-
-<button id="searchBtn">🔍</button>
-
-<button id="notifyBtn">🔔</button>
-
-<button id="chatBtn">💬</button>
-
-<button id="trendBtn">🔥</button>
-
-<button id="liveBtn">📡</button>
-
-<button id="giftBtn">🎁</button>
-
-<button id="musicBtn">🎵</button>
-
-<button id="effectBtn">✨</button>
-
-<button id="cameraBtn">📷</button>
-
-<button id="dashboardBtn">📊</button>
-
-<button id="earnBtn">💰</button>
-
 </div>
-
-
-<!-- LIKE COUNT -->
-
-<div id="likeCount">0</div>
-
-
-<!-- COMMENT BOX -->
-
-<div id="commentBox" class="comment-box"></div>
-
-
-<!-- UPLOAD BUTTON -->
 
 <button id="uploadBtn">+</button>
 
-
-<!-- BUTTON SCRIPT -->
-
-<script>
-
-document.getElementById("profileBtn").onclick=function(){
-window.location.href="profile.html";
-}
-
-document.getElementById("uploadBtn").onclick=function(){
-window.location.href="upload.html";
-}
-
-document.getElementById("searchBtn").onclick=function(){
-window.location.href="search.html";
-}
-
-document.getElementById("notifyBtn").onclick=function(){
-window.location.href="notifications.html";
-}
-
-document.getElementById("chatBtn").onclick=function(){
-window.location.href="chat.html";
-}
-
-document.getElementById("trendBtn").onclick=function(){
-window.location.href="trending.html";
-}
-
-document.getElementById("liveBtn").onclick=function(){
-window.location.href="live.html";
-}
-
-document.getElementById("giftBtn").onclick=function(){
-window.location.href="gift.html";
-}
-
-document.getElementById("dashboardBtn").onclick=function(){
-window.location.href="dashboard.html";
-}
-
-document.getElementById("earnBtn").onclick=function(){
-window.location.href="earnings.html";
-}
-
-document.getElementById("shareBtn").onclick=function(){
-
-navigator.clipboard.writeText(window.location.href);
-
-alert("Video link copied");
-
-}
-
-</script>
-
-
-<!-- FIREBASE SYSTEM -->
-
-<script type="module" src="firebase.js"></script>
-
-<script type="module" src="feed.js"></script>
-
-<script type="module" src="like.js"></script>
-
-<script type="module" src="comment.js"></script>
-
-<script type="module" src="follow.js"></script>
-
-
-<!-- NEW FEATURES MODULES -->
-
-<script type="module" src="search.js"></script>
-
-<script type="module" src="notifications.js"></script>
-
-<script type="module" src="chat.js"></script>
-
-<script type="module" src="trending.js"></script>
-
-<script type="module" src="live.js"></script>
-
-<script type="module" src="gift.js"></script>
-
-<script type="module" src="music.js"></script>
-
-<script type="module" src="effects.js"></script>
-
-<script type="module" src="camera.js"></script>
-
-<script type="module" src="dashboard.js"></script>
-
-<script type="module" src="earnings.js"></script>
-
-<script type="module" src="ads.js"></script>
-
-<script type="module" src="analytics.js"></script>
-
-<script type="module" src="premium.js"></script>
-
-<script type="module" src="creator.js"></script>
-
-<script type="module" src="withdraw.js"></script>
-
-<script type="module" src="coins.js"></script>
-
-<script type="module" src="duet.js"></script>
-
-<script type="module" src="stitch.js"></script>
-
-<script type="module" src="story.js"></script>
-
-<script type="module" src="report.js"></script>
-
-<script type="module" src="settings.js"></script>
-
-<script type="module" src="admin.js"></script>
-
+<script src="app.js"></script>
 
 </body>
+
 </html>
