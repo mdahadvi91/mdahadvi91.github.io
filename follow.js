@@ -1,18 +1,63 @@
-import { db } from "./firebase.js";
-import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { db, auth } from "./firebase.js";
+
+import {
+doc,
+setDoc,
+deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const followBtn = document.getElementById("followBtn");
 
-let profileId="defaultUser";
+let followed = false;
+
+/* FOLLOW SYSTEM */
+
+if(followBtn){
 
 followBtn.onclick = async ()=>{
 
-const ref = doc(db,"users",profileId);
+const user = auth.currentUser;
 
-await updateDoc(ref,{
-followers:increment(1)
+if(!user){
+
+alert("Login first");
+return;
+
+}
+
+const creatorId = "videoOwner"; // placeholder creator id
+
+const followRef = doc(db,"followers",user.uid+"_"+creatorId);
+
+try{
+
+if(!followed){
+
+await setDoc(followRef,{
+follower:user.uid,
+creator:creatorId
 });
 
-alert("Followed");
+followBtn.innerText="Following";
 
-};
+followed=true;
+
+}else{
+
+await deleteDoc(followRef);
+
+followBtn.innerText="Follow";
+
+followed=false;
+
+}
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
+
+}
