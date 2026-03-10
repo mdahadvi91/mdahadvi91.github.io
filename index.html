@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Mini TikTok</title>
 
 <style>
@@ -17,7 +18,6 @@ font-family:sans-serif;
 
 body{
 background:black;
-color:white;
 overflow:hidden;
 }
 
@@ -33,8 +33,6 @@ height:100vh;
 object-fit:cover;
 scroll-snap-align:start;
 }
-
-/* right buttons */
 
 .right-buttons{
 position:fixed;
@@ -55,8 +53,6 @@ color:white;
 font-size:20px;
 }
 
-/* upload */
-
 #uploadBtn{
 position:fixed;
 bottom:25px;
@@ -71,22 +67,19 @@ color:white;
 font-size:35px;
 }
 
-/* like animation */
-
 .heart{
 position:fixed;
-font-size:70px;
 left:50%;
 top:50%;
 transform:translate(-50%,-50%);
-pointer-events:none;
+font-size:70px;
 animation:pop 0.8s ease;
 }
 
 @keyframes pop{
-0%{transform:translate(-50%,-50%) scale(0.5);opacity:0}
-50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}
-100%{transform:translate(-50%,-50%) scale(1);opacity:0}
+0%{opacity:0;transform:translate(-50%,-50%) scale(0.5);}
+50%{opacity:1;transform:translate(-50%,-50%) scale(1.2);}
+100%{opacity:0;transform:translate(-50%,-50%) scale(1);}
 }
 
 ::-webkit-scrollbar{
@@ -107,10 +100,8 @@ display:none;
 </div>
 
 <div class="right-buttons">
-
 <button id="likeBtn">❤️</button>
 <button id="shareBtn">🔗</button>
-
 </div>
 
 <button id="uploadBtn">+</button>
@@ -119,7 +110,7 @@ display:none;
 
 const videos=document.querySelectorAll("video")
 
-// tap → sound on
+// single tap → sound on
 
 videos.forEach(video=>{
 
@@ -128,14 +119,34 @@ video.addEventListener("click",()=>{
 videos.forEach(v=>v.muted=true)
 
 video.muted=false
-video.play()
 
 })
 
 })
 
 
-// scroll play system
+// double tap → like animation
+
+videos.forEach(video=>{
+
+video.addEventListener("dblclick",()=>{
+
+const heart=document.createElement("div")
+
+heart.innerHTML="❤️"
+
+heart.className="heart"
+
+document.body.appendChild(heart)
+
+setTimeout(()=>heart.remove(),800)
+
+})
+
+})
+
+
+// scroll system
 
 window.addEventListener("scroll",()=>{
 
@@ -153,28 +164,6 @@ video.pause()
 video.muted=true
 
 }
-
-})
-
-})
-
-
-// double tap like animation
-
-videos.forEach(video=>{
-
-video.addEventListener("dblclick",()=>{
-
-const heart=document.createElement("div")
-
-heart.innerHTML="❤️"
-heart.className="heart"
-
-document.body.appendChild(heart)
-
-setTimeout(()=>{
-heart.remove()
-},800)
 
 })
 
