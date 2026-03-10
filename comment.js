@@ -1,76 +1,77 @@
-import { db, auth } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
 collection,
 addDoc,
-serverTimestamp,
-getDocs
+onSnapshot,
+query,
+orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const commentBtn = document.getElementById("commentBtn");
 const commentBox = document.getElementById("commentBox");
-const commentInput = document.getElementById("commentInput");
-const sendComment = document.getElementById("sendComment");
 
-let videoId = "currentVideo"; // placeholder
+let currentVideoId = null;
 
-/* OPEN COMMENT BOX */
 
-if(commentBtn){
+// SET CURRENT VIDEO
+function setCommentVideo(id){
 
-commentBtn.onclick = ()=>{
+currentVideoId = id;
 
-if(commentBox){
-
-commentBox.style.display="block";
+loadComments();
 
 }
 
-}
+window.setCommentVideo = setCommentVideo;
 
-}
 
-/* SEND COMMENT */
+// ADD COMMENT
+commentBtn.onclick = async function(){
 
-if(sendComment){
+if(!currentVideoId) return;
 
-sendComment.onclick = async ()=>{
+const text = prompt("Write comment");
 
-const user = auth.currentUser;
-
-if(!user){
-
-alert("Login first");
-return;
-
-}
-
-const text = commentInput.value;
-
-if(text=="") return;
-
-try{
+if(!text) return;
 
 await addDoc(collection(db,"comments"),{
 
-videoId:videoId,
-userId:user.uid,
-userEmail:user.email,
-text:text,
-createdAt:serverTimestamp()
+videoId: currentVideoId,
+text: text,
+time: Date.now()
 
 });
 
-commentInput.value="";
+};
 
-alert("Comment added");
 
-}catch(err){
+// LOAD COMMENTS
+function loadComments(){
 
-alert(err.message);
+const q = query(
+collection(db,"comments"),
+orderBy("time","desc")
+);
 
-}
+onSnapshot(q,(snapshot)=>{
 
-}
+commentBox.innerHTML = "";
+
+snapshot.forEach((doc)=>{
+
+const data = doc.data();
+
+if(data.videoId !== currentVideoId) return;
+
+const div = document.createElement("div");
+
+div.innerText = data.text;
+
+commentBox.appendChild(div);
+
+});
+
+});
 
 }
