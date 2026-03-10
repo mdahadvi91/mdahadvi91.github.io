@@ -1,0 +1,91 @@
+body{
+margin:0;
+background:black;
+color:white;
+font-family:sans-serif;
+overflow:hidden;
+}
+
+.feed{
+height:100vh;
+width:100%;
+overflow-y:scroll;
+scroll-snap-type:y mandatory;
+}
+
+.videoBox{
+position:relative;
+height:100vh;
+width:100%;
+scroll-snap-align:start;
+}
+
+.videoBox video{
+height:100%;
+width:100%;
+object-fit:cover;
+}
+
+/* RIGHT SIDE BUTTONS */
+
+.actions{
+position:absolute;
+right:10px;
+bottom:120px;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:20px;
+}
+
+.actions button{
+background:none;
+border:none;
+color:white;
+font-size:28px;
+cursor:pointer;
+}
+
+.actions span{
+font-size:14px;
+}
+
+/* USER INFO */
+
+.info{
+position:absolute;
+bottom:80px;
+left:10px;
+max-width:70%;
+}
+
+.username{
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.caption{
+font-size:14px;
+opacity:0.9;
+}
+
+/* BOTTOM MENU */
+
+.menu{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:60px;
+background:black;
+display:flex;
+justify-content:space-around;
+align-items:center;
+border-top:1px solid #333;
+}
+
+.menu div{
+text-align:center;
+font-size:12px;
+cursor:pointer;
+}
