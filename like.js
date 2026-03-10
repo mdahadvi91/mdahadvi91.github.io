@@ -1,61 +1,32 @@
-import { db, auth } from "./firebase.js";
+let lastTap = 0;
 
-import {
-doc,
-setDoc,
-deleteDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+document.addEventListener("click",function(e){
 
-const likeBtn = document.getElementById("likeBtn");
+if(e.target.tagName==="VIDEO"){
 
-let liked = false;
+const now = Date.now();
 
-if(likeBtn){
+if(now - lastTap < 300){
 
-likeBtn.onclick = async ()=>{
+const heart=document.createElement("div");
+heart.innerHTML="❤️";
 
-const user = auth.currentUser;
+heart.style.position="absolute";
+heart.style.fontSize="80px";
+heart.style.left="50%";
+heart.style.top="50%";
+heart.style.transform="translate(-50%,-50%)";
 
-if(!user){
+e.target.parentElement.appendChild(heart);
 
-alert("Login first");
-return;
+setTimeout(()=>{
+heart.remove();
+},800);
 
 }
 
-const videoId = "currentVideo"; // video id placeholder
+lastTap = now;
 
-const likeRef = doc(db,"likes",user.uid+"_"+videoId);
+}
 
-try{
-
-if(!liked){
-
-await setDoc(likeRef,{
-userId:user.uid,
-videoId:videoId
 });
-
-likeBtn.innerText="💖";
-
-liked=true;
-
-}else{
-
-await deleteDoc(likeRef);
-
-likeBtn.innerText="❤️";
-
-liked=false;
-
-}
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-}
-
-}
