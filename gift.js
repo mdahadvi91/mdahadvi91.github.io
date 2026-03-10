@@ -1,60 +1,165 @@
-import { db, auth } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
 collection,
-addDoc
+addDoc,
+getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-// SEND GIFT FUNCTION
-async function sendGift(creatorId, giftType){
+const giftBtn = document.getElementById("giftBtn");
+const giftBox = document.getElementById("giftBox");
 
-const user = auth.currentUser;
+let coins = 100; // demo coins
 
-if(!user) return;
+
+// SHOW GIFT BOX
+
+function openGiftBox(){
+
+if(!giftBox) return;
+
+giftBox.style.display="block";
+
+giftBox.innerHTML = `
+
+<div class="gift-item" data-coins="10">🌹 10</div>
+<div class="gift-item" data-coins="25">🎁 25</div>
+<div class="gift-item" data-coins="50">💎 50</div>
+<div class="gift-item" data-coins="100">👑 100</div>
+
+`;
+
+document.querySelectorAll(".gift-item").forEach(item=>{
+
+item.onclick=sendGift;
+
+});
+
+}
+
+
+giftBtn?.addEventListener("click",openGiftBox);
+
+
+// SEND GIFT
+
+async function sendGift(e){
+
+const cost = Number(e.target.dataset.coins);
+
+if(coins < cost){
+
+alert("Not enough coins");
+
+return;
+
+}
+
+coins -= cost;
+
+try{
 
 await addDoc(collection(db,"gifts"),{
-
-from:user.uid,
-to:creatorId,
-gift:giftType,
+gift:e.target.innerText,
+coins:cost,
 time:Date.now()
-
 });
 
-alert("Gift sent 🎁");
+showGiftAnimation(e.target.innerText);
+
+}catch(err){
+
+console.log("Gift error:",err);
 
 }
 
-window.sendGift = sendGift;
+}
 
 
-// GIFT VALUES
-const giftValues = {
+// GIFT ANIMATION
 
-coin:1,
-rose:5,
-diamond:20,
-crown:100
+function showGiftAnimation(text){
 
-};
+const div=document.createElement("div");
 
+div.innerText=text;
 
-// CALCULATE EARNINGS
-function calculateGiftMoney(gifts){
+div.style.position="fixed";
+div.style.left="50%";
+div.style.top="50%";
+div.style.fontSize="40px";
+div.style.transform="translate(-50%,-50%)";
 
-let total = 0;
+document.body.appendChild(div);
 
-gifts.forEach(g=>{
-
-const value = giftValues[g.gift] || 0;
-
-total += value;
-
-});
-
-return total;
+setTimeout(()=>{
+div.remove();
+},1000);
 
 }
 
-window.calculateGiftMoney = calculateGiftMoney;
+
+// LOAD GIFT HISTORY
+
+async function loadGifts(){
+
+if(!giftBox) return;
+
+try{
+
+const snap = await getDocs(collection(db,"gifts"));
+
+snap.forEach(doc=>{
+
+console.log("Gift:",doc.data());
+
+});
+
+}catch(e){
+
+console.log("Gift load error:",e);
+
+}
+
+}
+
+loadGifts();
+
+
+// LOCAL COINS SAVE
+
+function saveCoins(){
+
+localStorage.setItem("userCoins",coins);
+
+}
+
+function loadCoins(){
+
+const saved = localStorage.getItem("userCoins");
+
+if(saved){
+
+coins = Number(saved);
+
+}
+
+}
+
+giftBtn?.addEventListener("click",saveCoins);
+
+loadCoins();
+
+
+// GIFT ANALYTICS
+
+let giftCount=0;
+
+document.addEventListener("giftSent",()=>{
+
+giftCount++;
+
+console.log("Total gifts:",giftCount);
+
+});
