@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <meta charset="UTF-8">
@@ -7,35 +8,28 @@
 
 <title>Login / Signup</title>
 
+<link rel="stylesheet" href="style.css">
+
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:sans-serif;
-}
-
 body{
+margin:0;
 height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:linear-gradient(45deg,#141e30,#243b55);
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+font-family:sans-serif;
 }
 
 .container{
 width:350px;
+background:#111;
 padding:30px;
-background:rgba(0,0,0,0.8);
 border-radius:15px;
-box-shadow:0 0 25px #ff0050;
+box-shadow:0 0 30px #00f2ff;
 color:white;
 text-align:center;
-}
-
-h2{
-margin-bottom:20px;
 }
 
 input{
@@ -43,31 +37,26 @@ width:100%;
 padding:12px;
 margin:10px 0;
 border:none;
-border-radius:8px;
+border-radius:6px;
 outline:none;
 }
 
 button{
 width:100%;
 padding:12px;
-margin-top:10px;
-border:none;
-border-radius:8px;
 background:#ff0050;
+border:none;
 color:white;
 font-size:16px;
+border-radius:6px;
 cursor:pointer;
-}
-
-button:hover{
-background:#ff3366;
 }
 
 .switch{
 margin-top:15px;
 font-size:14px;
 cursor:pointer;
-color:#aaa;
+color:#00f2ff;
 }
 
 </style>
@@ -80,79 +69,21 @@ color:#aaa;
 
 <h2 id="title">Login</h2>
 
-<input type="email" id="email" placeholder="Email">
+<input id="email" type="email" placeholder="Email">
 
-<input type="password" id="password" placeholder="Password">
+<input id="password" type="password" placeholder="Password">
 
 <button id="actionBtn">Login</button>
 
-<div class="switch" id="switchMode">
-Don't have account? Signup
+<div class="switch" id="switchBtn">
+Create new account
 </div>
 
 </div>
 
-<script type="module">
-
-import { auth } from "./firebase.js";
-
-import {
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-let loginMode=true;
-
-const title=document.getElementById("title");
-const btn=document.getElementById("actionBtn");
-const switchMode=document.getElementById("switchMode");
-
-switchMode.onclick=()=>{
-
-loginMode=!loginMode;
-
-if(loginMode){
-
-title.innerText="Login";
-btn.innerText="Login";
-switchMode.innerText="Don't have account? Signup";
-
-}else{
-
-title.innerText="Signup";
-btn.innerText="Signup";
-switchMode.innerText="Already have account? Login";
-
-}
-
-};
-
-btn.onclick=()=>{
-
-const email=document.getElementById("email").value;
-const password=document.getElementById("password").value;
-
-if(loginMode){
-
-signInWithEmailAndPassword(auth,email,password)
-.then(()=>{
-window.location.href="home.html";
-})
-.catch(e=>alert(e.message));
-
-}else{
-
-createUserWithEmailAndPassword(auth,email,password)
-.then(()=>{
-window.location.href="home.html";
-})
-.catch(e=>alert(e.message));
-
-}
-
-};
-
-</script>
+<script type="module" src="firebase.js"></script>
+<script type="module" src="auth.js"></script>
 
 </body>
+
 </html>
