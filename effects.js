@@ -1,51 +1,119 @@
-// VIDEO EFFECTS LIBRARY
+const videoFeed = document.getElementById("video-feed");
 
-const previewVideo = document.getElementById("preview");
-const effectSelect = document.getElementById("effectSelect");
+let currentEffect = "none";
 
 
 // APPLY EFFECT
-effectSelect.onchange = function(){
 
-const effect = effectSelect.value;
+function applyEffect(effect){
 
-if(!previewVideo) return;
+currentEffect = effect;
 
-if(effect === "none"){
+const videos = document.querySelectorAll("video");
 
-previewVideo.style.filter = "none";
+videos.forEach(v=>{
 
-}else{
+if(effect==="none"){
+v.style.filter="none";
+}
 
-previewVideo.style.filter = effect;
+if(effect==="blur"){
+v.style.filter="blur(4px)";
+}
+
+if(effect==="dark"){
+v.style.filter="brightness(0.6)";
+}
+
+if(effect==="light"){
+v.style.filter="brightness(1.3)";
+}
+
+if(effect==="retro"){
+v.style.filter="sepia(1)";
+}
+
+if(effect==="bw"){
+v.style.filter="grayscale(1)";
+}
+
+});
 
 }
 
-};
+
+// EFFECT BUTTONS
+
+const blurBtn = document.getElementById("effectBlur");
+const darkBtn = document.getElementById("effectDark");
+const lightBtn = document.getElementById("effectLight");
+const retroBtn = document.getElementById("effectRetro");
+const bwBtn = document.getElementById("effectBW");
+const resetBtn = document.getElementById("effectReset");
 
 
-// EFFECT PREVIEW LIST (OPTIONAL EXTEND)
-const effects = [
-"none",
-"grayscale(1)",
-"sepia(1)",
-"contrast(1.5)",
-"brightness(1.4)",
-"hue-rotate(90deg)"
+blurBtn?.addEventListener("click",()=>applyEffect("blur"));
+darkBtn?.addEventListener("click",()=>applyEffect("dark"));
+lightBtn?.addEventListener("click",()=>applyEffect("light"));
+retroBtn?.addEventListener("click",()=>applyEffect("retro"));
+bwBtn?.addEventListener("click",()=>applyEffect("bw"));
+resetBtn?.addEventListener("click",()=>applyEffect("none"));
+
+
+// EFFECT LIBRARY
+
+const effectLibrary = [
+"blur",
+"dark",
+"light",
+"retro",
+"bw"
 ];
 
+function showEffectLibrary(){
 
-// FUNCTION TO ADD MORE EFFECTS
-function addEffect(name,value){
-
-const option = document.createElement("option");
-
-option.text = name;
-
-option.value = value;
-
-effectSelect.appendChild(option);
+console.log("Available effects:",effectLibrary);
 
 }
 
-window.addEffect = addEffect;
+
+// SAVE LAST EFFECT
+
+function saveEffect(){
+
+localStorage.setItem("videoEffect",currentEffect);
+
+}
+
+function loadEffect(){
+
+const saved = localStorage.getItem("videoEffect");
+
+if(saved){
+
+applyEffect(saved);
+
+}
+
+}
+
+document.addEventListener("click",saveEffect);
+
+loadEffect();
+
+
+// EFFECT ANALYTICS
+
+let effectClicks = 0;
+
+document.querySelectorAll("[id^='effect']").forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+effectClicks++;
+
+console.log("Effect used:",effectClicks);
+
+});
+
+});
