@@ -5,57 +5,27 @@ const feed = document.getElementById("video-feed");
 
 async function loadVideos(){
 
-const snapshot = await getDocs(collection(db,"videos"));
+feed.innerHTML = "";
 
-feed.innerHTML="";
+const snap = await getDocs(collection(db,"videos"));
 
-snapshot.forEach((doc)=>{
+snap.forEach(doc => {
 
 const data = doc.data();
 
 const video = document.createElement("video");
+
 video.src = data.video;
 video.className = "feed-video";
 
+video.autoplay = true;
 video.loop = true;
-video.controls = false;
-video.playsInline = true;
+video.muted = false;
+video.controls = true;
 
 feed.appendChild(video);
 
 });
-
-setupScrollPlay();
-
-}
-
-function setupScrollPlay(){
-
-const videos = document.querySelectorAll(".feed-video");
-
-const observer = new IntersectionObserver(entries => {
-
-entries.forEach(entry => {
-
-const video = entry.target;
-
-if(entry.isIntersecting){
-
-videos.forEach(v => v.pause());
-
-video.play();
-
-}else{
-
-video.pause();
-
-}
-
-});
-
-},{threshold:0.8});
-
-videos.forEach(v => observer.observe(v));
 
 }
 
