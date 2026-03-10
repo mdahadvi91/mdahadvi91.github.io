@@ -1,64 +1,74 @@
-// Firebase import
+// FIREBASE IMPORT
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import { 
-  getAuth,
-  onAuthStateChanged,
-  signOut
+import {
+getAuth,
+onAuthStateChanged,
+signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-import { 
-  getFirestore 
+import {
+getFirestore
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import { 
-  getStorage 
+import {
+getStorage
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 
-// 🔹 Your Firebase config
+// FIREBASE CONFIG
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
-  authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
-  projectId: "hridoy-er-apps-2ad7c",
-  storageBucket: "hridoy-er-apps-2ad7c.appspot.com",
-  messagingSenderId: "152919903520",
-  appId: "1:152919903520:web:5726d95dceeab535961b45",
-  measurementId: "G-R0S25ZXRQ3"
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_PROJECT.firebaseapp.com",
+projectId: "YOUR_PROJECT_ID",
+storageBucket: "YOUR_PROJECT.appspot.com",
+messagingSenderId: "YOUR_SENDER_ID",
+appId: "YOUR_APP_ID"
 };
 
 
-// 🔹 Initialize Firebase
+// INITIALIZE FIREBASE
+
 const app = initializeApp(firebaseConfig);
 
 
-// 🔹 Services
+// SERVICES
+
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
 
-// 🔹 Check Login
+// CHECK LOGIN
+
 onAuthStateChanged(auth,(user)=>{
 
-  if(!user){
-    
-    if(!window.location.pathname.includes("auth.html")){
-      window.location.href = "auth.html";
-    }
+if(!user){
 
-  }
+if(!window.location.pathname.includes("auth.html")){
+window.location.href="auth.html";
+}
+
+}
 
 });
 
 
-// 🔹 Logout function
+// LOGOUT
+
 function logout(){
-  signOut(auth).then(()=>{
-    window.location.href="auth.html";
-  });
+
+signOut(auth).then(()=>{
+
+window.location.href="auth.html";
+
+});
+
 }
 
 
-// 🔹 Export
+// EXPORT
+
 export { auth, db, storage, logout };
