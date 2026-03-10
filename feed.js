@@ -1,51 +1,19 @@
-import { db } from "./firebase.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
+  authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
+  projectId: "hridoy-er-apps-2ad7c",
+  storageBucket: "hridoy-er-apps-2ad7c.appspot.com",
+  messagingSenderId: "152919903520",
+  appId: "1:152919903520:web:5726d95dceeab535961b45"
+};
 
-const feed = document.getElementById("video-feed");
+const app = initializeApp(firebaseConfig);
 
-async function loadVideos() {
-
-if(!feed){
-console.log("video-feed div not found");
-return;
-}
-
-feed.innerHTML = "";
-
-try{
-
-const querySnapshot = await getDocs(collection(db,"videos"));
-
-querySnapshot.forEach((doc)=>{
-
-const data = doc.data();
-
-if(!data.video) return;
-
-const video = document.createElement("video");
-
-video.src = data.video;
-video.autoplay = true;
-video.loop = true;
-video.muted = false;
-video.controls = true;
-video.playsInline = true;
-
-video.style.width = "100%";
-video.style.height = "100vh";
-video.style.objectFit = "cover";
-
-feed.appendChild(video);
-
-});
-
-}catch(error){
-
-console.log("Error loading videos:",error);
-
-}
-
-}
-
-loadVideos();
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
