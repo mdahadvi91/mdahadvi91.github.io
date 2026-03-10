@@ -2,33 +2,30 @@
 <html>
 
 <head>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5168582564229195"
+crossorigin="anonymous"></script>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Mini TikTok</title>
 
 <link rel="stylesheet" href="style.css">
-
-<!-- Adsense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5168582564229195"
-crossorigin="anonymous"></script>
 
 </head>
 
 <body>
 
-<!-- VIDEO FEED -->
 <div id="video-feed"></div>
-  <div id="video-feed">
-<video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay muted controls></video>
-</div>
 
 <!-- RIGHT SIDE BUTTONS -->
+
 <div class="right-buttons">
 
 <button id="profileBtn">👤</button>
 
 <button id="likeBtn">❤️</button>
-<div id="likeCount">0</div>
 
 <button id="commentBtn">💬</button>
 
@@ -36,58 +33,42 @@ crossorigin="anonymous"></script>
 
 <button id="followBtn">➕</button>
 
-<button onclick="window.location.href='search.html'">🔍</button>
-
-<button onclick="window.location.href='notifications.html'">🔔</button>
-
-<button onclick="window.location.href='chat.html'">💬</button>
-
-<button onclick="window.location.href='trending.html'">🔥</button>
-
-<button onclick="window.location.href='dashboard.html'">📊</button>
-
 </div>
 
-<!-- COMMENT BOX -->
-<div id="commentBox" class="comment-box"></div>
-
 <!-- UPLOAD BUTTON -->
+
 <button id="uploadBtn">+</button>
 
 
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+<!-- BUTTON SCRIPT -->
 
-</div>
-
-<!-- BUTTON ACTIONS -->
 <script>
 
-document.getElementById("profileBtn").onclick=function(){
-window.location.href="profile.html";
+document.getElementById("profileBtn").onclick = function(){
+window.location.href = "profile.html";
 }
 
-document.getElementById("uploadBtn").onclick=function(){
-window.location.href="upload.html";
+document.getElementById("uploadBtn").onclick = function(){
+window.location.href = "upload.html";
 }
 
-document.getElementById("shareBtn").onclick=function(){
+document.getElementById("shareBtn").onclick = function(){
+
 navigator.clipboard.writeText(window.location.href);
+
 alert("Video link copied");
+
 }
 
 </script>
 
-<!-- FIREBASE SCRIPTS -->
 
 <script type="module" src="firebase.js"></script>
 <script type="module" src="feed.js"></script>
 <script type="module" src="like.js"></script>
 <script type="module" src="comment.js"></script>
 <script type="module" src="follow.js"></script>
-<script type="module" src="premium.js"></script>
-<script type="module" src="gift.js"></script>
 
 </body>
+
 </html>
