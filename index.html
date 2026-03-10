@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Crystal Heart Animation</title>
 
 <style>
@@ -19,17 +20,31 @@ font-family:sans-serif;
 color:white;
 }
 
+/* TITLE */
+
 h1{
 position:absolute;
-top:20px;
+top:30px;
 text-align:center;
 width:100%;
 color:#6eff7a;
-font-size:30px;
+font-size:28px;
+letter-spacing:2px;
 }
+
+/* CANVAS */
 
 canvas{
 position:absolute;
+}
+
+/* MESSAGE */
+
+.msg{
+position:absolute;
+bottom:40px;
+font-size:20px;
+opacity:0.8;
 }
 
 </style>
@@ -38,8 +53,13 @@ position:absolute;
 <body>
 
 <h1>Crystal Heart Animation</h1>
+<div class="msg">Tap Screen ❤️</div>
 
 <canvas id="canvas"></canvas>
+
+<audio id="music" loop>
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_2d7c8d7c0a.mp3">
+</audio>
 
 <script>
 
@@ -49,41 +69,86 @@ const ctx=canvas.getContext("2d")
 canvas.width=window.innerWidth
 canvas.height=window.innerHeight
 
+const music=document.getElementById("music")
+
 let particles=[]
+let sparks=[]
+
+/* HEART FORMULA */
 
 function heart(t){
-return {
+return{
 x:16*Math.pow(Math.sin(t),3),
 y:-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))
 }
 }
 
-for(let i=0;i<2000;i++){
+/* CREATE HEART PARTICLES */
+
+for(let i=0;i<1800;i++){
 
 let t=Math.random()*Math.PI*2
 let pos=heart(t)
 
 particles.push({
-x:canvas.width/2+pos.x*20,
-y:canvas.height/2+pos.y*20,
+x:canvas.width/2+pos.x*18,
+y:canvas.height/2+pos.y*18,
 size:Math.random()*2,
-alpha:Math.random()
+alpha:Math.random(),
 })
 
 }
 
+/* EXPLOSION */
+
+function explode(x,y){
+
+for(let i=0;i<200;i++){
+
+sparks.push({
+x:x,
+y:y,
+vx:(Math.random()-0.5)*6,
+vy:(Math.random()-0.5)*6,
+life:100
+})
+
+}
+
+}
+
+/* DRAW */
+
 function animate(){
 
-ctx.fillStyle="rgba(0,0,0,0.2)"
+ctx.fillStyle="rgba(0,0,0,0.25)"
 ctx.fillRect(0,0,canvas.width,canvas.height)
+
+/* HEART */
 
 particles.forEach(p=>{
 
 ctx.beginPath()
 ctx.arc(p.x,p.y,p.size,0,Math.PI*2)
-
-ctx.fillStyle="rgba(255,80,120,"+p.alpha+")"
+ctx.fillStyle="rgba(255,70,120,"+p.alpha+")"
 ctx.fill()
+
+})
+
+/* SPARKS */
+
+sparks.forEach((s,i)=>{
+
+s.x+=s.vx
+s.y+=s.vy
+s.life--
+
+ctx.beginPath()
+ctx.arc(s.x,s.y,2,0,Math.PI*2)
+ctx.fillStyle="white"
+ctx.fill()
+
+if(s.life<=0) sparks.splice(i,1)
 
 })
 
@@ -92,6 +157,27 @@ requestAnimationFrame(animate)
 }
 
 animate()
+
+/* CLICK EVENT */
+
+canvas.addEventListener("click",e=>{
+
+explode(e.clientX,e.clientY)
+
+if(music.paused){
+music.play()
+}
+
+})
+
+/* RESIZE */
+
+window.addEventListener("resize",()=>{
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+})
 
 </script>
 
