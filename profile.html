@@ -71,7 +71,29 @@ object-fit:cover;
 
 </div>
 
-<script type="module" src="firebase.js"></script>
+ <script import { auth } from "./firebase.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+logoutBtn.addEventListener("click", () => {
+
+  signOut(auth)
+  .then(() => {
+
+    alert("Logged out successfully");
+
+    window.location.href = "auth.html";
+
+  })
+  .catch((error) => {
+
+    console.log(error);
+
+  });
+
+});
+ <script type="module" src="firebase.js"></script>
 <script type="module" src="profile.js"></script>
 
 </body>
