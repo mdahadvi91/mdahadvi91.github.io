@@ -1,19 +1,35 @@
 import { db } from "./firebase.js";
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const commentBtn = document.getElementById("commentBtn");
+const commentBox = document.getElementById("commentBox");
 
-commentBtn.addEventListener("click", ()=>{
+commentBtn.onclick = async ()=>{
 
-const comment = prompt("Write your comment");
+const text = prompt("Write comment");
 
-if(!comment) return;
+if(!text) return;
 
-addDoc(collection(db,"comments"),{
-text: comment,
-time: Date.now()
+await addDoc(collection(db,"comments"),{
+text:text,
+time:Date.now()
 });
 
-alert("Comment added");
+loadComments();
+};
 
+async function loadComments(){
+
+commentBox.innerHTML="";
+
+const snap = await getDocs(collection(db,"comments"));
+
+snap.forEach(d=>{
+const div = document.createElement("div");
+div.innerText = d.data().text;
+commentBox.appendChild(div);
 });
+
+}
+
+loadComments();
