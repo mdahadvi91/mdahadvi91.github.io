@@ -154,8 +154,217 @@ display:none;
 
 </div>
 
+<!-- PROFILE PAGE -->
 
-<!-- PROFILE -->
+<div id="profile" class="page">
+
+<div class="profile-header">
+
+<img src="https://i.pravatar.cc/120" class="avatar">
+
+<h2 id="username">Creator</h2>
+
+<button id="followBtn">Follow</button>
+
+<div class="stats">
+
+<div>
+<h3 id="followers">0</h3>
+<p>Followers</p>
+</div>
+
+<div>
+<h3 id="following">0</h3>
+<p>Following</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="grid" id="profileVideos"></div>
+
+</div>
+
+
+
+<style>
+
+.profile-header{
+
+text-align:center;
+padding:20px;
+
+}
+
+.avatar{
+
+width:100px;
+height:100px;
+border-radius:50%;
+object-fit:cover;
+margin-bottom:10px;
+
+}
+
+#followBtn{
+
+padding:8px 20px;
+border:none;
+border-radius:20px;
+background:#ff0050;
+color:white;
+font-size:16px;
+cursor:pointer;
+
+}
+
+.stats{
+
+display:flex;
+justify-content:center;
+gap:40px;
+margin-top:15px;
+
+}
+
+.stats h3{
+
+margin:0;
+
+}
+
+.stats p{
+
+margin:0;
+font-size:12px;
+color:#aaa;
+
+}
+
+.grid{
+
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:4px;
+padding-bottom:80px;
+
+}
+
+.grid video{
+
+width:100%;
+height:140px;
+object-fit:cover;
+
+}
+
+</style>
+
+
+
+<script type="module">
+
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+
+const db = getFirestore()
+
+const currentUser="user1"
+const profileUser="user2"
+
+const followBtn=document.getElementById("followBtn")
+
+
+
+/* LOAD FOLLOW DATA */
+
+async function loadFollowStats(){
+
+const followersRef=collection(db,"users",profileUser,"followers")
+const followingRef=collection(db,"users",currentUser,"following")
+
+const followersSnap=await getDocs(followersRef)
+const followingSnap=await getDocs(followingRef)
+
+document.getElementById("followers").innerText=followersSnap.size
+document.getElementById("following").innerText=followingSnap.size
+
+const followDoc=doc(db,"users",profileUser,"followers",currentUser)
+
+const snap=await getDoc(followDoc)
+
+if(snap.exists()){
+
+followBtn.innerText="Following"
+
+}else{
+
+followBtn.innerText="Follow"
+
+}
+
+}
+
+loadFollowStats()
+
+
+
+/* FOLLOW / UNFOLLOW */
+
+followBtn.onclick=async ()=>{
+
+const followDoc=doc(db,"users",profileUser,"followers",currentUser)
+
+const followingDoc=doc(db,"users",currentUser,"following",profileUser)
+
+const snap=await getDoc(followDoc)
+
+if(snap.exists()){
+
+await deleteDoc(followDoc)
+await deleteDoc(followingDoc)
+
+}else{
+
+await setDoc(followDoc,{time:Date.now()})
+await setDoc(followingDoc,{time:Date.now()})
+
+}
+
+loadFollowStats()
+
+}
+
+
+
+/* LOAD PROFILE VIDEOS */
+
+async function loadProfileVideos(){
+
+const grid=document.getElementById("profileVideos")
+
+grid.innerHTML=""
+
+const snap=await getDocs(collection(db,"videos"))
+
+snap.forEach(v=>{
+
+const data=v.data()
+
+const video=document.createElement("video")
+
+video.src=data.url
+video.controls=true
+
+grid.appendChild(video)
+
+})
+
+}
+
+loadProfileVideos()
+
+</script>
 
 <div id="profile" class="page">
 
