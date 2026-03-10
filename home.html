@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>My Social App</title>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Home</title>
 
 <style>
 
 body{
 margin:0;
 background:black;
-font-family:Arial;
+color:white;
+font-family:sans-serif;
 overflow:hidden;
 }
 
@@ -32,45 +35,37 @@ height:100%;
 object-fit:cover;
 }
 
-/* RIGHT BUTTONS */
-
-.right{
-position:absolute;
-right:10px;
-bottom:120px;
-color:white;
-text-align:center;
-}
-
-.right div{
-margin:15px 0;
-font-size:20px;
-}
-
-/* CAPTION */
-
-.caption{
-position:absolute;
-bottom:100px;
-left:10px;
-color:white;
-max-width:70%;
-}
-
-/* TOP BAR */
-
-.top{
+.topbar{
 position:absolute;
 top:10px;
 left:0;
 right:0;
-color:white;
 text-align:center;
 font-weight:bold;
 font-size:18px;
 }
 
-/* BOTTOM MENU */
+.right{
+position:absolute;
+right:10px;
+bottom:140px;
+text-align:center;
+}
+
+.right button{
+background:none;
+border:none;
+color:white;
+font-size:26px;
+margin:12px 0;
+}
+
+.caption{
+position:absolute;
+bottom:90px;
+left:10px;
+max-width:70%;
+}
 
 .menu{
 position:fixed;
@@ -82,7 +77,6 @@ background:black;
 display:flex;
 justify-content:space-around;
 align-items:center;
-color:white;
 border-top:1px solid #333;
 }
 
@@ -94,23 +88,22 @@ font-size:12px;
 .plus{
 background:white;
 color:black;
-font-size:25px;
 width:40px;
 height:40px;
 border-radius:10px;
 display:flex;
 align-items:center;
 justify-content:center;
+font-size:24px;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div class="feed" id="feed"></div>
-
-<!-- BOTTOM MENU -->
 
 <div class="menu">
 
@@ -118,11 +111,11 @@ justify-content:center;
 
 <div>👥<br>Friends</div>
 
-<div class="plus">+</div>
+<div class="plus" onclick="location.href='upload.html'">+</div>
 
 <div>💬<br>Inbox</div>
 
-<div>👤<br>Profile</div>
+<div onclick="location.href='profile.html'">👤<br>Profile</div>
 
 </div>
 
@@ -130,7 +123,9 @@ justify-content:center;
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 
-import { getFirestore,collection,getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { getFirestore,collection,getDocs,updateDoc,doc }
+
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 const firebaseConfig = {
 
@@ -152,53 +147,72 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-const feed=document.getElementById("feed");
+const feed = document.getElementById("feed");
 
 async function load(){
 
-const snap=await getDocs(collection(db,"posts"));
+feed.innerHTML="";
 
-snap.forEach(doc=>{
+const snap = await getDocs(collection(db,"posts"));
 
-const d=doc.data();
+snap.forEach(d=>{
 
-feed.innerHTML+=`
+const data=d.data();
+
+feed.innerHTML += `
 
 <div class="videoBox">
 
-<div class="top">Following | <b>For You</b></div>
+<div class="topbar">Following | <b>For You</b></div>
 
-<video autoplay loop muted src="${d.media}"></video>
+<video autoplay loop muted src="${data.video}"></video>
 
 <div class="right">
 
-<div>❤️<br>${d.likes}</div>
+<button onclick="like('${d.id}',${data.likes})">❤️</button>
 
-<div>💬<br>0</div>
+<div>${data.likes}</div>
 
-<div>🔗<br>Share</div>
+<button>💬</button>
+
+<button>🔖</button>
+
+<button>🔁</button>
 
 </div>
 
 <div class="caption">
 
-<b>@${d.username}</b>
+<b>@${data.username}</b>
 
-<p>${d.caption}</p>
-
-</div>
+<p>${data.caption}</p>
 
 </div>
 
-`
+</div>
 
-})
+`;
+
+});
 
 }
 
-load()
+window.like = async function(id,current){
+
+await updateDoc(doc(db,"posts",id),{
+
+likes:current+1
+
+});
+
+load();
+
+}
+
+load();
 
 </script>
 
 </body>
+
 </html>
