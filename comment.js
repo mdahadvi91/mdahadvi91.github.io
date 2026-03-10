@@ -1,35 +1,76 @@
-import { db } from "./firebase.js";
-import { collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { db, auth } from "./firebase.js";
+
+import {
+collection,
+addDoc,
+serverTimestamp,
+getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const commentBtn = document.getElementById("commentBtn");
 const commentBox = document.getElementById("commentBox");
+const commentInput = document.getElementById("commentInput");
+const sendComment = document.getElementById("sendComment");
 
-commentBtn.onclick = async ()=>{
+let videoId = "currentVideo"; // placeholder
 
-const text = prompt("Write comment");
+/* OPEN COMMENT BOX */
 
-if(!text) return;
+if(commentBtn){
 
-await addDoc(collection(db,"comments"),{
-text:text,
-time:Date.now()
-});
+commentBtn.onclick = ()=>{
 
-loadComments();
-};
+if(commentBox){
 
-async function loadComments(){
-
-commentBox.innerHTML="";
-
-const snap = await getDocs(collection(db,"comments"));
-
-snap.forEach(d=>{
-const div = document.createElement("div");
-div.innerText = d.data().text;
-commentBox.appendChild(div);
-});
+commentBox.style.display="block";
 
 }
 
-loadComments();
+}
+
+}
+
+/* SEND COMMENT */
+
+if(sendComment){
+
+sendComment.onclick = async ()=>{
+
+const user = auth.currentUser;
+
+if(!user){
+
+alert("Login first");
+return;
+
+}
+
+const text = commentInput.value;
+
+if(text=="") return;
+
+try{
+
+await addDoc(collection(db,"comments"),{
+
+videoId:videoId,
+userId:user.uid,
+userEmail:user.email,
+text:text,
+createdAt:serverTimestamp()
+
+});
+
+commentInput.value="";
+
+alert("Comment added");
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
+
+}
