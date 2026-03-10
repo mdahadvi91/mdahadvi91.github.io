@@ -1,61 +1,23 @@
-import { db, auth } from "./firebase.js";
-
-import {
-doc,
-setDoc,
-deleteDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { db } from "./firebase.js";
+import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const likeBtn = document.getElementById("likeBtn");
 
-let liked = false;
+let currentVideoId = null;
 
-if(likeBtn){
-
-likeBtn.onclick = async ()=>{
-
-const user = auth.currentUser;
-
-if(!user){
-
-alert("Login first");
-return;
-
+/* feed.js থেকে video id set হবে */
+export function setVideoId(id){
+  currentVideoId = id;
 }
 
-const videoId = "currentVideo"; // video id placeholder
+likeBtn.addEventListener("click", async ()=>{
 
-const likeRef = doc(db,"likes",user.uid+"_"+videoId);
+if(!currentVideoId) return;
 
-try{
+const videoRef = doc(db,"videos",currentVideoId);
 
-if(!liked){
-
-await setDoc(likeRef,{
-userId:user.uid,
-videoId:videoId
+await updateDoc(videoRef,{
+likes: increment(1)
 });
 
-likeBtn.innerText="💖";
-
-liked=true;
-
-}else{
-
-await deleteDoc(likeRef);
-
-likeBtn.innerText="❤️";
-
-liked=false;
-
-}
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-}
-
-}
+});
