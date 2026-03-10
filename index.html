@@ -3,9 +3,6 @@
 
 <head>
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5168582564229195"
-crossorigin="anonymous"></script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
@@ -17,6 +14,7 @@ crossorigin="anonymous"></script>
 
 <body>
 
+<!-- VIDEO FEED -->
 <div id="video-feed"></div>
 
 <!-- RIGHT SIDE BUTTONS -->
@@ -33,41 +31,217 @@ crossorigin="anonymous"></script>
 
 <button id="followBtn">➕</button>
 
+<!-- NEW FEATURES BUTTONS -->
+
+<button id="searchBtn">🔍</button>
+
+<button id="notificationBtn">🔔</button>
+
+<button id="chatBtn">💬</button>
+
+<button id="trendingBtn">🔥</button>
+
+<button id="dashboardBtn">📊</button>
+
+<button id="liveBtn">📡</button>
+
+<button id="giftBtn">🎁</button>
+
+<button id="musicBtn">🎵</button>
+
+<button id="filterBtn">✨</button>
+
+<button id="cameraBtn">📷</button>
+
+<button id="effectBtn">🎬</button>
+
+<button id="earnBtn">💰</button>
+
 </div>
+
+<!-- LIKE COUNT -->
+<div id="likeCount" style="position:fixed;right:20px;bottom:220px;color:white;font-size:14px;">0</div>
+
+<!-- COMMENT BOX -->
+<div id="commentBox" class="comment-box"></div>
 
 <!-- UPLOAD BUTTON -->
 
 <button id="uploadBtn">+</button>
 
-
-<!-- BUTTON SCRIPT -->
+<!-- NAVIGATION SCRIPT -->
 
 <script>
 
-document.getElementById("profileBtn").onclick = function(){
-window.location.href = "profile.html";
+const profileBtn=document.getElementById("profileBtn");
+if(profileBtn){
+profileBtn.onclick=function(){
+window.location.href="profile.html";
+}
 }
 
-document.getElementById("uploadBtn").onclick = function(){
-window.location.href = "upload.html";
+const uploadBtn=document.getElementById("uploadBtn");
+if(uploadBtn){
+uploadBtn.onclick=function(){
+window.location.href="upload.html";
+}
 }
 
-document.getElementById("shareBtn").onclick = function(){
+const searchBtn=document.getElementById("searchBtn");
+if(searchBtn){
+searchBtn.onclick=function(){
+window.location.href="search.html";
+}
+}
 
+const notificationBtn=document.getElementById("notificationBtn");
+if(notificationBtn){
+notificationBtn.onclick=function(){
+window.location.href="notifications.html";
+}
+}
+
+const chatBtn=document.getElementById("chatBtn");
+if(chatBtn){
+chatBtn.onclick=function(){
+window.location.href="chat.html";
+}
+}
+
+const trendingBtn=document.getElementById("trendingBtn");
+if(trendingBtn){
+trendingBtn.onclick=function(){
+window.location.href="trending.html";
+}
+}
+
+const dashboardBtn=document.getElementById("dashboardBtn");
+if(dashboardBtn){
+dashboardBtn.onclick=function(){
+window.location.href="dashboard.html";
+}
+}
+
+const liveBtn=document.getElementById("liveBtn");
+if(liveBtn){
+liveBtn.onclick=function(){
+window.location.href="live.html";
+}
+}
+
+const giftBtn=document.getElementById("giftBtn");
+if(giftBtn){
+giftBtn.onclick=function(){
+window.location.href="gift.html";
+}
+}
+
+const musicBtn=document.getElementById("musicBtn");
+if(musicBtn){
+musicBtn.onclick=function(){
+window.location.href="music.html";
+}
+}
+
+const filterBtn=document.getElementById("filterBtn");
+if(filterBtn){
+filterBtn.onclick=function(){
+window.location.href="filters.html";
+}
+}
+
+const cameraBtn=document.getElementById("cameraBtn");
+if(cameraBtn){
+cameraBtn.onclick=function(){
+window.location.href="camera.html";
+}
+}
+
+const effectBtn=document.getElementById("effectBtn");
+if(effectBtn){
+effectBtn.onclick=function(){
+window.location.href="effects.html";
+}
+}
+
+const earnBtn=document.getElementById("earnBtn");
+if(earnBtn){
+earnBtn.onclick=function(){
+window.location.href="earnings.html";
+}
+}
+
+const shareBtn=document.getElementById("shareBtn");
+if(shareBtn){
+shareBtn.onclick=function(){
 navigator.clipboard.writeText(window.location.href);
-
 alert("Video link copied");
-
+}
 }
 
 </script>
 
+<!-- MAIN SYSTEM SCRIPTS -->
 
 <script type="module" src="firebase.js"></script>
+
 <script type="module" src="feed.js"></script>
+
 <script type="module" src="like.js"></script>
+
 <script type="module" src="comment.js"></script>
+
 <script type="module" src="follow.js"></script>
+
+<!-- NEW FEATURE MODULES -->
+
+<script type="module" src="search.js"></script>
+
+<script type="module" src="notifications.js"></script>
+
+<script type="module" src="chat.js"></script>
+
+<script type="module" src="trending.js"></script>
+
+<script type="module" src="dashboard.js"></script>
+
+<script type="module" src="live.js"></script>
+
+<script type="module" src="gift.js"></script>
+
+<script type="module" src="music.js"></script>
+
+<script type="module" src="filters.js"></script>
+
+<script type="module" src="camera.js"></script>
+
+<script type="module" src="effects.js"></script>
+
+<script type="module" src="earnings.js"></script>
+
+<script type="module" src="ads.js"></script>
+
+<script type="module" src="analytics.js"></script>
+
+<script type="module" src="premium.js"></script>
+
+<script type="module" src="creator.js"></script>
+
+<script type="module" src="withdraw.js"></script>
+
+<script type="module" src="coins.js"></script>
+
+<script type="module" src="duet.js"></script>
+
+<script type="module" src="stitch.js"></script>
+
+<script type="module" src="story.js"></script>
+
+<script type="module" src="report.js"></script>
+
+<script type="module" src="settings.js"></script>
+
+<script type="module" src="admin.js"></script>
 
 </body>
 
