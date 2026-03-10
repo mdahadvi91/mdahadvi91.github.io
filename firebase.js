@@ -4,21 +4,21 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-// Your config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
   authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
   projectId: "hridoy-er-apps-2ad7c",
-  storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
+  storageBucket: "hridoy-er-apps-2ad7c.appspot.com",
   messagingSenderId: "152919903520",
   appId: "1:152919903520:web:5726d95dceeab535961b45",
   measurementId: "G-R0S25ZXRQ3"
 };
 
-// Init
+// Initialize
 const app = initializeApp(firebaseConfig);
 
-// Export
+// Export services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
