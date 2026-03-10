@@ -1,50 +1,147 @@
-import { db, auth } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
-collection,
-addDoc
+doc,
+setDoc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
 const premiumBtn = document.getElementById("premiumBtn");
-const boostBtn = document.getElementById("boostBtn");
+const premiumBadge = document.getElementById("premiumBadge");
+
+let userId = "defaultUser";
+let isPremium = false;
 
 
-// BUY PREMIUM
-premiumBtn.onclick = async function(){
+// LOAD PREMIUM STATUS
 
-const user = auth.currentUser;
+async function loadPremium(){
 
-if(!user) return;
+try{
 
-await addDoc(collection(db,"premiumUsers"),{
+const ref = doc(db,"premiumUsers",userId);
 
-userId:user.uid,
-type:"premium",
+const snap = await getDoc(ref);
+
+if(snap.exists()){
+
+isPremium = true;
+
+showPremium();
+
+}
+
+}catch(e){
+
+console.log("Premium load error:",e);
+
+}
+
+}
+
+
+// ACTIVATE PREMIUM
+
+async function activatePremium(){
+
+try{
+
+const ref = doc(db,"premiumUsers",userId);
+
+await setDoc(ref,{
+active:true,
 time:Date.now()
-
 });
 
-alert("Premium activated 💎");
+isPremium = true;
 
-};
+showPremium();
+
+alert("Premium activated");
+
+}catch(e){
+
+console.log("Premium error:",e);
+
+}
+
+}
 
 
+// SHOW BADGE
 
-// BOOST VIDEO
-window.boostVideo = async function(videoId){
+function showPremium(){
 
-const user = auth.currentUser;
+if(premiumBadge){
 
-if(!user) return;
+premiumBadge.style.display="inline-block";
 
-await addDoc(collection(db,"boosts"),{
+premiumBadge.innerText="⭐ PREMIUM";
 
-videoId:videoId,
-userId:user.uid,
-time:Date.now()
+}
+
+}
+
+
+// BUTTON EVENT
+
+premiumBtn?.addEventListener("click",activatePremium);
+
+
+// PREMIUM VIDEO FILTER
+
+function filterPremiumVideos(videos){
+
+if(!isPremium){
+
+return videos.filter(v=>!v.premium);
+
+}
+
+return videos;
+
+}
+
+
+// LOCAL SAVE
+
+function savePremiumLocal(){
+
+localStorage.setItem("premiumUser",isPremium);
+
+}
+
+function loadPremiumLocal(){
+
+const saved = localStorage.getItem("premiumUser");
+
+if(saved){
+
+isPremium = saved==="true";
+
+if(isPremium){
+showPremium();
+}
+
+}
+
+}
+
+premiumBtn?.addEventListener("click",savePremiumLocal);
+
+loadPremium();
+loadPremiumLocal();
+
+
+// PREMIUM ANALYTICS
+
+let premiumClicks=0;
+
+premiumBtn?.addEventListener("click",()=>{
+
+premiumClicks++;
+
+console.log("Premium clicks:",premiumClicks);
 
 });
-
-alert("Video boosted 🚀");
-
-};
