@@ -3,65 +3,37 @@ import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/
 
 const feed = document.getElementById("video-feed");
 
-async function loadVideos(){
+async function loadVideos() {
 
-const querySnapshot = await getDocs(collection(db,"videos"));
+feed.innerHTML = "";
 
-querySnapshot.forEach((doc)=>{
+const snapshot = await getDocs(collection(db,"videos"));
+
+snapshot.forEach((doc)=>{
 
 const data = doc.data();
 
 const video = document.createElement("video");
 
 video.src = data.video;
+
 video.className = "feed-video";
 
+video.autoplay = true;
 video.loop = true;
 video.muted = true;
-video.autoplay = true;
+video.controls = false;
 video.playsInline = true;
 
 feed.appendChild(video);
 
-/* 🔊 TAP SOUND CONTROL */
-
-video.addEventListener("click",()=>{
-
-video.muted = !video.muted;
-
 });
 
-/* ❤️ DOUBLE TAP LIKE */
-
-video.addEventListener("dblclick",(e)=>{
-
-const heart = document.createElement("div");
-
-heart.innerHTML = "❤️";
-
-heart.className = "heart";
-
-heart.style.left = e.clientX + "px";
-heart.style.top = e.clientY + "px";
-
-document.body.appendChild(heart);
-
-setTimeout(()=>{
-heart.remove();
-},1000);
-
-});
-
-});
-
-startObserver();
+autoPlay();
 
 }
 
-loadVideos();
-
-
-function startObserver(){
+function autoPlay(){
 
 const videos = document.querySelectorAll(".feed-video");
 
@@ -73,6 +45,10 @@ const video = entry.target;
 
 if(entry.isIntersecting){
 
+videos.forEach(v=>{
+v.pause();
+});
+
 video.play();
 
 }else{
@@ -83,10 +59,12 @@ video.pause();
 
 });
 
-},{threshold:0.7});
+},{threshold:0.8});
 
-videos.forEach(video=>{
-observer.observe(video);
+videos.forEach(v=>{
+observer.observe(v);
 });
 
 }
+
+loadVideos();
