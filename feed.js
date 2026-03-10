@@ -11,17 +11,49 @@ snapshot.forEach((doc)=>{
 
 const data = doc.data();
 
+if(!data.video) return;
+
 const video = document.createElement("video");
 
 video.src = data.video;
-video.controls = true;
-video.autoplay = true;
-video.loop = true;
 video.muted = true;
+video.loop = true;
 video.playsInline = true;
+video.preload = "auto";
 
 feed.appendChild(video);
 
+});
+
+autoPlay();
+}
+
+function autoPlay(){
+
+const videos = document.querySelectorAll("video");
+
+const observer = new IntersectionObserver((entries)=>{
+
+entries.forEach(entry=>{
+
+const video = entry.target;
+
+if(entry.isIntersecting){
+
+video.play();
+
+}else{
+
+video.pause();
+
+}
+
+});
+
+},{ threshold:0.7 });
+
+videos.forEach(video=>{
+observer.observe(video);
 });
 
 }
