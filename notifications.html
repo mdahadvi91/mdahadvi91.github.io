@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Notifications</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:sans-serif;
+}
+
+body{
+background:black;
+color:white;
+padding:20px;
+}
+
+/* header */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.back{
+cursor:pointer;
+color:#aaa;
+}
+
+/* notification box */
+
+.notification{
+background:#111;
+padding:15px;
+border-radius:10px;
+margin-bottom:10px;
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.icon{
+font-size:20px;
+}
+
+.text{
+font-size:14px;
+opacity:0.9;
+}
+
+.time{
+font-size:12px;
+opacity:0.6;
+margin-top:3px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>Notifications</h2>
+
+<div class="back" onclick="goHome()">⬅ Home</div>
+
+</div>
+
+<div class="notification">
+
+<div class="icon">❤️</div>
+
+<div>
+
+<div class="text">Someone liked your video</div>
+<div class="time">2 minutes ago</div>
+
+</div>
+
+</div>
+
+<div class="notification">
+
+<div class="icon">💬</div>
+
+<div>
+
+<div class="text">New comment on your video</div>
+<div class="time">10 minutes ago</div>
+
+</div>
+
+</div>
+
+<div class="notification">
+
+<div class="icon">👤</div>
+
+<div>
+
+<div class="text">You got a new follower</div>
+<div class="time">1 hour ago</div>
+
+</div>
+
+</div>
+
+<script>
+
+function goHome(){
+
+window.location.href="home.html";
+
+}
+
+</script>
+
+</body>
+</html>
