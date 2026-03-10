@@ -4,7 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Mini TikTok</title>
 
@@ -15,7 +15,9 @@
 <body>
 
 <!-- VIDEO FEED -->
+
 <div id="video-feed"></div>
+
 
 <!-- RIGHT SIDE BUTTONS -->
 
@@ -31,17 +33,13 @@
 
 <button id="followBtn">➕</button>
 
-<!-- NEW FEATURES BUTTONS -->
-
 <button id="searchBtn">🔍</button>
 
-<button id="notificationBtn">🔔</button>
+<button id="notifyBtn">🔔</button>
 
 <button id="chatBtn">💬</button>
 
-<button id="trendingBtn">🔥</button>
-
-<button id="dashboardBtn">📊</button>
+<button id="trendBtn">🔥</button>
 
 <button id="liveBtn">📡</button>
 
@@ -49,139 +47,88 @@
 
 <button id="musicBtn">🎵</button>
 
-<button id="filterBtn">✨</button>
+<button id="effectBtn">✨</button>
 
 <button id="cameraBtn">📷</button>
 
-<button id="effectBtn">🎬</button>
+<button id="dashboardBtn">📊</button>
 
 <button id="earnBtn">💰</button>
 
 </div>
 
+
 <!-- LIKE COUNT -->
-<div id="likeCount" style="position:fixed;right:20px;bottom:220px;color:white;font-size:14px;">0</div>
+
+<div id="likeCount">0</div>
+
 
 <!-- COMMENT BOX -->
+
 <div id="commentBox" class="comment-box"></div>
+
 
 <!-- UPLOAD BUTTON -->
 
 <button id="uploadBtn">+</button>
 
-<!-- NAVIGATION SCRIPT -->
+
+<!-- BUTTON SCRIPT -->
 
 <script>
 
-const profileBtn=document.getElementById("profileBtn");
-if(profileBtn){
-profileBtn.onclick=function(){
+document.getElementById("profileBtn").onclick=function(){
 window.location.href="profile.html";
 }
-}
 
-const uploadBtn=document.getElementById("uploadBtn");
-if(uploadBtn){
-uploadBtn.onclick=function(){
+document.getElementById("uploadBtn").onclick=function(){
 window.location.href="upload.html";
 }
-}
 
-const searchBtn=document.getElementById("searchBtn");
-if(searchBtn){
-searchBtn.onclick=function(){
+document.getElementById("searchBtn").onclick=function(){
 window.location.href="search.html";
 }
-}
 
-const notificationBtn=document.getElementById("notificationBtn");
-if(notificationBtn){
-notificationBtn.onclick=function(){
+document.getElementById("notifyBtn").onclick=function(){
 window.location.href="notifications.html";
 }
-}
 
-const chatBtn=document.getElementById("chatBtn");
-if(chatBtn){
-chatBtn.onclick=function(){
+document.getElementById("chatBtn").onclick=function(){
 window.location.href="chat.html";
 }
-}
 
-const trendingBtn=document.getElementById("trendingBtn");
-if(trendingBtn){
-trendingBtn.onclick=function(){
+document.getElementById("trendBtn").onclick=function(){
 window.location.href="trending.html";
 }
-}
 
-const dashboardBtn=document.getElementById("dashboardBtn");
-if(dashboardBtn){
-dashboardBtn.onclick=function(){
-window.location.href="dashboard.html";
-}
-}
-
-const liveBtn=document.getElementById("liveBtn");
-if(liveBtn){
-liveBtn.onclick=function(){
+document.getElementById("liveBtn").onclick=function(){
 window.location.href="live.html";
 }
-}
 
-const giftBtn=document.getElementById("giftBtn");
-if(giftBtn){
-giftBtn.onclick=function(){
+document.getElementById("giftBtn").onclick=function(){
 window.location.href="gift.html";
 }
+
+document.getElementById("dashboardBtn").onclick=function(){
+window.location.href="dashboard.html";
 }
 
-const musicBtn=document.getElementById("musicBtn");
-if(musicBtn){
-musicBtn.onclick=function(){
-window.location.href="music.html";
-}
-}
-
-const filterBtn=document.getElementById("filterBtn");
-if(filterBtn){
-filterBtn.onclick=function(){
-window.location.href="filters.html";
-}
-}
-
-const cameraBtn=document.getElementById("cameraBtn");
-if(cameraBtn){
-cameraBtn.onclick=function(){
-window.location.href="camera.html";
-}
-}
-
-const effectBtn=document.getElementById("effectBtn");
-if(effectBtn){
-effectBtn.onclick=function(){
-window.location.href="effects.html";
-}
-}
-
-const earnBtn=document.getElementById("earnBtn");
-if(earnBtn){
-earnBtn.onclick=function(){
+document.getElementById("earnBtn").onclick=function(){
 window.location.href="earnings.html";
 }
-}
 
-const shareBtn=document.getElementById("shareBtn");
-if(shareBtn){
-shareBtn.onclick=function(){
+document.getElementById("shareBtn").onclick=function(){
+
 navigator.clipboard.writeText(window.location.href);
+
 alert("Video link copied");
-}
+
 }
 
 </script>
 
-<!-- MAIN SYSTEM SCRIPTS -->
+
+<!-- FIREBASE SYSTEM -->
 
 <script type="module" src="firebase.js"></script>
 
@@ -193,7 +140,8 @@ alert("Video link copied");
 
 <script type="module" src="follow.js"></script>
 
-<!-- NEW FEATURE MODULES -->
+
+<!-- NEW FEATURES MODULES -->
 
 <script type="module" src="search.js"></script>
 
@@ -203,19 +151,17 @@ alert("Video link copied");
 
 <script type="module" src="trending.js"></script>
 
-<script type="module" src="dashboard.js"></script>
-
 <script type="module" src="live.js"></script>
 
 <script type="module" src="gift.js"></script>
 
 <script type="module" src="music.js"></script>
 
-<script type="module" src="filters.js"></script>
+<script type="module" src="effects.js"></script>
 
 <script type="module" src="camera.js"></script>
 
-<script type="module" src="effects.js"></script>
+<script type="module" src="dashboard.js"></script>
 
 <script type="module" src="earnings.js"></script>
 
@@ -243,6 +189,6 @@ alert("Video link copied");
 
 <script type="module" src="admin.js"></script>
 
-</body>
 
+</body>
 </html>
