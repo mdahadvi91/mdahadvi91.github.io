@@ -13,21 +13,9 @@
 body{
 margin:0;
 background:black;
-color:white;
 font-family:sans-serif;
 overflow:hidden;
 }
-
-.page{
-display:none;
-height:100vh;
-}
-
-.active{
-display:block;
-}
-
-/* FEED */
 
 #video-feed{
 height:100vh;
@@ -36,21 +24,53 @@ scroll-snap-type:y mandatory;
 }
 
 .video-box{
-height:100vh;
 position:relative;
+height:100vh;
 scroll-snap-align:start;
 display:flex;
-justify-content:center;
 align-items:center;
+justify-content:center;
 }
 
 video{
 width:100%;
 height:100%;
 object-fit:contain;
+background:black;
 }
 
-/* RIGHT BUTTONS */
+/* controls */
+
+.controls{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+display:flex;
+gap:30px;
+opacity:0;
+transition:0.3s;
+}
+
+.show{opacity:1;}
+
+.controls button{
+width:75px;
+height:75px;
+border-radius:50%;
+border:none;
+background:rgba(0,0,0,0.6);
+color:white;
+font-size:26px;
+}
+
+.play{
+width:90px;
+height:90px;
+font-size:36px;
+}
+
+/* right buttons */
 
 .right-buttons{
 position:absolute;
@@ -58,8 +78,7 @@ right:10px;
 bottom:140px;
 display:flex;
 flex-direction:column;
-gap:18px;
-text-align:center;
+gap:20px;
 }
 
 .right-buttons button{
@@ -72,81 +91,42 @@ color:white;
 font-size:22px;
 }
 
-/* PROFILE */
-
-.profile-header{
-text-align:center;
-padding:20px;
-}
-
-.avatar{
-width:100px;
-height:100px;
-border-radius:50%;
-object-fit:cover;
-}
-
-#followBtn{
-padding:8px 20px;
-border:none;
-border-radius:20px;
-background:#ff0050;
-color:white;
-font-size:16px;
-cursor:pointer;
-margin-top:10px;
-}
-
-.stats{
-display:flex;
-justify-content:center;
-gap:40px;
-margin-top:15px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:4px;
-padding-bottom:80px;
-}
-
-.grid video{
-width:100%;
-height:140px;
-object-fit:cover;
-}
-
-/* NAVBAR */
-
-.navbar{
-position:fixed;
+.progress-container{
+position:absolute;
 bottom:0;
+left:0;
 width:100%;
-height:65px;
-background:black;
-border-top:1px solid #333;
-display:flex;
-justify-content:space-around;
-align-items:center;
+height:6px;
+background:rgba(255,255,255,0.3);
 }
 
-.navbar button{
-background:none;
-border:none;
+.progress{
+height:6px;
+width:0%;
+background:red;
+}
+
+.time{
+position:absolute;
+bottom:10px;
+left:10px;
 color:white;
-font-size:22px;
+font-size:14px;
 }
 
-/* UPLOAD */
+.heart{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:80px;
+animation:pop 0.7s forwards;
+}
 
-.upload-box{
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-height:100%;
-gap:20px;
+@keyframes pop{
+0%{transform:translate(-50%,-50%) scale(0.5); opacity:0;}
+50%{transform:translate(-50%,-50%) scale(1.3); opacity:1;}
+100%{transform:translate(-50%,-50%) scale(1); opacity:0;}
 }
 
 ::-webkit-scrollbar{
@@ -159,71 +139,188 @@ display:none;
 
 <body>
 
-<!-- HOME -->
-
-<div id="home" class="page active">
 <div id="video-feed"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import { 
+getFirestore,
+collection,
+getDocs,
+updateDoc,
+doc
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
+authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
+projectId: "hridoy-er-apps-2ad7c",
+storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
+messagingSenderId: "152919903520",
+appId: "1:152919903520:web:5726d95dceeab535961b45"
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const feed=document.getElementById("video-feed")
+
+async function loadVideos(){
+
+const snap=await getDocs(collection(db,"videos"))
+
+snap.forEach(d=>{
+
+const data=d.data()
+
+const box=document.createElement("div")
+box.className="video-box"
+
+box.innerHTML=`
+
+<video src="${data.url}" loop></video>
+
+<div class="controls">
+<button class="back">↺5</button>
+<button class="play">▶</button>
+<button class="forward">↻5</button>
 </div>
 
-<!-- UPLOAD -->
-
-<div id="upload" class="page">
-
-<div class="upload-box">
-
-<h2>Upload Video</h2>
-
-<input type="file" id="videoFile">
-
-<button onclick="uploadVideo()">Upload</button>
-
+<div class="right-buttons">
+<button class="like">❤️</button>
+<div>${data.likes||0}</div>
+<button class="share">🔗</button>
+<div>👁 ${data.views||0}</div>
 </div>
 
+<div class="time">0:00 / 0:00</div>
+
+<div class="progress-container">
+<div class="progress"></div>
 </div>
 
-<!-- PROFILE -->
+`
 
-<div id="profile" class="page">
+feed.appendChild(box)
 
-<div class="profile-header">
+setupVideo(box,d.id)
 
-<img src="https://i.pravatar.cc/120" class="avatar">
+})
 
-<h2>Hridoy</h2>
+}
 
-<button id="followBtn">Follow</button>
+loadVideos()
 
-<div class="stats">
 
-<div>
-<h3 id="followers">0</h3>
-<p>Followers</p>
-</div>
+function setupVideo(box,id){
 
-<div>
-<h3 id="following">0</h3>
-<p>Following</p>
-</div>
+const video=box.querySelector("video")
+const play=box.querySelector(".play")
+const back=box.querySelector(".back")
+const forward=box.querySelector(".forward")
 
-</div>
+const controls=box.querySelector(".controls")
 
-</div>
+const progress=box.querySelector(".progress")
+const progressContainer=box.querySelector(".progress-container")
 
-<div class="grid" id="profileVideos"></div>
+const time=box.querySelector(".time")
 
-</div>
+const likeBtn=box.querySelector(".like")
 
-<!-- NAVBAR -->
+let timer
 
-<div class="navbar">
+video.addEventListener("click",()=>{
 
-<button onclick="showPage('home')">🏠</button>
-<button onclick="showPage('upload')">➕</button>
-<button onclick="showPage('profile')">👤</button>
+controls.classList.add("show")
 
-</div>
+clearTimeout(timer)
 
-<script type="module" src="script.js"></script>
+timer=setTimeout(()=>{
+controls.classList.remove("show")
+},2000)
+
+})
+
+play.onclick=()=>{
+
+if(video.paused){
+video.play()
+play.innerHTML="❚❚"
+}else{
+video.pause()
+play.innerHTML="▶"
+}
+
+}
+
+back.onclick=()=>video.currentTime-=5
+forward.onclick=()=>video.currentTime+=5
+
+video.addEventListener("timeupdate",()=>{
+
+const percent=(video.currentTime/video.duration)*100
+progress.style.width=percent+"%"
+
+time.innerText=format(video.currentTime)+" / "+format(video.duration)
+
+})
+
+progressContainer.onclick=(e)=>{
+
+const rect=progressContainer.getBoundingClientRect()
+const pos=(e.clientX-rect.left)/rect.width
+
+video.currentTime=pos*video.duration
+
+}
+
+video.addEventListener("dblclick",()=>{
+
+const heart=document.createElement("div")
+heart.className="heart"
+heart.innerHTML="❤️"
+
+box.appendChild(heart)
+
+setTimeout(()=>heart.remove(),700)
+
+})
+
+likeBtn.onclick=async ()=>{
+
+const likeText=likeBtn.nextElementSibling
+let count=parseInt(likeText.innerText)
+
+count++
+likeText.innerText=count
+
+await updateDoc(doc(db,"videos",id),{likes:count})
+
+}
+
+}
+
+function format(sec){
+
+sec=Math.floor(sec)
+
+let m=Math.floor(sec/60)
+let s=sec%60
+
+if(s<10) s="0"+s
+
+return m+":"+s
+
+}
+
+</script>
 
 </body>
 </html>
