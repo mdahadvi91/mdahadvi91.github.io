@@ -1,72 +1,21 @@
 import { auth, db } from "./firebase.js";
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-collection,
-getDocs,
-query,
-where
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const profileVideos = document.getElementById("profileVideos");
 
-import {
-onAuthStateChanged,
-signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+auth.onAuthStateChanged(async user=>{
+  if(!user) return;
 
-const userEmail = document.getElementById("userEmail");
-const userVideos = document.getElementById("userVideos");
-const logoutBtn = document.getElementById("logoutBtn");
+  const q = query(collection(db,"videos"), where("userId","==",user.uid));
+  const snap = await getDocs(q);
 
-/* CHECK USER */
+  snap.forEach(d=>{
+    const data = d.data();
 
-onAuthStateChanged(auth, async (user)=>{
+    const video = document.createElement("video");
+    video.src = data.video;
+    video.controls = true;
 
-if(!user){
-
-window.location.href="auth.html";
-return;
-
-}
-
-/* SHOW EMAIL */
-
-if(userEmail){
-userEmail.innerText = user.email;
-}
-
-/* LOAD USER VIDEOS */
-
-const q = query(
-collection(db,"videos"),
-where("userId","==",user.uid)
-);
-
-const snapshot = await getDocs(q);
-
-snapshot.forEach((doc)=>{
-
-const data = doc.data();
-
-const video = document.createElement("video");
-
-video.src = data.url;
-video.controls = true;
-
-userVideos.appendChild(video);
-
+    profileVideos.appendChild(video);
+  });
 });
-
-});
-
-/* LOGOUT */
-
-if(logoutBtn){
-
-logoutBtn.onclick = async ()=>{
-
-await signOut(auth);
-
-window.location.href="auth.html";
-
-}
-
-}
