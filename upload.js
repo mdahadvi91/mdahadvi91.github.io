@@ -1,28 +1,68 @@
-import { auth, db, storage } from "./firebase.js";
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { storage, db, auth } from "./firebase.js";
 
-document.getElementById("uploadVideo").onclick = async ()=>{
+import {
+ref,
+uploadBytes,
+getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-const file = document.getElementById("videoFile").files[0];
+import {
+collection,
+addDoc,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const fileInput = document.getElementById("videoFile");
+const uploadBtn = document.getElementById("uploadBtn");
+const status = document.getElementById("status");
+
+uploadBtn.onclick = async ()=>{
+
+const file = fileInput.files[0];
+
+if(!file){
+
+alert("Select video first");
+return;
+
+}
+
 const user = auth.currentUser;
 
-const name = Date.now()+"_"+file.name;
+if(!user){
 
-const storageRef = ref(storage,"videos/"+name);
+alert("Login first");
+return;
+
+}
+
+try{
+
+status.innerText="Uploading...";
+
+const storageRef = ref(storage,"videos/"+Date.now()+"_"+file.name);
 
 await uploadBytes(storageRef,file);
 
 const url = await getDownloadURL(storageRef);
 
 await addDoc(collection(db,"videos"),{
-video:url,
+
+url:url,
 userId:user.uid,
-likes:0,
-views:0,
-time:Date.now()
+userEmail:user.email,
+createdAt:serverTimestamp()
+
 });
 
-alert("Uploaded");
+status.innerText="Upload success";
 
-};
+fileInput.value="";
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
