@@ -58,13 +58,8 @@ object-fit:cover;
 <body>
 
 <div class="profile-header">
- 
-<h2 id="username"></h2>
-<div id="profileVideos"></div>
- 
+
 <h2 id="userEmail">User</h2>
- 
- <div id="profileVideos"></div>
 
 <p id="followers">Followers: 0</p>
 
@@ -76,29 +71,7 @@ object-fit:cover;
 
 </div>
 
- <script import { auth } from "./firebase.js";
-import { signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-const logoutBtn = document.getElementById("logoutBtn");
-
-logoutBtn.addEventListener("click", () => {
-
-  signOut(auth)
-  .then(() => {
-
-    alert("Logged out successfully");
-
-    window.location.href = "auth.html";
-
-  })
-  .catch((error) => {
-
-    console.log(error);
-
-  });
-
-});
- <script type="module" src="firebase.js"></script>
+<script type="module" src="firebase.js"></script>
 <script type="module" src="profile.js"></script>
 
 </body>
