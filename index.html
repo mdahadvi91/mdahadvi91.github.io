@@ -1,55 +1,109 @@
-<!DOCTYPE html>
-<html>
+import { auth } from "./firebase.js";
 
-<head>
+import {
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TikTok Clone</title>
+/* SIGNUP */
 
-</head>
+const signupForm = document.getElementById("signupForm");
 
-<body style="background:black;color:white;text-align:center;margin-top:40vh;font-family:sans-serif">
+if(signupForm){
 
-<h2>Loading...</h2>
+signupForm.addEventListener("submit", async (e)=>{
 
-<script type="module">
+e.preventDefault();
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
 
-import { getAuth,onAuthStateChanged }
+try{
 
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+await createUserWithEmailAndPassword(auth,email,password);
 
-const firebaseConfig = {
-
-apiKey: "AIzaSyDAl3TMOxgMKvw-hjqmhEyNTUj2_I25bgk",
-
-authDomain: "hridoy-er-apps-2ad7c.firebaseapp.com",
-
-projectId: "hridoy-er-apps-2ad7c",
-
-storageBucket: "hridoy-er-apps-2ad7c.firebasestorage.app",
-
-messagingSenderId: "152919903520",
-
-appId: "1:152919903520:web:5726d95dceeab535961b45"
-
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-onAuthStateChanged(auth,(user)=>{
-
-if(user){
+alert("Signup success");
 
 location.href="home.html";
 
+}catch(err){
+
+alert(err.message);
+
 }
 
-else{
+});
+
+}
+
+
+/* LOGIN */
+
+const loginForm = document.getElementById("loginForm");
+
+if(loginForm){
+
+loginForm.addEventListener("submit", async (e)=>{
+
+e.preventDefault();
+
+const email=document.getElementById("email").value;
+const password=document.getElementById("password").value;
+
+try{
+
+await signInWithEmailAndPassword(auth,email,password);
+
+alert("Login success");
+
+location.href="home.html";
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+});
+
+}
+
+
+/* LOGOUT */
+
+window.logoutUser = function(){
+
+signOut(auth).then(()=>{
+
+location.href="login.html";
+
+});
+
+}
+
+
+/* SESSION CHECK */
+
+onAuthStateChanged(auth,(user)=>{
+
+if(!user){
+
+const protectedPages=[
+"home.html",
+"upload.html",
+"profile.html",
+"notifications.html",
+"chat.html"
+];
+
+const path=location.pathname;
+
+protectedPages.forEach(p=>{
+
+if(path.includes(p)){
 
 location.href="login.html";
 
@@ -57,8 +111,6 @@ location.href="login.html";
 
 });
 
-</script>
+}
 
-</body>
-
-</html>
+});
