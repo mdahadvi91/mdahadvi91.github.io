@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mini TikTok</title>
 
 <style>
-
 body{
 margin:0;
 background:black;
@@ -31,9 +28,7 @@ scroll-snap-align:start;
 ::-webkit-scrollbar{
 display:none;
 }
-
 </style>
-
 </head>
 
 <body>
@@ -48,34 +43,35 @@ display:none;
 
 <script>
 
-const videos=document.querySelectorAll("video")
+const feed = document.getElementById("video-feed");
+const videos = document.querySelectorAll("#video-feed video");
 
-const observer=new IntersectionObserver((entries)=>{
+function checkVideo(){
 
-entries.forEach(entry=>{
+videos.forEach(video=>{
 
-if(entry.isIntersecting){
+const rect = video.getBoundingClientRect();
+const middle = window.innerHeight / 2;
 
-entry.target.play()
+if(rect.top <= middle && rect.bottom >= middle){
+
+video.play();
 
 }else{
 
-entry.target.pause()
+video.pause();
 
 }
 
-})
+});
 
-},{
-threshold:0.7
-})
+}
 
-videos.forEach(video=>{
-observer.observe(video)
-})
+feed.addEventListener("scroll", checkVideo);
+
+checkVideo();
 
 </script>
 
 </body>
-
 </html>
