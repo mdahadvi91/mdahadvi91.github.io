@@ -5,8 +5,6 @@ const feed = document.getElementById("video-feed");
 
 async function loadVideos(){
 
-feed.innerHTML = "";
-
 const querySnapshot = await getDocs(collection(db,"videos"));
 
 querySnapshot.forEach((doc)=>{
@@ -18,16 +16,48 @@ const video = document.createElement("video");
 video.src = data.video;
 video.className = "feed-video";
 
-video.autoplay = true;
 video.loop = true;
 video.muted = true;
 video.playsInline = true;
-video.controls = false;
+video.autoplay = true;
 
 feed.appendChild(video);
 
 });
 
+startObserver();
+
 }
 
 loadVideos();
+
+
+function startObserver(){
+
+const videos = document.querySelectorAll(".feed-video");
+
+const observer = new IntersectionObserver((entries)=>{
+
+entries.forEach((entry)=>{
+
+const video = entry.target;
+
+if(entry.isIntersecting){
+
+video.play();
+
+}else{
+
+video.pause();
+
+}
+
+});
+
+},{threshold:0.7});
+
+videos.forEach((video)=>{
+observer.observe(video);
+});
+
+}
