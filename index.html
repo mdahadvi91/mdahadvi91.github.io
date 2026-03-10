@@ -1,116 +1,38 @@
-import { auth } from "./firebase.js";
+<!DOCTYPE html>
+<html lang="en">
 
-import {
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword,
-signOut,
-onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-/* SIGNUP */
+<title>Short Video App</title>
 
-const signupForm = document.getElementById("signupForm");
+<link rel="stylesheet" href="style.css">
 
-if(signupForm){
-
-signupForm.addEventListener("submit", async (e)=>{
-
-e.preventDefault();
-
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
-
-try{
-
-await createUserWithEmailAndPassword(auth,email,password);
-
-alert("Signup success");
-
-location.href="home.html";
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-});
-
-}
+</head>
 
 
-/* LOGIN */
-
-const loginForm = document.getElementById("loginForm");
-
-if(loginForm){
-
-loginForm.addEventListener("submit", async (e)=>{
-
-e.preventDefault();
-
-const email=document.getElementById("email").value;
-const password=document.getElementById("password").value;
-
-try{
-
-await signInWithEmailAndPassword(auth,email,password);
-
-alert("Login success");
-
-location.href="home.html";
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-});
-
-}
+<body>
 
 
-/* LOGOUT */
+<div class="center-box">
 
-window.logoutUser = function(){
+<h1>Welcome</h1>
 
-signOut(auth).then(()=>{
+<p>Short Video Social Platform</p>
 
-location.href="login.html";
+<div class="btn-group">
 
-});
+<a href="login.html" class="btn">Login</a>
 
-}
+<a href="signup.html" class="btn">Signup</a>
+
+</div>
+
+</div>
 
 
-/* SESSION CHECK */
+</body>
 
-onAuthStateChanged(auth,(user)=>{
-
-if(!user){
-
-const protectedPages=[
-"home.html",
-"upload.html",
-"profile.html",
-"notifications.html",
-"chat.html"
-];
-
-const path=location.pathname;
-
-protectedPages.forEach(p=>{
-
-if(path.includes(p)){
-
-location.href="login.html";
-
-}
-
-});
-
-}
-
-});
+</html>
