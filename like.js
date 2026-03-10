@@ -1,32 +1,62 @@
-let lastTap = 0;
+import { db } from "./firebase.js";
 
-document.addEventListener("click",function(e){
+import {
+doc,
+updateDoc,
+increment
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-if(e.target.tagName==="VIDEO"){
+const likeBtn = document.getElementById("likeBtn");
+const likeCount = document.getElementById("likeCount");
 
-const now = Date.now();
+let currentVideoId = null;
 
-if(now - lastTap < 300){
 
-const heart=document.createElement("div");
-heart.innerHTML="❤️";
+// SET CURRENT VIDEO ID
+function setVideo(id,likes){
 
-heart.style.position="absolute";
-heart.style.fontSize="80px";
-heart.style.left="50%";
-heart.style.top="50%";
-heart.style.transform="translate(-50%,-50%)";
+currentVideoId = id;
 
-e.target.parentElement.appendChild(heart);
-
-setTimeout(()=>{
-heart.remove();
-},800);
+if(likeCount){
+likeCount.innerText = likes || 0;
+}
 
 }
 
-lastTap = now;
+window.setVideo = setVideo;
 
-}
+
+// LIKE BUTTON
+likeBtn.onclick = async function(){
+
+if(!currentVideoId) return;
+
+const ref = doc(db,"videos",currentVideoId);
+
+await updateDoc(ref,{
+likes:increment(1)
+});
+
+let count = parseInt(likeCount.innerText);
+
+likeCount.innerText = count + 1;
+
+};
+
+
+// DOUBLE TAP LIKE
+document.addEventListener("dblclick",async()=>{
+
+if(!currentVideoId) return;
+
+const ref = doc(db,"videos",currentVideoId);
+
+await updateDoc(ref,{
+likes:increment(1)
+});
+
+let count = parseInt(likeCount.innerText);
+
+likeCount.innerText = count + 1;
 
 });
