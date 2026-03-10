@@ -2,10 +2,8 @@
 <html>
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>Mini TikTok</title>
 
 <style>
@@ -23,8 +21,6 @@ color:white;
 overflow:hidden;
 }
 
-/* video feed */
-
 #video-feed{
 height:100vh;
 overflow-y:scroll;
@@ -38,7 +34,7 @@ object-fit:cover;
 scroll-snap-align:start;
 }
 
-/* buttons */
+/* right buttons */
 
 .right-buttons{
 position:fixed;
@@ -54,10 +50,12 @@ width:50px;
 height:50px;
 border-radius:50%;
 border:none;
-background:rgba(0,0,0,0.5);
+background:rgba(0,0,0,0.6);
 color:white;
 font-size:20px;
 }
+
+/* upload */
 
 #uploadBtn{
 position:fixed;
@@ -73,28 +71,44 @@ color:white;
 font-size:35px;
 }
 
+/* like animation */
+
+.heart{
+position:fixed;
+font-size:70px;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+pointer-events:none;
+animation:pop 0.8s ease;
+}
+
+@keyframes pop{
+0%{transform:translate(-50%,-50%) scale(0.5);opacity:0}
+50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}
+100%{transform:translate(-50%,-50%) scale(1);opacity:0}
+}
+
 ::-webkit-scrollbar{
 display:none;
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div id="video-feed">
 
-<video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay loop muted playsinline controls></video>
+<video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay loop muted playsinline></video>
 
-<video src="https://www.w3schools.com/html/movie.mp4" autoplay loop muted playsinline controls></video>
+<video src="https://www.w3schools.com/html/movie.mp4" autoplay loop muted playsinline></video>
 
 </div>
 
 <div class="right-buttons">
 
 <button id="likeBtn">❤️</button>
-
 <button id="shareBtn">🔗</button>
 
 </div>
@@ -111,9 +125,7 @@ videos.forEach(video=>{
 
 video.addEventListener("click",()=>{
 
-videos.forEach(v=>{
-v.muted=true
-})
+videos.forEach(v=>v.muted=true)
 
 video.muted=false
 video.play()
@@ -123,7 +135,7 @@ video.play()
 })
 
 
-// scroll play
+// scroll play system
 
 window.addEventListener("scroll",()=>{
 
@@ -147,6 +159,28 @@ video.muted=true
 })
 
 
+// double tap like animation
+
+videos.forEach(video=>{
+
+video.addEventListener("dblclick",()=>{
+
+const heart=document.createElement("div")
+
+heart.innerHTML="❤️"
+heart.className="heart"
+
+document.body.appendChild(heart)
+
+setTimeout(()=>{
+heart.remove()
+},800)
+
+})
+
+})
+
+
 // like button
 
 let likes=0
@@ -160,7 +194,7 @@ this.innerText="❤️ "+likes
 }
 
 
-// share button
+// share
 
 document.getElementById("shareBtn").onclick=function(){
 
@@ -173,5 +207,4 @@ alert("Link Copied")
 </script>
 
 </body>
-
 </html>
