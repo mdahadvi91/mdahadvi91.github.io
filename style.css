@@ -1,0 +1,114 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial
+}
+
+body{
+background:linear-gradient(135deg,#1e3a8a,#1e293b);
+color:white;
+text-align:center;
+min-height:100vh;
+display:flex;
+flex-direction:column
+}
+
+header{
+font-size:32px;
+padding:25px;
+font-weight:bold
+}
+
+.ads{
+margin:15px
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+padding:25px;
+max-width:900px;
+margin:auto
+}
+
+.grid button{
+
+position:relative;
+height:120px;
+border-radius:25px;
+border:none;
+background:#020617;
+color:white;
+font-size:22px;
+font-weight:bold;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+transition:.4s
+
+}
+
+.grid button::before{
+
+content:"";
+position:absolute;
+inset:-3px;
+border-radius:25px;
+
+background:linear-gradient(
+45deg,
+#ff0000,
+#ff7300,
+#fffb00,
+#48ff00,
+#00ffd5,
+#002bff,
+#7a00ff,
+#ff00c8,
+#ff0000
+);
+
+background-size:400%;
+animation:rgbBorder 8s linear infinite;
+z-index:-1
+
+}
+
+.grid button::after{
+
+content:"";
+position:absolute;
+inset:2px;
+background:#020617;
+border-radius:22px;
+z-index:-1
+
+}
+
+@keyframes rgbBorder{
+
+0%{background-position:0 0}
+50%{background-position:400% 0}
+100%{background-position:0 0}
+
+}
+
+.grid button:hover{
+
+transform:translateY(-8px) scale(1.05);
+box-shadow:0 0 20px #00ffff,0 0 40px #00ffff
+
+}
+
+footer{
+
+margin-top:auto;
+background:#020617;
+padding:25px;
+font-size:14px
+
+}
