@@ -1,1 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>JPG to PNG - Hridoy Tools</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.uploadBox{
+border:2px dashed #38bdf8;
+padding:40px;
+text-align:center;
+border-radius:10px;
+cursor:pointer;
+margin:20px;
+}
+
+.preview{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+padding:20px;
+}
+
+.preview img{
+width:120px;
+border-radius:8px;
+}
+
+.convertBtn{
+display:block;
+margin:20px auto;
+padding:12px 30px;
+background:#38bdf8;
+border:none;
+border-radius:8px;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>JPG → PNG</header>
+
+<div class="uploadBox" onclick="fileInput.click()">
+<p>Select JPG Images</p>
+<input type="file" id="fileInput" accept="image/jpeg" multiple hidden>
+</div>
+
+<div class="preview" id="preview"></div>
+
+<button class="convertBtn" onclick="convertPNG()">Convert to PNG</button>
+
+<script>
+
+let images = [];
+
+const input = document.getElementById("fileInput");
+const preview = document.getElementById("preview");
+
+input.addEventListener("change", function(){
+
+preview.innerHTML="";
+images=[];
+
+Array.from(this.files).forEach(file=>{
+
+const reader = new FileReader();
+
+reader.onload=function(e){
+
+images.push(e.target.result);
+
+const img=document.createElement("img");
+img.src=e.target.result;
+preview.appendChild(img);
+
+}
+
+reader.readAsDataURL(file);
+
+});
+
+});
+
+function convertPNG(){
+
+images.forEach((imgSrc,index)=>{
+
+const img=new Image();
+img.src=imgSrc;
+
+img.onload=function(){
+
+const canvas=document.createElement("canvas");
+const ctx=canvas.getContext("2d");
+
+canvas.width=img.width;
+canvas.height=img.height;
+
+ctx.drawImage(img,0,0);
+
+const link=document.createElement("a");
+link.download="converted-"+index+".png";
+link.href=canvas.toDataURL("image/png");
+
+link.click();
+
+}
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
