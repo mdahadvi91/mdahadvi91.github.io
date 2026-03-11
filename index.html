@@ -127,7 +127,7 @@ Top AdSense Banner
 Middle AdSense Banner
 </div>
 
-<input type="file" id="fileInput" multiple>
+<input type="file" id="fileInput" multiple accept="image/*">
 
 <br><br>
 
@@ -162,6 +162,9 @@ let files=[]
 function openTool(t){
 
 tool=t
+files=[]
+
+document.getElementById("fileInput").value=""
 
 document.getElementById("toolsPage").style.display="none"
 document.getElementById("toolScreen").style.display="block"
@@ -197,6 +200,18 @@ img.src=URL.createObjectURL(file)
 
 async function runTool(){
 
+if(tool==="qr"){
+
+let text=prompt("Enter text for QR")
+
+if(!text) return
+
+window.open("https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+encodeURIComponent(text))
+
+return
+
+}
+
 if(files.length===0){
 
 alert("Upload image first")
@@ -226,8 +241,9 @@ canvas.height=img.height
 ctx.drawImage(img,0,0)
 
 let type=tool==="jpgpng"?"image/png":"image/jpeg"
+let name=tool==="jpgpng"?"image.png":"image.jpg"
 
-download(canvas.toDataURL(type),"image")
+download(canvas.toDataURL(type),name)
 
 }
 
@@ -296,14 +312,6 @@ ctx.scale(-1,1)
 ctx.drawImage(img,-img.width,0)
 
 download(canvas.toDataURL(),"flip.png")
-
-}
-
-if(tool==="qr"){
-
-let text=prompt("Enter text")
-
-window.open("https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+text)
 
 }
 
