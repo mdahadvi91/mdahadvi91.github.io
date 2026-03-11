@@ -3,41 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hridoy Tools Management</title>
+<title>⚡ Hridoy Tools Management</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
 
 body{
-background:#0f172a;
-color:white;
-text-align:center;
-min-height:100vh;
+background:linear-gradient(-45deg,#0f172a,#1e293b,#2563eb,#0ea5e9);
+background-size:400% 400%;
+animation:bgMove 12s ease infinite;
+color:white;text-align:center;min-height:100vh
 }
 
-header{
-padding:25px;
-font-size:28px;
-font-weight:bold;
+@keyframes bgMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 
-.ad-box{
-width:90%;
-max-width:900px;
-margin:20px auto;
-padding:25px;
-background:#1e293b;
-border-radius:10px;
-border:2px dashed #3b82f6;
-}
+header{padding:25px;font-size:30px;font-weight:bold}
 
 .grid{
 display:grid;
@@ -45,49 +33,381 @@ grid-template-columns:repeat(4,1fr);
 gap:20px;
 padding:40px;
 max-width:1000px;
-margin:auto;
+margin:auto
 }
 
 .grid button{
-padding:20px;
-border:none;
-border-radius:12px;
-background:#1e293b;
-color:white;
-cursor:pointer;
+padding:22px;border:none;border-radius:14px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+color:white;cursor:pointer;
+font-size:20px;font-weight:bold;
 transition:.3s;
+position:relative
 }
+
+.grid button{
+
+position:relative;
+height:140px;
+border-radius:20px;
+border:none;
+
+background:#0f172a;
+
+color:white;
+font-size:24px;
+font-weight:bold;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+cursor:pointer;
+
+overflow:hidden;
+
+transition:.4s;
+
+}
+
+/* RGB Border */
+
+.grid button::before{
+
+content:"";
+position:absolute;
+
+inset:-3px;
+
+border-radius:22px;
+
+background:linear-gradient(
+45deg,
+#ff0000,
+#ff7300,
+#fffb00,
+#48ff00,
+#00ffd5,
+#002bff,
+#7a00ff,
+#ff00c8,
+#ff0000
+);
+
+background-size:400%;
+
+animation:rgbBorder 8s linear infinite;
+
+z-index:-1;
+
+}
+
+/* Card inner glow */
+
+.grid button::after{
+
+content:"";
+position:absolute;
+
+inset:2px;
+
+background:#020617;
+
+border-radius:18px;
+
+z-index:-1;
+
+}
+
+/* RGB Animation */
+
+@keyframes rgbBorder{
+
+0%{background-position:0 0}
+50%{background-position:400% 0}
+100%{background-position:0 0}
+
+}
+
+/* Hover 3D */
 
 .grid button:hover{
-background:#2563eb;
+
+transform:translateY(-8px) scale(1.05);
+
+box-shadow:
+0 0 20px #00ffff,
+0 0 40px #00ffff;
+
 }
 
-#toolScreen{
-display:none;
-padding:20px;
+/* Text animation */
+
+.grid button span{
+
+animation:textPulse 2s infinite alternate;
+
 }
 
-canvas{
-max-width:90%;
-margin-top:20px;
+@keyframes textPulse{
+
+from{
+opacity:.7;
+transform:scale(1);
+}
+
+to{
+opacity:1;
+transform:scale(1.1);
+}
+
+}
+.run-btn{
+
+position:relative;
+height:120px;
+width:260px;
+
+border-radius:20px;
+border:none;
+
+background:#0f172a;
+
+color:white;
+font-size:24px;
+font-weight:bold;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+cursor:pointer;
+
+overflow:hidden;
+
+transition:.4s;
+
+margin:auto;
+
+}
+
+/* RGB Border */
+
+.run-btn::before{
+
+content:"";
+position:absolute;
+
+inset:-3px;
+
+border-radius:22px;
+
+background:linear-gradient(
+45deg,
+#ff0000,
+#ff7300,
+#fffb00,
+#48ff00,
+#00ffd5,
+#002bff,
+#7a00ff,
+#ff00c8,
+#ff0000
+);
+
+background-size:400%;
+
+animation:rgbBorder 8s linear infinite;
+
+z-index:-1;
+
+}
+
+/* inner card */
+
+.run-btn::after{
+
+content:"";
+position:absolute;
+
+inset:2px;
+
+background:#020617;
+
+border-radius:18px;
+
+z-index:-1;
+
+}
+
+/* hover */
+
+.run-btn:hover{
+
+transform:translateY(-6px) scale(1.05);
+
+box-shadow:
+0 0 20px #00ffff,
+0 0 40px #00ffff;
+
+}
+.back-btn{
+
+position:fixed;
+top:15px;
+left:15px;
+
+width:60px;
+height:60px;
+
+border-radius:20px;
+border:none;
+
+background:#0f172a;
+
+color:white;
+font-size:28px;
+font-weight:bold;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+cursor:pointer;
+
+overflow:hidden;
+
+transition:.4s;
+
+}
+
+/* RGB Border */
+
+.back-btn::before{
+
+content:"";
+position:absolute;
+
+inset:-3px;
+
+border-radius:22px;
+
+background:linear-gradient(
+45deg,
+#ff0000,
+#ff7300,
+#fffb00,
+#48ff00,
+#00ffd5,
+#002bff,
+#7a00ff,
+#ff00c8,
+#ff0000
+);
+
+background-size:400%;
+
+animation:rgbBorder 8s linear infinite;
+
+z-index:-1;
+
+}
+
+/* Inner dark card */
+
+.back-btn::after{
+
+content:"";
+position:absolute;
+
+inset:2px;
+
+background:#020617;
+
+border-radius:18px;
+
+z-index:-1;
+
+}
+
+/* Hover */
+
+.back-btn:hover{
+
+transform:scale(1.1);
+
+box-shadow:
+0 0 15px #00ffff,
+0 0 35px #00ffff;
+
+}
+#toolScreen{display:none;padding:20px}
+
+.drop-area{
+border:2px dashed #3b82f6;
+padding:30px;
+margin:20px auto;
+max-width:400px;
+border-radius:10px
+}
+
+.preview-gallery{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+justify-content:center;
+margin-top:15px
+}
+
+.preview-gallery img{
+width:70px;
+height:70px;
+object-fit:cover;
+border-radius:6px
+}
+
+.loader{
+border:6px solid #1e293b;
+border-top:6px solid #3b82f6;
+border-radius:50%;
+width:40px;
+height:40px;
+animation:spin 1s linear infinite;
+margin:20px auto;
+display:none
+}
+
+@keyframes spin{
+0%{transform:rotate(0)}
+100%{transform:rotate(360deg)}
+}
+
+.progress-box{
+width:80%;
+height:20px;
+background:#111827;
+margin:20px auto;
+border-radius:20px;
+overflow:hidden
+}
+
+#progressBar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#3b82f6,#60a5fa)
 }
 
 footer{
 background:#111827;
 padding:30px;
-margin-top:40px;
+margin-top:40px
 }
 
-footer a{
-color:white;
-margin:10px;
-text-decoration:none;
-}
+footer a{color:white;margin:10px;text-decoration:none}
 
 @media(max-width:700px){
-.grid{
-grid-template-columns:repeat(2,1fr);
-}
+.grid{grid-template-columns:repeat(2,1fr)}
 }
 
 </style>
@@ -97,61 +417,92 @@ grid-template-columns:repeat(2,1fr);
 
 <header>⚡ Hridoy Tools Management</header>
 
-<div class="ad-box">
-Top AdSense Banner
-</div>
+<div>Top AdSense Banner</div>
 
 <div id="toolsPage" class="grid">
 
-<button onclick="openTool('jpgpdf')">JPG → PDF</button>
-<button onclick="openTool('mergejpgpdf')">Merge JPG → PDF</button>
-<button onclick="openTool('jpgpng')">JPG → PNG</button>
-<button onclick="openTool('pngjpg')">PNG → JPG</button>
+<button onclick="openTool('jpgpdf')"><span>JPG → PDF</span></button>
+<button onclick="openTool('mergejpgpdf')">
+<span>Merge JPG → PDF</span>
+</button>
 
-<button onclick="openTool('resize')">Resize Image</button>
-<button onclick="openTool('compress')">Compress Image</button>
-<button onclick="openTool('rotate')">Rotate</button>
-<button onclick="openTool('flip')">Flip</button>
+<button onclick="openTool('pdfjpg')">
+<span>PDF → JPG</span>
+</button>
 
-<button onclick="openTool('qr')">QR Generator</button>
-<button onclick="openTool('base64')">Base64</button>
-<button onclick="openTool('info')">Image Info</button>
+<button onclick="openTool('jpgpng')">
+<span>JPG → PNG</span>
+</button>
+
+<button onclick="openTool('pngjpg')">
+<span>PNG → JPG</span>
+</button>
+
+<button onclick="openTool('resize')">
+<span>Resize Image</span>
+</button>
+
+<button onclick="openTool('compress')">
+<span>Compress Image</span>
+</button>
+
+<button onclick="openTool('rotate')">
+<span>Rotate</span>
+</button>
+
+<button onclick="openTool('flip')">
+<span>Flip</span>
+</button>
+
+<button onclick="openTool('qr')">
+<span>QR Generator</span>
+</button>
+
+<button onclick="openTool('base64')">
+<span>Base64</span>
+</button>
+
+<button onclick="openTool('info')">
+<span>Image Info</span>
+</button>
 
 </div>
 
 <div id="toolScreen">
 
-<button onclick="goHome()">⬅ Back</button>
+<button class="back-btn" onclick="goHome()">
+<span>←</span>
+</button>
 
-<div class="ad-box">
-Middle AdSense Banner
+<div>Middle AdSense Banner</div>
+
+<input type="file" id="fileInput" multiple accept="image/*,.pdf">
+
+<div class="drop-area" id="dropArea">Drag & Drop Images / PDF</div>
+
+<div class="preview-gallery" id="gallery"></div>
+
+<div class="loader" id="loader"></div>
+
+<div class="progress-box">
+<div id="progressBar"></div>
 </div>
-
-<input type="file" id="fileInput" multiple accept="image/*">
-
-<br><br>
-
-<button onclick="runTool()">Run Tool</button>
 
 <br>
 
-<canvas id="canvas"></canvas>
+<button class="run-btn" onclick="runTool()">
+<span>⚡ Run Tool</span>
+</button>
 
 </div>
 
 <footer>
-
 <p>© 2026 Hridoy Tools Management</p>
-
 <a href="#">Home</a>
 <a href="#">Contact</a>
 <a href="#">Privacy Policy</a>
 <a href="#">Terms</a>
-
-<div class="ad-box">
-Footer AdSense Banner
-</div>
-
+<div>Footer AdSense Banner</div>
 </footer>
 
 <script>
@@ -159,15 +510,20 @@ Footer AdSense Banner
 let tool=""
 let files=[]
 
+const gallery=document.getElementById("gallery")
+const loader=document.getElementById("loader")
+const bar=document.getElementById("progressBar")
+
 function openTool(t){
 
 tool=t
 files=[]
-
-document.getElementById("fileInput").value=""
+gallery.innerHTML=""
 
 document.getElementById("toolsPage").style.display="none"
 document.getElementById("toolScreen").style.display="block"
+
+history.pushState({tool:true},"")
 
 }
 
@@ -178,192 +534,82 @@ document.getElementById("toolsPage").style.display="grid"
 
 }
 
-document.getElementById("fileInput").addEventListener("change",e=>{
-files=[...e.target.files]
+window.addEventListener("popstate",function(){
+
+if(document.getElementById("toolScreen").style.display==="block"){
+goHome()
+}
+
 })
 
-function loadImage(file){
+document.getElementById("fileInput").addEventListener("change",e=>{
+files=[...e.target.files]
+showPreview()
+})
 
-return new Promise((resolve,reject)=>{
+const dropArea=document.getElementById("dropArea")
 
-let img=new Image()
+dropArea.addEventListener("dragover",e=>e.preventDefault())
 
-img.onload=()=>resolve(img)
+dropArea.addEventListener("drop",e=>{
+e.preventDefault()
+files=[...e.dataTransfer.files]
+showPreview()
+})
 
-img.onerror=reject
+function showPreview(){
 
+gallery.innerHTML=""
+
+files.forEach(file=>{
+
+if(file.type.includes("image")){
+
+const img=document.createElement("img")
 img.src=URL.createObjectURL(file)
+gallery.appendChild(img)
+
+}
 
 })
 
 }
+
+function startProgress(){
+
+bar.style.width="0%"
+let p=0
+
+const i=setInterval(()=>{
+p+=10
+bar.style.width=p+"%"
+if(p>=100) clearInterval(i)
+},100)
+
+}
+
+function showLoader(){loader.style.display="block"}
+function hideLoader(){loader.style.display="none"}
 
 async function runTool(){
 
-if(tool==="qr"){
-
-let text=prompt("Enter text for QR")
-
-if(!text) return
-
-window.open("https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+encodeURIComponent(text))
-
-return
-
-}
-
 if(files.length===0){
-
-alert("Upload image first")
-
+alert("Upload file first")
 return
-
 }
 
-if(tool==="jpgpdf"){
-singleJpgToPdf()
+showLoader()
+startProgress()
+
+if(tool==="jpgpdf" || tool==="mergejpgpdf"){
+await mergeJpgToPdf()
 }
 
-if(tool==="mergejpgpdf"){
-mergeJpgToPdf()
+if(tool==="pdfjpg"){
+await pdfToJpg()
 }
 
-if(tool==="jpgpng" || tool==="pngjpg"){
-
-const img=await loadImage(files[0])
-
-const canvas=document.getElementById("canvas")
-const ctx=canvas.getContext("2d")
-
-canvas.width=img.width
-canvas.height=img.height
-
-ctx.drawImage(img,0,0)
-
-let type=tool==="jpgpng"?"image/png":"image/jpeg"
-let name=tool==="jpgpng"?"image.png":"image.jpg"
-
-download(canvas.toDataURL(type),name)
-
-}
-
-if(tool==="resize"){
-
-const img=await loadImage(files[0])
-
-const canvas=document.getElementById("canvas")
-const ctx=canvas.getContext("2d")
-
-canvas.width=img.width/2
-canvas.height=img.height/2
-
-ctx.drawImage(img,0,0,canvas.width,canvas.height)
-
-download(canvas.toDataURL(),"resize.png")
-
-}
-
-if(tool==="compress"){
-
-const img=await loadImage(files[0])
-
-const canvas=document.getElementById("canvas")
-const ctx=canvas.getContext("2d")
-
-canvas.width=img.width
-canvas.height=img.height
-
-ctx.drawImage(img,0,0)
-
-download(canvas.toDataURL("image/jpeg",0.5),"compress.jpg")
-
-}
-
-if(tool==="rotate"){
-
-const img=await loadImage(files[0])
-
-const canvas=document.getElementById("canvas")
-const ctx=canvas.getContext("2d")
-
-canvas.width=img.height
-canvas.height=img.width
-
-ctx.translate(canvas.width/2,canvas.height/2)
-ctx.rotate(Math.PI/2)
-
-ctx.drawImage(img,-img.width/2,-img.height/2)
-
-download(canvas.toDataURL(),"rotate.png")
-
-}
-
-if(tool==="flip"){
-
-const img=await loadImage(files[0])
-
-const canvas=document.getElementById("canvas")
-const ctx=canvas.getContext("2d")
-
-canvas.width=img.width
-canvas.height=img.height
-
-ctx.scale(-1,1)
-ctx.drawImage(img,-img.width,0)
-
-download(canvas.toDataURL(),"flip.png")
-
-}
-
-if(tool==="base64"){
-
-let reader=new FileReader()
-
-reader.onload=()=>alert(btoa(reader.result))
-
-reader.readAsBinaryString(files[0])
-
-}
-
-if(tool==="info"){
-
-let f=files[0]
-
-alert("Name: "+f.name+"\nSize: "+Math.round(f.size/1024)+" KB")
-
-}
-
-}
-
-async function singleJpgToPdf(){
-
-const file=files[0]
-
-const img=await loadImage(file)
-
-const pdfDoc=await PDFLib.PDFDocument.create()
-
-const canvas=document.createElement("canvas")
-const ctx=canvas.getContext("2d")
-
-canvas.width=img.width
-canvas.height=img.height
-
-ctx.drawImage(img,0,0)
-
-const data=canvas.toDataURL("image/jpeg")
-
-const bytes=await fetch(data).then(r=>r.arrayBuffer())
-
-const image=await pdfDoc.embedJpg(bytes)
-
-const page=pdfDoc.addPage([img.width,img.height])
-
-page.drawImage(image,{x:0,y:0,width:img.width,height:img.height})
-
-const pdfBytes=await pdfDoc.save()
-
-download(URL.createObjectURL(new Blob([pdfBytes])),"jpg-to-pdf.pdf")
+hideLoader()
 
 }
 
@@ -373,38 +619,75 @@ const pdfDoc=await PDFLib.PDFDocument.create()
 
 for(const file of files){
 
-const img=await loadImage(file)
+const bytes=await file.arrayBuffer()
 
-const canvas=document.createElement("canvas")
-const ctx=canvas.getContext("2d")
+let image
 
-canvas.width=img.width
-canvas.height=img.height
+if(file.type==="image/png"){
+image=await pdfDoc.embedPng(bytes)
+}else{
+image=await pdfDoc.embedJpg(bytes)
+}
 
-ctx.drawImage(img,0,0)
+const page=pdfDoc.addPage([image.width,image.height])
 
-const data=canvas.toDataURL("image/jpeg")
-
-const bytes=await fetch(data).then(r=>r.arrayBuffer())
-
-const image=await pdfDoc.embedJpg(bytes)
-
-const page=pdfDoc.addPage([img.width,img.height])
-
-page.drawImage(image,{x:0,y:0,width:img.width,height:img.height})
+page.drawImage(image,{
+x:0,y:0,
+width:image.width,
+height:image.height
+})
 
 }
 
 const pdfBytes=await pdfDoc.save()
 
-download(URL.createObjectURL(new Blob([pdfBytes])),"merge-jpg-to-pdf.pdf")
+download(
+URL.createObjectURL(new Blob([pdfBytes])),
+"images-to-pdf.pdf"
+)
+
+}
+
+async function pdfToJpg(){
+
+const file=files[0]
+
+const reader=new FileReader()
+
+reader.onload=async function(){
+
+const typedarray=new Uint8Array(this.result)
+
+const pdf=await pdfjsLib.getDocument(typedarray).promise
+
+for(let i=1;i<=pdf.numPages;i++){
+
+const page=await pdf.getPage(i)
+
+const viewport=page.getViewport({scale:2})
+
+const canvas=document.createElement("canvas")
+
+const ctx=canvas.getContext("2d")
+
+canvas.width=viewport.width
+canvas.height=viewport.height
+
+await page.render({canvasContext:ctx,viewport}).promise
+
+download(canvas.toDataURL("image/jpeg"),"page-"+i+".jpg")
+
+}
+
+}
+
+reader.readAsArrayBuffer(file)
 
 }
 
 function download(url,name){
 
-let a=document.createElement("a")
-
+const a=document.createElement("a")
 a.href=url
 a.download=name
 a.click()
