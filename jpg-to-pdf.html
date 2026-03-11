@@ -1,117 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>JPG to PDF - Hridoy Tools</title>
-
-<link rel="stylesheet" href="style.css">
-
+<title>JPG to PDF</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<style>
-
-.uploadBox{
-border:2px dashed #38bdf8;
-padding:40px;
-text-align:center;
-border-radius:10px;
-cursor:pointer;
-margin:20px;
-}
-
-.preview{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-padding:20px;
-}
-
-.preview img{
-width:120px;
-border-radius:8px;
-}
-
-.convertBtn{
-display:block;
-margin:20px auto;
-padding:12px 30px;
-background:#38bdf8;
-border:none;
-border-radius:8px;
-color:white;
-font-size:16px;
-cursor:pointer;
-}
-
-</style>
-
 </head>
 
 <body>
 
-<header>JPG → PDF</header>
+<h2>JPG → PDF</h2>
 
-<div class="uploadBox" onclick="fileInput.click()">
-<p>Select JPG Images</p>
-<input type="file" id="fileInput" accept="image/jpeg" multiple hidden>
-</div>
-
-<div class="preview" id="preview"></div>
-
-<button class="convertBtn" onclick="convertPDF()">Convert to PDF</button>
+<input type="file" id="file" accept="image/jpeg">
+<button onclick="convert()">Convert</button>
 
 <script>
 
-let images = [];
+function convert(){
 
-const input = document.getElementById("fileInput");
-const preview = document.getElementById("preview");
+const file=document.getElementById("file").files[0]
 
-input.addEventListener("change",function(){
-
-preview.innerHTML="";
-images=[];
-
-Array.from(this.files).forEach(file=>{
-
-const reader = new FileReader();
+const reader=new FileReader()
 
 reader.onload=function(e){
 
-images.push(e.target.result);
+const img=new Image()
 
-const img=document.createElement("img");
-img.src=e.target.result;
-preview.appendChild(img);
+img.onload=function(){
 
-}
+const {jsPDF}=window.jspdf
 
-reader.readAsDataURL(file);
+const pdf=new jsPDF()
 
-});
+pdf.addImage(img,"JPEG",0,0,img.width,img.height)
 
-});
-
-async function convertPDF(){
-
-const { jsPDF } = window.jspdf;
-
-const pdf = new jsPDF();
-
-for(let i=0;i<images.length;i++){
-
-if(i>0) pdf.addPage();
-
-const img = images[i];
-
-pdf.addImage(img,"JPEG",10,10,190,0);
+pdf.save("image.pdf")
 
 }
 
-pdf.save("converted.pdf");
+img.src=e.target.result
+
+}
+
+reader.readAsDataURL(file)
 
 }
 
