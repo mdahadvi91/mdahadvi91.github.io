@@ -5,45 +5,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>PDF to JPG - Hridoy Tools</title>
-
-<link rel="stylesheet" href="style.css">
+<title>PDF to JPG</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <style>
 
-.uploadBox{
-border:2px dashed #38bdf8;
-padding:40px;
+body{
+font-family:sans-serif;
 text-align:center;
-border-radius:10px;
-cursor:pointer;
-margin:20px;
+background:#0f172a;
+color:white;
+padding:30px;
 }
 
-.preview{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-padding:20px;
-}
-
-.preview canvas{
-width:120px;
-border-radius:8px;
-}
-
-.convertBtn{
-display:block;
-margin:20px auto;
-padding:12px 30px;
-background:#38bdf8;
+button{
+padding:10px 20px;
 border:none;
 border-radius:8px;
+background:#3b82f6;
 color:white;
-font-size:16px;
 cursor:pointer;
+margin-top:10px;
+}
+
+canvas{
+margin-top:20px;
+max-width:90%;
+border-radius:10px;
 }
 
 </style>
@@ -52,84 +41,64 @@ cursor:pointer;
 
 <body>
 
-<header>PDF → JPG</header>
+<h2>PDF → JPG</h2>
 
-<div class="uploadBox" onclick="fileInput.click()">
-<p>Select PDF File</p>
-<input type="file" id="fileInput" accept="application/pdf" hidden>
-</div>
+<input type="file" id="file" accept="application/pdf">
+<br>
+<button onclick="convert()">Convert</button>
 
-<div class="preview" id="preview"></div>
-
-<button class="convertBtn" onclick="downloadImages()">Download JPG</button>
+<div id="preview"></div>
 
 <script>
 
-let pages = [];
+async function convert(){
 
-const input = document.getElementById("fileInput");
-const preview = document.getElementById("preview");
+const file=document.getElementById("file").files[0]
 
-input.addEventListener("change", function(){
+if(!file){
+alert("Select PDF file")
+return
+}
 
-preview.innerHTML="";
-pages=[];
+const reader=new FileReader()
 
-const file = this.files[0];
+reader.onload=async function(){
 
-const reader = new FileReader();
+const typedarray=new Uint8Array(this.result)
 
-reader.onload = function(){
+const pdf=await pdfjsLib.getDocument(typedarray).promise
 
-const typedarray = new Uint8Array(this.result);
+const page=await pdf.getPage(1)
 
-pdfjsLib.getDocument(typedarray).promise.then(function(pdf){
+const viewport=page.getViewport({scale:2})
 
-for(let i=1;i<=pdf.numPages;i++){
+const canvas=document.createElement("canvas")
 
-pdf.getPage(i).then(function(page){
+const context=canvas.getContext("2d")
 
-const viewport = page.getViewport({scale:1.5});
+canvas.height=viewport.height
+canvas.width=viewport.width
 
-const canvas = document.createElement("canvas");
-const ctx = canvas.getContext("2d");
-
-canvas.height = viewport.height;
-canvas.width = viewport.width;
-
-page.render({
-canvasContext:ctx,
+await page.render({
+canvasContext:context,
 viewport:viewport
-});
+}).promise
 
-preview.appendChild(canvas);
+document.getElementById("preview").innerHTML=""
 
-pages.push(canvas);
+document.getElementById("preview").appendChild(canvas)
 
-});
+const link=document.createElement("a")
+
+link.download="page.jpg"
+
+link.href=canvas.toDataURL("image/jpeg")
+
+link.click()
 
 }
 
-});
-
-};
-
-reader.readAsArrayBuffer(file);
-
-});
-
-function downloadImages(){
-
-pages.forEach((canvas,index)=>{
-
-const link=document.createElement("a");
-
-link.download="page-"+(index+1)+".jpg";
-link.href=canvas.toDataURL("image/jpeg",0.9);
-
-link.click();
-
-});
+reader.readAsArrayBuffer(file)
 
 }
 
