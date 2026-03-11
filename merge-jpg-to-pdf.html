@@ -1,60 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Merge JPG to PDF</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<meta charset="UTF-8">
+<title>Merge PDF</title>
+
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+<style>
+
+body{
+font-family:sans-serif;
+text-align:center;
+background:#0f172a;
+color:white;
+padding:30px;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:8px;
+background:#3b82f6;
+color:white;
+cursor:pointer;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<h2>Merge JPG → PDF</h2>
+<h2>Merge PDF Files</h2>
 
-<input type="file" id="files" accept="image/jpeg" multiple>
-<button onclick="convert()">Convert</button>
+<input type="file" id="files" multiple accept="application/pdf">
+<br><br>
+<button onclick="mergePDF()">Merge</button>
 
 <script>
 
-async function convert(){
+async function mergePDF(){
 
 const files=document.getElementById("files").files
 
-const {jsPDF}=window.jspdf
+const mergedPdf = await PDFLib.PDFDocument.create()
 
-const pdf=new jsPDF()
+for(let file of files){
 
-for(let i=0;i<files.length;i++){
+const bytes=await file.arrayBuffer()
 
-const file=files[i]
+const pdf=await PDFLib.PDFDocument.load(bytes)
 
-const reader=new FileReader()
+const pages=await mergedPdf.copyPages(pdf,pdf.getPageIndices())
 
-await new Promise(resolve=>{
-
-reader.onload=function(e){
-
-const img=new Image()
-
-img.onload=function(){
-
-if(i>0) pdf.addPage()
-
-pdf.addImage(img,"JPEG",0,0,img.width,img.height)
-
-resolve()
+pages.forEach(p=>mergedPdf.addPage(p))
 
 }
 
-img.src=e.target.result
+const mergedBytes=await mergedPdf.save()
 
-}
+const blob=new Blob([mergedBytes],{type:"application/pdf"})
 
-reader.readAsDataURL(file)
+const link=document.createElement("a")
 
-})
+link.href=URL.createObjectURL(blob)
 
-}
+link.download="merged.pdf"
 
-pdf.save("merged.pdf")
+link.click()
 
 }
 
