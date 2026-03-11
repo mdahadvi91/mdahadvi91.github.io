@@ -203,19 +203,20 @@ cursor:pointer;
 background:#ef4444;
 margin:15px;
 }
-footer{
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-text-align:center;
-padding:15px;
-font-size:14px;
-background:#020617;
+html, body{
+height:100%;
+margin:0;
+display:flex;
+flex-direction:column;
 }
 
-footer a{
-color:#38bdf8;
-margin:0 8px;
-text-decoration:none;
+#main{
+flex:1;
+}
+
+footer{
+margin-top:auto;
+text-align:center;
+padding:20px;
+font-size:14px;
 }
