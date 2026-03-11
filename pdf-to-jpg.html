@@ -1,1 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>PDF to JPG - Hridoy Tools</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<style>
+
+.uploadBox{
+border:2px dashed #38bdf8;
+padding:40px;
+text-align:center;
+border-radius:10px;
+cursor:pointer;
+margin:20px;
+}
+
+.preview{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+padding:20px;
+}
+
+.preview canvas{
+width:120px;
+border-radius:8px;
+}
+
+.convertBtn{
+display:block;
+margin:20px auto;
+padding:12px 30px;
+background:#38bdf8;
+border:none;
+border-radius:8px;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>PDF → JPG</header>
+
+<div class="uploadBox" onclick="fileInput.click()">
+<p>Select PDF File</p>
+<input type="file" id="fileInput" accept="application/pdf" hidden>
+</div>
+
+<div class="preview" id="preview"></div>
+
+<button class="convertBtn" onclick="downloadImages()">Download JPG</button>
+
+<script>
+
+let pages = [];
+
+const input = document.getElementById("fileInput");
+const preview = document.getElementById("preview");
+
+input.addEventListener("change", function(){
+
+preview.innerHTML="";
+pages=[];
+
+const file = this.files[0];
+
+const reader = new FileReader();
+
+reader.onload = function(){
+
+const typedarray = new Uint8Array(this.result);
+
+pdfjsLib.getDocument(typedarray).promise.then(function(pdf){
+
+for(let i=1;i<=pdf.numPages;i++){
+
+pdf.getPage(i).then(function(page){
+
+const viewport = page.getViewport({scale:1.5});
+
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.height = viewport.height;
+canvas.width = viewport.width;
+
+page.render({
+canvasContext:ctx,
+viewport:viewport
+});
+
+preview.appendChild(canvas);
+
+pages.push(canvas);
+
+});
+
+}
+
+});
+
+};
+
+reader.readAsArrayBuffer(file);
+
+});
+
+function downloadImages(){
+
+pages.forEach((canvas,index)=>{
+
+const link=document.createElement("a");
+
+link.download="page-"+(index+1)+".jpg";
+link.href=canvas.toDataURL("image/jpeg",0.9);
+
+link.click();
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
