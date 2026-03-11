@@ -1,100 +1,409 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hridoy Tools Management</title>
 
-<title>Hridoy Tools</title>
-
-<link rel="stylesheet" href="style.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#0f172a;
+color:white;
+text-align:center;
+min-height:100vh;
+}
+
+header{
+padding:25px;
+font-size:28px;
+font-weight:bold;
+}
+
+.ad-box{
+width:90%;
+max-width:900px;
+margin:20px auto;
+padding:25px;
+background:#1e293b;
+border-radius:10px;
+border:2px dashed #3b82f6;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+padding:40px;
+max-width:1000px;
+margin:auto;
+}
+
+.grid button{
+padding:20px;
+border:none;
+border-radius:12px;
+background:#1e293b;
+color:white;
+cursor:pointer;
+transition:.3s;
+}
+
+.grid button:hover{
+background:#2563eb;
+}
+
+#toolScreen{
+display:none;
+padding:20px;
+}
+
+canvas{
+max-width:90%;
+margin-top:20px;
+}
+
+footer{
+background:#111827;
+padding:30px;
+margin-top:40px;
+}
+
+footer a{
+color:white;
+margin:10px;
+text-decoration:none;
+}
+
+@media(max-width:700px){
+.grid{
+grid-template-columns:repeat(2,1fr);
+}
+}
+
+</style>
 </head>
 
 <body>
 
-<div class="bg"></div>
+<header>⚡ Hridoy Tools Management</header>
 
-<h1 class="title">Hridoy Tools</h1>
+<div class="ad-box">
+Top AdSense Banner
+</div>
 
-<!-- TOOLS GRID -->
 <div id="toolsPage" class="grid">
 
-<button onclick="openTool('resize')">Resize</button>
-<button onclick="openTool('compress')">Compress</button>
-<button onclick="openTool('crop')">Crop</button>
-<button onclick="openTool('rotate')">Rotate</button>
-<button onclick="openTool('flip')">Flip</button>
-
+<button onclick="openTool('jpgpdf')">JPG → PDF</button>
+<button onclick="openTool('mergejpgpdf')">Merge JPG → PDF</button>
 <button onclick="openTool('jpgpng')">JPG → PNG</button>
 <button onclick="openTool('pngjpg')">PNG → JPG</button>
 
-<button onclick="openTool('jpgpdf')">JPG → PDF</button>
-<button onclick="openTool('pngpdf')">PNG → PDF</button>
-
-<button onclick="openTool('mergepdf')">Merge PDF</button>
-<button onclick="openTool('splitpdf')">Split PDF</button>
-
-<button onclick="openTool('pdfjpg')">PDF → JPG</button>
-
-<button onclick="openTool('gray')">Grayscale</button>
-<button onclick="openTool('invert')">Invert</button>
+<button onclick="openTool('resize')">Resize Image</button>
+<button onclick="openTool('compress')">Compress Image</button>
+<button onclick="openTool('rotate')">Rotate</button>
+<button onclick="openTool('flip')">Flip</button>
 
 <button onclick="openTool('qr')">QR Generator</button>
-
-<button onclick="openTool('base64e')">Base64 Encode</button>
-<button onclick="openTool('base64d')">Base64 Decode</button>
-
+<button onclick="openTool('base64')">Base64</button>
 <button onclick="openTool('info')">Image Info</button>
-
-<button onclick="openTool('preview')">Preview</button>
 
 </div>
 
+<div id="toolScreen">
 
-<!-- TOOL SCREEN -->
-<div id="toolScreen" class="toolScreen" style="display:none;">
+<button onclick="goHome()">⬅ Back</button>
 
-<button class="backBtn" onclick="goHome()">⬅ Back</button>
-
-<div id="uploadBox" class="uploadBox">
+<div class="ad-box">
+Middle AdSense Banner
+</div>
 
 <input type="file" id="fileInput" multiple>
 
-<p>Drag & Drop Files<br>or Click to Upload</p>
+<br><br>
 
-</div>
+<button onclick="runTool()">Run Tool</button>
 
-<div id="previewArea"></div>
-
-<div class="progress">
-<div id="progressBar"></div>
-</div>
+<br>
 
 <canvas id="canvas"></canvas>
 
 </div>
 
+<footer>
 
-<!-- IMAGE PREVIEW POPUP -->
-<div id="previewPopup" class="popup">
+<p>© 2026 Hridoy Tools Management</p>
 
-<div class="popupContent">
+<a href="#">Home</a>
+<a href="#">Contact</a>
+<a href="#">Privacy Policy</a>
+<a href="#">Terms</a>
 
-<img id="previewImg">
-
-<button onclick="closePreview()">Close</button>
-
+<div class="ad-box">
+Footer AdSense Banner
 </div>
 
-</div>
+</footer>
 
+<script>
 
-<script src="script.js"></script>
+let tool=""
+let files=[]
+
+function openTool(t){
+
+tool=t
+
+document.getElementById("toolsPage").style.display="none"
+document.getElementById("toolScreen").style.display="block"
+
+}
+
+function goHome(){
+
+document.getElementById("toolScreen").style.display="none"
+document.getElementById("toolsPage").style.display="grid"
+
+}
+
+document.getElementById("fileInput").addEventListener("change",e=>{
+files=[...e.target.files]
+})
+
+function loadImage(file){
+
+return new Promise((resolve,reject)=>{
+
+let img=new Image()
+
+img.onload=()=>resolve(img)
+
+img.onerror=reject
+
+img.src=URL.createObjectURL(file)
+
+})
+
+}
+
+async function runTool(){
+
+if(files.length===0){
+
+alert("Upload image first")
+
+return
+
+}
+
+if(tool==="jpgpdf"){
+singleJpgToPdf()
+}
+
+if(tool==="mergejpgpdf"){
+mergeJpgToPdf()
+}
+
+if(tool==="jpgpng" || tool==="pngjpg"){
+
+const img=await loadImage(files[0])
+
+const canvas=document.getElementById("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.drawImage(img,0,0)
+
+let type=tool==="jpgpng"?"image/png":"image/jpeg"
+
+download(canvas.toDataURL(type),"image")
+
+}
+
+if(tool==="resize"){
+
+const img=await loadImage(files[0])
+
+const canvas=document.getElementById("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.width/2
+canvas.height=img.height/2
+
+ctx.drawImage(img,0,0,canvas.width,canvas.height)
+
+download(canvas.toDataURL(),"resize.png")
+
+}
+
+if(tool==="compress"){
+
+const img=await loadImage(files[0])
+
+const canvas=document.getElementById("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.drawImage(img,0,0)
+
+download(canvas.toDataURL("image/jpeg",0.5),"compress.jpg")
+
+}
+
+if(tool==="rotate"){
+
+const img=await loadImage(files[0])
+
+const canvas=document.getElementById("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.height
+canvas.height=img.width
+
+ctx.translate(canvas.width/2,canvas.height/2)
+ctx.rotate(Math.PI/2)
+
+ctx.drawImage(img,-img.width/2,-img.height/2)
+
+download(canvas.toDataURL(),"rotate.png")
+
+}
+
+if(tool==="flip"){
+
+const img=await loadImage(files[0])
+
+const canvas=document.getElementById("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.scale(-1,1)
+ctx.drawImage(img,-img.width,0)
+
+download(canvas.toDataURL(),"flip.png")
+
+}
+
+if(tool==="qr"){
+
+let text=prompt("Enter text")
+
+window.open("https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+text)
+
+}
+
+if(tool==="base64"){
+
+let reader=new FileReader()
+
+reader.onload=()=>alert(btoa(reader.result))
+
+reader.readAsBinaryString(files[0])
+
+}
+
+if(tool==="info"){
+
+let f=files[0]
+
+alert("Name: "+f.name+"\nSize: "+Math.round(f.size/1024)+" KB")
+
+}
+
+}
+
+async function singleJpgToPdf(){
+
+const file=files[0]
+
+const img=await loadImage(file)
+
+const pdfDoc=await PDFLib.PDFDocument.create()
+
+const canvas=document.createElement("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.drawImage(img,0,0)
+
+const data=canvas.toDataURL("image/jpeg")
+
+const bytes=await fetch(data).then(r=>r.arrayBuffer())
+
+const image=await pdfDoc.embedJpg(bytes)
+
+const page=pdfDoc.addPage([img.width,img.height])
+
+page.drawImage(image,{x:0,y:0,width:img.width,height:img.height})
+
+const pdfBytes=await pdfDoc.save()
+
+download(URL.createObjectURL(new Blob([pdfBytes])),"jpg-to-pdf.pdf")
+
+}
+
+async function mergeJpgToPdf(){
+
+const pdfDoc=await PDFLib.PDFDocument.create()
+
+for(const file of files){
+
+const img=await loadImage(file)
+
+const canvas=document.createElement("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.drawImage(img,0,0)
+
+const data=canvas.toDataURL("image/jpeg")
+
+const bytes=await fetch(data).then(r=>r.arrayBuffer())
+
+const image=await pdfDoc.embedJpg(bytes)
+
+const page=pdfDoc.addPage([img.width,img.height])
+
+page.drawImage(image,{x:0,y:0,width:img.width,height:img.height})
+
+}
+
+const pdfBytes=await pdfDoc.save()
+
+download(URL.createObjectURL(new Blob([pdfBytes])),"merge-jpg-to-pdf.pdf")
+
+}
+
+function download(url,name){
+
+let a=document.createElement("a")
+
+a.href=url
+a.download=name
+a.click()
+
+}
+
+</script>
 
 </body>
 </html>
