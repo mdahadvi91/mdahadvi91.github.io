@@ -1,374 +1,344 @@
-/* ================= PARTICLES ================= */
-
-var particles=document.getElementById("particles");
-
-for(let i=0;i<70;i++){
-
-let dot=document.createElement("div");
-dot.className="dot";
-
-dot.style.left=Math.random()*100+"%";
-dot.style.animationDuration=(10+Math.random()*20)+"s";
-
-particles.appendChild(dot);
-
-}
-
-/* ================= OPEN SITE ================= */
+//////////////////////////////////////
+// OPEN SITE
+//////////////////////////////////////
 
 function openSite(){
-document.getElementById("welcome").style.display="none";
-document.getElementById("main").style.display="block";
+document.getElementById("welcome").style.display="none"
+document.getElementById("main").style.display="block"
 }
 
-var home=document.getElementById("app").innerHTML;
+//////////////////////////////////////
+// GO HOME
+//////////////////////////////////////
 
 function goHome(){
-document.getElementById("app").innerHTML=home;
+document.getElementById("toolScreen").style.display="none"
+document.getElementById("toolsPage").style.display="block"
 }
 
-/* ================= LOADER ================= */
+//////////////////////////////////////
+// OPEN TOOL
+//////////////////////////////////////
 
-function showLoader(){
-let loader=document.getElementById("loader");
-if(loader) loader.style.display="flex";
+function openTool(tool){
+
+document.getElementById("toolsPage").style.display="none"
+document.getElementById("toolScreen").style.display="block"
+
+let area=document.getElementById("toolContent")
+
+if(tool=="resize"){
+area.innerHTML=toolLayout("Resize Image","resizeImage()",true)
 }
 
-function hideLoader(){
-let loader=document.getElementById("loader");
-if(loader) loader.style.display="none";
+if(tool=="compress"){
+area.innerHTML=toolLayout("Compress Image","compressImage()",true)
 }
 
-/* ================= PROGRESS BAR ================= */
-
-function showProgress(){
-
-let bar=document.createElement("div");
-
-bar.className="progress";
-
-bar.innerHTML="<div class='progress-bar'></div>";
-
-document.body.appendChild(bar);
-
-let p=0;
-
-let interval=setInterval(()=>{
-
-p+=10;
-
-bar.firstChild.style.width=p+"%";
-
-if(p>=100){
-
-clearInterval(interval);
-
-setTimeout(()=>{
-bar.remove();
-},500);
-
+if(tool=="rotate"){
+area.innerHTML=toolLayout("Rotate Image","rotateImage()",true)
 }
 
-},200);
-
+if(tool=="flip"){
+area.innerHTML=toolLayout("Flip Image","flipImage()",true)
 }
 
-/* ================= DARK MODE ================= */
+if(tool=="jpgpng"){
+area.innerHTML=toolLayout("JPG → PNG","jpgToPng()",true)
+}
 
-function toggleMode(){
+if(tool=="pngjpg"){
+area.innerHTML=toolLayout("PNG → JPG","pngToJpg()",true)
+}
 
-document.body.classList.toggle("light");
-
-let btn=document.getElementById("modeToggle");
-
-if(document.body.classList.contains("light")){
-
-btn.innerHTML="☀ Day";
-
-}else{
-
-btn.innerHTML="🌙 Night";
-
+if(tool=="crop"){
+area.innerHTML=toolLayout("Crop Image","cropImage()",true)
 }
 
 }
 
-/* ================= PDF PAGE ================= */
+//////////////////////////////////////
+// TOOL LAYOUT
+//////////////////////////////////////
 
-function openPDF(){
+function toolLayout(title,func,canvas=true){
 
-document.getElementById("app").innerHTML=`
+return `
+<h2>${title}</h2>
 
-<button class="back" onclick="goHome()">⬅ Back</button>
-
-<div class="container">
-
-<h2>PDF Tools</h2>
-
-<div class="grid">
-
-<div class="card" onclick="jpgPdf()">JPG → PDF</div>
-<div class="card" onclick="pngPdf()">PNG → PDF</div>
-<div class="card" onclick="pngJpg()">PNG → JPG</div>
-<div class="card" onclick="jpgPng()">JPG → PNG</div>
-<div class="card" onclick="mergeImages()">Merge Images → PDF</div>
-<div class="card" onclick="pdfJpg()">PDF → JPG</div>
-
+<div class="dropArea" id="dropArea">
+Drag & Drop Image
+<br>or<br>
+<input type="file" id="file">
 </div>
 
-</div>
-`;
+<br>
 
-}
-
-/* ================= JPG → PDF ================= */
-
-function jpgPdf(){
-
-document.getElementById("app").innerHTML=`
-
-<button class="back" onclick="openPDF()">⬅ Back</button>
-
-<div class="center">
-
-<h2>JPG → PDF</h2>
-
-<input type="file" id="img">
+<img id="preview" style="max-width:100%;display:none">
 
 <br><br>
 
-<button onclick="convertJPG()">Convert</button>
+<button onclick="${func}">Convert</button>
 
-</div>
-`;
-
-}
-
-function convertJPG(){
-
-let file=document.getElementById("img").files[0];
-
-if(!file){
-alert("Select image");
-return;
-}
-
-let reader=new FileReader();
-
-reader.onload=function(e){
-
-let img=new Image();
-
-img.onload=function(){
-
-const { jsPDF }=window.jspdf;
-
-let pdf=new jsPDF({
-orientation:img.width>img.height?'l':'p',
-unit:'px',
-format:[img.width,img.height]
-});
-
-pdf.addImage(img,'JPEG',0,0,img.width,img.height);
-
-pdf.save("image.pdf");
-
-};
-
-img.src=e.target.result;
-
-};
-
-reader.readAsDataURL(file);
-
-}
-
-/* ================= PNG → PDF ================= */
-
-function pngPdf(){
-
-document.getElementById("app").innerHTML=`
-
-<button class="back" onclick="openPDF()">⬅ Back</button>
-
-<div class="center">
-
-<h2>PNG → PDF</h2>
-
-<input type="file" id="png">
-
-<br><br>
-
-<button onclick="convertPNG()">Convert</button>
-
-</div>
-`;
-
-}
-
-function convertPNG(){
-
-let file=document.getElementById("png").files[0];
-
-if(!file){
-alert("Select image");
-return;
-}
-
-let reader=new FileReader();
-
-reader.onload=function(e){
-
-let img=new Image();
-
-img.onload=function(){
-
-const { jsPDF }=window.jspdf;
-
-let pdf=new jsPDF({
-orientation:img.width>img.height?'l':'p',
-unit:'px',
-format:[img.width,img.height]
-});
-
-pdf.addImage(img,'PNG',0,0,img.width,img.height);
-
-pdf.save("image.pdf");
-
-};
-
-img.src=e.target.result;
-
-};
-
-reader.readAsDataURL(file);
-
-}
-
-/* ================= IMAGE TOOLS ================= */
-
-function openImage(){
-
-document.getElementById("app").innerHTML=`
-
-<button class="back" onclick="goHome()">⬅ Back</button>
-
-<div class="container">
-
-<h2>Image Tools</h2>
-
-<div class="grid">
-
-<div class="card" onclick="resizeTool()">Resize Image</div>
-<div class="card" onclick="compressTool()">Compress Image</div>
-<div class="card" onclick="blurTool()">Blur Image</div>
-<div class="card" onclick="cropTool()">Crop Image</div>
-
-<div class="card" onclick="bgRemove()">Background Remover</div>
-<div class="card" onclick="watermarkTool()">Add Watermark</div>
-<div class="card" onclick="filterTool()">Color Filter</div>
-
+<div id="loading" style="display:none">
+Processing...
 </div>
 
-</div>
-`;
+${canvas ? `<canvas id="canvas"></canvas>` : ``}
+`
+}
+
+//////////////////////////////////////
+// DRAG DROP SYSTEM
+//////////////////////////////////////
+
+document.addEventListener("change",function(e){
+
+if(e.target.id=="file"){
+previewFile(e.target.files[0])
+}
+
+})
+
+document.addEventListener("dragover",e=>{
+e.preventDefault()
+})
+
+document.addEventListener("drop",e=>{
+
+let file=e.dataTransfer.files[0]
+
+if(file){
+previewFile(file)
+
+let input=document.getElementById("file")
+if(input) input.files=e.dataTransfer.files
+}
+
+})
+
+//////////////////////////////////////
+// PREVIEW
+//////////////////////////////////////
+
+function previewFile(file){
+
+let img=document.getElementById("preview")
+
+img.src=URL.createObjectURL(file)
+
+img.style.display="block"
 
 }
 
-/* ================= RESIZE ================= */
+//////////////////////////////////////
+// LOADING
+//////////////////////////////////////
 
-function resizeTool(){
-
-document.getElementById("app").innerHTML=`
-
-<button class="back" onclick="openImage()">⬅ Back</button>
-
-<div class="center">
-
-<h2>Resize Image</h2>
-
-<input type="file" id="img">
-
-<br><br>
-
-Width <input type="number" id="w">
-
-Height <input type="number" id="h">
-
-<br><br>
-
-<button onclick="resizeImage()">Resize</button>
-
-</div>
-`;
-
+function showLoading(){
+document.getElementById("loading").style.display="block"
 }
+
+function hideLoading(){
+document.getElementById("loading").style.display="none"
+}
+
+//////////////////////////////////////
+// IMAGE FUNCTIONS
+//////////////////////////////////////
 
 function resizeImage(){
 
-let file=document.getElementById("img").files[0];
+let file=document.getElementById("file").files[0]
+if(!file) return alert("Select image")
 
-if(!file){
-alert("Select image");
-return;
-}
+showLoading()
 
-let w=document.getElementById("w").value;
-let h=document.getElementById("h").value;
-
-let reader=new FileReader();
-
-reader.onload=function(e){
-
-let img=new Image();
+let img=new Image()
+img.src=URL.createObjectURL(file)
 
 img.onload=function(){
 
-let canvas=document.createElement("canvas");
+let canvas=document.getElementById("canvas")
+let ctx=canvas.getContext("2d")
 
-canvas.width=w;
-canvas.height=h;
+canvas.width=img.width/2
+canvas.height=img.height/2
 
-let ctx=canvas.getContext("2d");
+ctx.drawImage(img,0,0,canvas.width,canvas.height)
 
-ctx.drawImage(img,0,0,w,h);
+downloadCanvas(canvas,"resize.png")
 
-let link=document.createElement("a");
-
-link.download="resized.png";
-link.href=canvas.toDataURL();
-
-link.click();
-
-};
-
-img.src=e.target.result;
-
-};
-
-reader.readAsDataURL(file);
+hideLoading()
 
 }
 
-/* ================= VIDEO PAGE ================= */
+}
 
-function openVideo(){
+function compressImage(){
 
-document.getElementById("app").innerHTML=`
+let file=document.getElementById("file").files[0]
+if(!file) return alert("Select image")
 
-<button class="back" onclick="goHome()">⬅ Back</button>
+showLoading()
 
-<div class="container">
+let img=new Image()
+img.src=URL.createObjectURL(file)
 
-<h2>Video Tools</h2>
+img.onload=function(){
 
-<div class="grid">
+let canvas=document.getElementById("canvas")
+let ctx=canvas.getContext("2d")
 
-<div class="card">Coming Soon</div>
+canvas.width=img.width
+canvas.height=img.height
 
-</div>
+ctx.drawImage(img,0,0)
 
-</div>
-`;
+downloadCanvas(canvas,"compress.jpg","image/jpeg",0.5)
+
+hideLoading()
+
+}
+
+}
+
+function rotateImage(){
+
+let file=document.getElementById("file").files[0]
+if(!file) return alert("Select image")
+
+let img=new Image()
+img.src=URL.createObjectURL(file)
+
+img.onload=function(){
+
+let canvas=document.getElementById("canvas")
+let ctx=canvas.getContext("2d")
+
+canvas.width=img.height
+canvas.height=img.width
+
+ctx.translate(canvas.width/2,canvas.height/2)
+ctx.rotate(Math.PI/2)
+
+ctx.drawImage(img,-img.width/2,-img.height/2)
+
+downloadCanvas(canvas,"rotate.png")
+
+}
+
+}
+
+function flipImage(){
+
+let file=document.getElementById("file").files[0]
+if(!file) return alert("Select image")
+
+let img=new Image()
+img.src=URL.createObjectURL(file)
+
+img.onload=function(){
+
+let canvas=document.getElementById("canvas")
+let ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.scale(-1,1)
+ctx.drawImage(img,-img.width,0)
+
+downloadCanvas(canvas,"flip.png")
+
+}
+
+}
+
+function jpgToPng(){
+
+let file=document.getElementById("file").files[0]
+if(!file) return alert("Select image")
+
+let img=new Image()
+img.src=URL.createObjectURL(file)
+
+img.onload=function(){
+
+let canvas=document.getElementById("canvas")
+let ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.drawImage(img,0,0)
+
+downloadCanvas(canvas,"image.png")
+
+}
+
+}
+
+function pngToJpg(){
+
+let file=document.getElementById("file").files[0]
+if(!file) return alert("Select image")
+
+let img=new Image()
+img.src=URL.createObjectURL(file)
+
+img.onload=function(){
+
+let canvas=document.getElementById("canvas")
+let ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.drawImage(img,0,0)
+
+downloadCanvas(canvas,"image.jpg","image/jpeg",1)
+
+}
+
+}
+
+function cropImage(){
+
+let file=document.getElementById("file").files[0]
+if(!file) return alert("Select image")
+
+let img=new Image()
+img.src=URL.createObjectURL(file)
+
+img.onload=function(){
+
+let canvas=document.getElementById("canvas")
+let ctx=canvas.getContext("2d")
+
+canvas.width=300
+canvas.height=300
+
+ctx.drawImage(img,0,0,300,300)
+
+downloadCanvas(canvas,"crop.png")
+
+}
+
+}
+
+//////////////////////////////////////
+// DOWNLOAD HELPER
+//////////////////////////////////////
+
+function downloadCanvas(canvas,name,type="image/png",quality=1){
+
+let link=document.createElement("a")
+
+link.download=name
+
+link.href=canvas.toDataURL(type,quality)
+
+link.click()
 
 }
