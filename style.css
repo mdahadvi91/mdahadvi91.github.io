@@ -1,0 +1,205 @@
+body{
+margin:0;
+font-family:sans-serif;
+background:#0f172a;
+color:white;
+transition:.3s;
+}
+
+/* PARTICLES */
+
+#particles{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+overflow:hidden;
+}
+
+.dot{
+position:absolute;
+width:3px;
+height:3px;
+background:#38bdf8;
+border-radius:50%;
+opacity:.7;
+animation:move 20s linear infinite;
+}
+
+@keyframes move{
+from{transform:translateY(100vh)}
+to{transform:translateY(-10vh)}
+}
+
+/* WELCOME */
+
+#welcome{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#0f172a;
+z-index:999;
+}
+
+.box{
+position:relative;
+width:320px;
+height:260px;
+background:#1e293b;
+border-radius:15px;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+overflow:hidden;
+}
+
+.box::before{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+background:linear-gradient(0deg,transparent,#45f3ff,#ff2770,#45f3ff);
+animation:rotate 6s linear infinite;
+}
+
+.box::after{
+content:"";
+position:absolute;
+inset:4px;
+background:#1e293b;
+border-radius:12px;
+}
+
+@keyframes rotate{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+.content{
+position:relative;
+z-index:2;
+padding:20px;
+}
+
+.go{
+margin-top:20px;
+padding:10px 40px;
+border:none;
+border-radius:25px;
+background:#38bdf8;
+color:white;
+cursor:pointer;
+}
+
+/* HEADER */
+
+header{
+background:#020617;
+padding:20px;
+text-align:center;
+font-size:26px;
+font-weight:bold;
+}
+
+/* SEARCH */
+
+.search{
+text-align:center;
+margin:20px;
+}
+
+.search input{
+width:80%;
+max-width:400px;
+padding:10px;
+border:none;
+border-radius:8px;
+}
+
+/* MODE */
+
+#modeToggle{
+position:fixed;
+top:15px;
+right:15px;
+padding:8px 15px;
+border:none;
+border-radius:20px;
+background:#38bdf8;
+color:white;
+cursor:pointer;
+}
+
+/* GRID */
+
+.container{
+padding:20px;
+max-width:900px;
+margin:auto;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+
+.card{
+background:rgba(30,41,59,0.8);
+padding:25px;
+border-radius:12px;
+text-align:center;
+cursor:pointer;
+transition:.3s;
+box-shadow:0 0 15px rgba(56,189,248,.3);
+}
+
+.card:hover{
+transform:scale(1.05);
+box-shadow:0 0 25px #38bdf8;
+}
+
+/* LIGHT MODE */
+
+.light{
+background:#f1f5f9;
+color:black;
+}
+
+.light header{
+background:#e2e8f0;
+}
+
+.light .card{
+background:white;
+color:black;
+}
+
+/* TOOL PAGE */
+
+.center{
+text-align:center;
+padding:30px;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:8px;
+background:#3b82f6;
+color:white;
+cursor:pointer;
+}
+
+.back{
+background:#ef4444;
+margin:15px;
+}
