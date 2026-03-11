@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>PDF Tools - Hridoy Tools</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.tools-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+padding:20px;
+max-width:900px;
+margin:auto;
+}
+
+.tool-card{
+background:#1e293b;
+padding:25px;
+border-radius:12px;
+text-align:center;
+cursor:pointer;
+transition:.3s;
+box-shadow:0 0 15px rgba(56,189,248,.3);
+}
+
+.tool-card:hover{
+transform:scale(1.05);
+box-shadow:0 0 25px #38bdf8;
+}
+
+.tool-card img{
+width:50px;
+margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>PDF Tools</header>
+
+<div class="tools-grid">
+
+<a href="jpg-to-pdf.html" class="tool-card">
+<img src="https://img.icons8.com/color/96/image.png">
+<h3>JPG → PDF</h3>
+<p>Convert JPG images into PDF</p>
+</a>
+
+<a href="jpg-to-png.html" class="tool-card">
+<img src="https://img.icons8.com/color/96/png.png">
+<h3>JPG → PNG</h3>
+<p>Convert JPG to PNG format</p>
+</a>
+
+<a href="merge-jpg-to-pdf.html" class="tool-card">
+<img src="https://img.icons8.com/color/96/merge.png">
+<h3>Merge JPG → PDF</h3>
+<p>Combine multiple images into one PDF</p>
+</a>
+
+<a href="png-to-jpg.html" class="tool-card">
+<img src="https://img.icons8.com/color/96/jpg.png">
+<h3>PNG → JPG</h3>
+<p>Convert PNG images to JPG</p>
+</a>
+
+<a href="png-to-pdf.html" class="tool-card">
+<img src="https://img.icons8.com/color/96/pdf.png">
+<h3>PNG → PDF</h3>
+<p>Convert PNG images into PDF</p>
+</a>
+
+<a href="pdf-to-jpg.html" class="tool-card">
+<img src="https://img.icons8.com/color/96/pdf.png">
+<h3>PDF → JPG</h3>
+<p>Extract images from PDF</p>
+</a>
+
+</div>
+
+</body>
+</html>
