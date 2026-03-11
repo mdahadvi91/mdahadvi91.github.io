@@ -504,6 +504,25 @@ footer a{color:white;margin:10px;text-decoration:none}
 <button class="back-btn" onclick="goHome()">
 <span>←</span>
 </button>
+<button onclick="openTool('crop')">
+<span>Crop Image</span>
+</button>
+
+<button onclick="openTool('watermark')">
+<span>Add Watermark</span>
+</button>
+
+<button onclick="openTool('colorpicker')">
+<span>Color Picker</span>
+</button>
+
+<button onclick="openTool('webptojpg')">
+<span>WebP → JPG</span>
+</button>
+
+<button onclick="openTool('jpgtowebp')">
+<span>JPG → WebP</span>
+</button>
 
 <div>Middle AdSense Banner</div>
 
@@ -624,6 +643,26 @@ function hideLoader(){loader.style.display="none"}
 
 async function runTool(){
 
+if(tool==="crop"){
+await cropImage()
+}
+
+if(tool==="watermark"){
+await addWatermark()
+}
+
+if(tool==="colorpicker"){
+await colorPicker()
+}
+
+if(tool==="webptojpg"){
+await webpToJpg()
+}
+
+if(tool==="jpgtowebp"){
+await jpgToWebp()
+}
+
 if(files.length===0){
 alert("Upload file first")
 return
@@ -722,6 +761,134 @@ const a=document.createElement("a")
 a.href=url
 a.download=name
 a.click()
+
+}
+
+async function cropImage(){
+
+const file=files[0]
+
+const img=new Image()
+img.src=URL.createObjectURL(file)
+
+img.onload=function(){
+
+const canvas=document.createElement("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=400
+canvas.height=300
+
+ctx.drawImage(img,0,0,400,300)
+
+download(canvas.toDataURL(),"crop.png")
+
+}
+
+}
+
+async function addWatermark(){
+
+const file=files[0]
+
+const img=new Image()
+img.src=URL.createObjectURL(file)
+
+img.onload=function(){
+
+const canvas=document.createElement("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.drawImage(img,0,0)
+
+ctx.font="50px Arial"
+ctx.fillStyle="rgba(255,255,255,0.5)"
+ctx.fillText("Hridoy Tools",50,80)
+
+download(canvas.toDataURL(),"watermark.png")
+
+}
+
+}
+
+async function colorPicker(){
+
+const file=files[0]
+
+const img=new Image()
+img.src=URL.createObjectURL(file)
+
+img.onload=function(){
+
+const canvas=document.createElement("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+document.getElementById("gallery").innerHTML=""
+document.getElementById("gallery").appendChild(canvas)
+
+ctx.drawImage(img,0,0)
+
+canvas.onclick=function(e){
+
+const pixel=ctx.getImageData(e.offsetX,e.offsetY,1,1).data
+
+alert("RGB: "+pixel[0]+","+pixel[1]+","+pixel[2])
+
+}
+
+}
+
+}
+
+async function webpToJpg(){
+
+const file=files[0]
+
+const img=new Image()
+img.src=URL.createObjectURL(file)
+
+img.onload=function(){
+
+const canvas=document.createElement("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.drawImage(img,0,0)
+
+download(canvas.toDataURL("image/jpeg"),"image.jpg")
+
+}
+
+}
+
+async function jpgToWebp(){
+
+const file=files[0]
+
+const img=new Image()
+img.src=URL.createObjectURL(file)
+
+img.onload=function(){
+
+const canvas=document.createElement("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=img.width
+canvas.height=img.height
+
+ctx.drawImage(img,0,0)
+
+download(canvas.toDataURL("image/webp"),"image.webp")
+
+}
 
 }
 
