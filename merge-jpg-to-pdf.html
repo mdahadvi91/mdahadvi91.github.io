@@ -1,115 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Merge JPG to PDF - Hridoy Tools</title>
-
-<link rel="stylesheet" href="style.css">
-
+<title>Merge JPG to PDF</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<style>
-
-.uploadBox{
-border:2px dashed #38bdf8;
-padding:40px;
-text-align:center;
-border-radius:10px;
-cursor:pointer;
-margin:20px;
-}
-
-.preview{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-padding:20px;
-}
-
-.preview img{
-width:120px;
-border-radius:8px;
-}
-
-.convertBtn{
-display:block;
-margin:20px auto;
-padding:12px 30px;
-background:#38bdf8;
-border:none;
-border-radius:8px;
-color:white;
-font-size:16px;
-cursor:pointer;
-}
-
-</style>
-
 </head>
 
 <body>
 
-<header>Merge JPG → PDF</header>
+<h2>Merge JPG → PDF</h2>
 
-<div class="uploadBox" onclick="fileInput.click()">
-<p>Select JPG Images</p>
-<input type="file" id="fileInput" accept="image/jpeg" multiple hidden>
-</div>
-
-<div class="preview" id="preview"></div>
-
-<button class="convertBtn" onclick="mergePDF()">Merge to PDF</button>
+<input type="file" id="files" accept="image/jpeg" multiple>
+<button onclick="convert()">Convert</button>
 
 <script>
 
-let images = [];
+async function convert(){
 
-const input = document.getElementById("fileInput");
-const preview = document.getElementById("preview");
+const files=document.getElementById("files").files
 
-input.addEventListener("change",function(){
+const {jsPDF}=window.jspdf
 
-preview.innerHTML="";
-images=[];
+const pdf=new jsPDF()
 
-Array.from(this.files).forEach(file=>{
+for(let i=0;i<files.length;i++){
 
-const reader = new FileReader();
+const file=files[i]
+
+const reader=new FileReader()
+
+await new Promise(resolve=>{
 
 reader.onload=function(e){
 
-images.push(e.target.result);
+const img=new Image()
 
-const img=document.createElement("img");
-img.src=e.target.result;
-preview.appendChild(img);
+img.onload=function(){
 
-}
+if(i>0) pdf.addPage()
 
-reader.readAsDataURL(file);
+pdf.addImage(img,"JPEG",0,0,img.width,img.height)
 
-});
-
-});
-
-async function mergePDF(){
-
-const { jsPDF } = window.jspdf;
-
-const pdf = new jsPDF();
-
-for(let i=0;i<images.length;i++){
-
-if(i>0) pdf.addPage();
-
-pdf.addImage(images[i],"JPEG",10,10,190,0);
+resolve()
 
 }
 
-pdf.save("merged.pdf");
+img.src=e.target.result
+
+}
+
+reader.readAsDataURL(file)
+
+})
+
+}
+
+pdf.save("merged.pdf")
 
 }
 
