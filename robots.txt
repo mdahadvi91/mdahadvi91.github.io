@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hridoy-neon.vercel.app/sitemap.xml
