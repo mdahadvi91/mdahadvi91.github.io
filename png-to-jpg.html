@@ -1,1 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>PNG to JPG - Hridoy Tools</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.uploadBox{
+border:2px dashed #38bdf8;
+padding:40px;
+text-align:center;
+border-radius:10px;
+cursor:pointer;
+margin:20px;
+}
+
+.preview{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+padding:20px;
+}
+
+.preview img{
+width:120px;
+border-radius:8px;
+}
+
+.convertBtn{
+display:block;
+margin:20px auto;
+padding:12px 30px;
+background:#38bdf8;
+border:none;
+border-radius:8px;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>PNG → JPG</header>
+
+<div class="uploadBox" onclick="fileInput.click()">
+<p>Select PNG Images</p>
+<input type="file" id="fileInput" accept="image/png" multiple hidden>
+</div>
+
+<div class="preview" id="preview"></div>
+
+<button class="convertBtn" onclick="convertJPG()">Convert to JPG</button>
+
+<script>
+
+let images = [];
+
+const input = document.getElementById("fileInput");
+const preview = document.getElementById("preview");
+
+input.addEventListener("change", function(){
+
+preview.innerHTML="";
+images=[];
+
+Array.from(this.files).forEach(file=>{
+
+const reader = new FileReader();
+
+reader.onload=function(e){
+
+images.push(e.target.result);
+
+const img=document.createElement("img");
+img.src=e.target.result;
+preview.appendChild(img);
+
+}
+
+reader.readAsDataURL(file);
+
+});
+
+});
+
+function convertJPG(){
+
+images.forEach((imgSrc,index)=>{
+
+const img=new Image();
+img.src=imgSrc;
+
+img.onload=function(){
+
+const canvas=document.createElement("canvas");
+const ctx=canvas.getContext("2d");
+
+canvas.width=img.width;
+canvas.height=img.height;
+
+ctx.fillStyle="#ffffff";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.drawImage(img,0,0);
+
+const link=document.createElement("a");
+link.download="converted-"+index+".jpg";
+link.href=canvas.toDataURL("image/jpeg",0.9);
+
+link.click();
+
+}
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
