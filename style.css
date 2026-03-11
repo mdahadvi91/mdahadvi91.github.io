@@ -203,3 +203,19 @@ cursor:pointer;
 background:#ef4444;
 margin:15px;
 }
+footer{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+text-align:center;
+padding:15px;
+font-size:14px;
+background:#020617;
+}
+
+footer a{
+color:#38bdf8;
+margin:0 8px;
+text-decoration:none;
+}
