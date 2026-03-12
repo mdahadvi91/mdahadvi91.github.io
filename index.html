@@ -1,8 +1,9 @@
 <!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <!-- Google AdSense -->
-<script async 
+<script async
 src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5216241068377334"
 crossorigin="anonymous"></script>
 ><title>⚡ Hridoy Tools | JPG to PDF, PDF to JPG, Image Converter</title><meta name="description" content="Hridoy Tools Management - Free online tools for JPG to PDF, PDF to JPG, PNG converter, resize image, compress image and more.">
@@ -343,8 +344,9 @@ if(document.getElementById("toolScreen").style.display==="block"){goHome()}
 })
 
 document.getElementById("fileInput").addEventListener("change",e=>{
-files=[...e.target.files]
+files=[...files,...e.target.files]
 showPreview()
+e.target.value=""
 })
 
 const dropArea=document.getElementById("dropArea")
@@ -353,7 +355,7 @@ dropArea.addEventListener("dragover",e=>e.preventDefault())
 
 dropArea.addEventListener("drop",e=>{
 e.preventDefault()
-files=[...e.dataTransfer.files]
+files=[...files,...e.dataTransfer.files]
 showPreview()
 })
 
@@ -387,6 +389,7 @@ showLoader()
 startProgress()
 if(tool==="jpgpdf"||tool==="mergejpgpdf"){await mergeJpgToPdf()}
 if(tool==="pdfjpg"){await pdfToJpg()}
+if(tool==="jpgpng"){await jpgToPng()}
 hideLoader()
 }
 
