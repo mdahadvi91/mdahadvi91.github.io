@@ -6,6 +6,7 @@
 <script async
 src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5216241068377334"
 crossorigin="anonymous"></script>
+<title>
 ><title>⚡ Hridoy Tools | JPG to PDF, PDF to JPG, Image Converter</title><meta name="description" content="Hridoy Tools Management - Free online tools for JPG to PDF, PDF to JPG, PNG converter, resize image, compress image and more.">
 <meta name="keywords" content="hridoy tools, jpg to pdf, pdf to jpg, image converter, compress image, resize image, online image tools">
 <meta name="author" content="Hridoy">
@@ -44,7 +45,18 @@ body{
 background:linear-gradient(-45deg,#0f172a,#1e293b,#2563eb,#0ea5e9);
 background-size:400% 400%;
 animation:bgMove 12s ease infinite;
-color:white;text-align:center;min-height:100vh
+color:white;
+text-align:center;
+min-height:100vh;
+
+display:flex;
+flex-direction:column;
+}
+
+footer{
+background:#111827;
+padding:30px;
+margin-top:auto;
 }
 
 @keyframes bgMove{
@@ -287,7 +299,34 @@ footer a{color:white;margin:10px;text-decoration:none}
 @media(max-width:700px){
 .grid{grid-template-columns:repeat(2,1fr)}
 }
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
 
+.popup-box{
+background:white;
+color:black;
+padding:25px;
+width:80%;
+max-width:400px;
+border-radius:10px;
+text-align:center;
+}
+
+.close{
+float:right;
+cursor:pointer;
+font-size:20px;
+}
 </style></head><body><header>⚡ Hridoy Tools Management</header><div>Top AdSense Banner</div><!-- TOOL GRID --><div id="toolsPage" class="grid"><button onclick="openTool('jpgpdf')"><span>JPG → PDF</span></button>
 <button onclick="openTool('mergejpgpdf')"><span>Merge JPG → PDF</span></button>
 <button onclick="openTool('pdfjpg')"><span>PDF → JPG</span></button>
@@ -307,12 +346,21 @@ footer a{color:white;margin:10px;text-decoration:none}
 <div id="progressBar"></div>
 </div><br><button class="run-btn" onclick="runTool()"><span>⚡ Run Tool</span></button>
 
-</div><footer>
+</div>
+<div id="popup" class="popup">
+  <div class="popup-box">
+    <span class="close" onclick="closePopup()">✖</span>
+    <h2 id="popupTitle"></h2>
+    <p id="popupContent"></p>
+  </div>
+</div>
+
+<footer>
 <p>© 2026 Hridoy Tools Management</p>
-<a href="#">Home</a>
-<a href="#">Contact</a>
-<a href="#">Privacy Policy</a>
-<a href="#">Terms</a>
+<a href="#" onclick="goHome()">Home</a>
+<a href="#" onclick="showContact()">Contact</a>
+<a href="#" onclick="showPrivacy()">Privacy Policy</a>
+<a href="#" onclick="showTerms()">Terms</a>
 <div>Footer AdSense Banner</div>
 </footer><script>
 
@@ -335,8 +383,11 @@ history.pushState({tool:true},"")
 }
 
 function goHome(){
+
+document.getElementById("infoPage").style.display="none"
 document.getElementById("toolScreen").style.display="none"
 document.getElementById("toolsPage").style.display="grid"
+
 }
 
 window.addEventListener("popstate",function(){
@@ -460,6 +511,62 @@ const a=document.createElement("a")
 a.href=url
 a.download=name
 a.click()
+}
+
+function showContact(){
+openPopup(
+"Contact",
+"Email: hridoyvi55@gmail.com <br> Phone: +971507975837"
+)
+}
+
+function showPrivacy(){
+openPopup(
+"Privacy Policy",
+"We do not store any uploaded files. All processing happens in your browser."
+)
+}
+
+function showTerms(){
+openPopup(
+"Terms & Conditions",
+"Use these tools freely. Do not upload illegal content."
+)
+}
+
+function openPopup(title,content){
+
+document.getElementById("popup").style.display="flex"
+
+document.getElementById("popupTitle").innerText=title
+
+document.getElementById("popupContent").innerHTML=content
+
+}
+
+function closePopup(){
+document.getElementById("popup").style.display="none"
+}
+
+function showContact(){
+openPopup(
+"Contact",
+"Email: hridoyvi55@gmail.com <br> Phone: +971507975837"
+)
+}
+
+function showPrivacy(){
+openPopup(
+"Privacy Policy",
+"We do not store any uploaded files. All processing happens in your browser."
+)
+}
+
+function showTerms(){
+openPopup(
+"Terms & Conditions",
+"Use these tools freely. Do not upload illegal content."
+)
 }
 
 </script></body>
